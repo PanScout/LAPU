@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1757281221" />
+    <testcase name="test_complex_mul_basic" classname="test_complex_mul_fsm" file="/Users/mwd/Developer/HDL/LAPU/tests/test_complex_mul_fsm.py" lineno="76" time="0.003242969512939453" sim_time_ns="52.000001" ratio_time="16034.686972085281" />
+  </testsuite>
+</testsuites>
