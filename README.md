@@ -1,1 +1,1 @@
-# LAPU: Programmable linear alegbra processing unit
+# LAPU: Linear Alegbra Processing Unit
