@@ -1,0 +1,10 @@
+# Core testbench framework (official)
+cocotb~=1.9
+
+# Test runner (nice ergonomics; used by many cocotb examples)
+pytest>=7
+
+# Optional: parallelize pytest (handy once you have many tests)
+pytest-xdist>=3
+
+cocotb-bus>=0.2
