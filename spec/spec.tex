@@ -1,0 +1,351 @@
+%===========================================================
+% Semi-Processor ISA Reference — Minimal (Header + Bitfields)
+%===========================================================
+\documentclass[10pt]{article}
+
+% Basic fonts (pdfLaTeX-friendly)
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amsmath}         % you already added this earlier
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{subcaption}      % provides subtable
+\usepackage{array}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\usepackage{ltablex}   % longtable + tabularx hybrid
+\keepXColumns
+\usepackage{booktabs}
+\usepackage{needspace} % keep headings with following material
+
+% A4 portrait; we'll rotate only the bitfield page
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{longtable} % multipage, non-floating tables
+\usepackage{array}     % for custom p{..} column types
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}} % like 'X', but for longtable
+
+% Diagrams
+\usepackage{bytefield}
+\usepackage{pdflscape}
+% in preamble
+\usepackage{graphicx} % (already common)
+\usepackage{bytefield}
+\usepackage{graphicx}
+\usepackage{makecell} % for line breaks in narrow cells
+\renewcommand\cellalign{cc}
+\newcommand{\bfstack}[3]{% name, hi, lo
+  \makecell{\strut \scriptsize #1\\ \tiny [#2:#3]}
+}
+\bytefieldsetup{
+  bitwidth=5.0em,   % horizontal size of ONE bit
+  bitheight=5.2ex,  % vertical size of ONE bit row
+  boxformatting=\scriptsize % (optional) shrink text inside boxes
+}
+\usepackage{caption}
+\usepackage{tabularx}
+\usepackage{booktabs}   % nicer rules (optional)
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X} % auto-wrap ragged-right
+
+
+
+% Small tick labels; set bitwidth to snap 128 bits to the line
+\bytefieldsetup{bitformatting=\scriptsize}
+\newcommand{\SetBitwidthToLine}{%
+  \bytefieldsetup{bitwidth=\dimexpr\linewidth/128\relax}%
+}
+
+% Metadata
+\newcommand{\archname}{LAPU-128}
+\newcommand{\archver}{v0.6 (Draft)}
+\newcommand{\EightBitTicks}{%
+  \bitheader{0,8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,127}\\%
+}
+
+
+\begin{document}
+
+%======================
+% Header (title) page
+%======================
+\begin{center}
+  {\Large \textbf{\archname} \\ Instruction Set Reference}\\[4pt]
+  {\small \archver\ — \today}
+\end{center}
+
+\begin{abstract}
+This document outline the 128-bit instruction formats for LAPU-128,
+focused on complex arithmetic and vector descriptors. LAPU-128 is small focused ISA designed perform complex tensor operations in an embedded enviroment. The following page
+shows the canonical XL, XC, XV, and XM encodings with 8-bit tick marks.
+\end{abstract}
+
+\clearpage
+
+%==========================================
+% Landscape page: Bitfield diagrams only
+%==========================================
+\begin{landscape}
+\section*{Core Instruction Formats (128-bit)}
+\SetBitwidthToLine
+
+% helper: shorter labels fit better
+\newcommand{\slabel}[1]{\centering\scriptsize #1}
+
+%================ R-Type ================
+\subsection*{R-Type: Register-to-Register operations of either complex scalar or complex vector types}
+\begin{bytefield}{128}
+  \EightBitTicks
+  \begin{rightwordgroup}{R}
+    \bitbox{8}{\bfstack{opcode}{127}{120}} &
+    \bitbox{8}{\bfstack{subop}{119}{112}} &
+    \bitbox{16}{\bfstack{flags}{111}{96}} &
+    \bitbox{3}{\bfstack{rd}{95}{93}} &
+    \bitbox{3}{\bfstack{rs1}{92}{90}} &
+    \bitbox{3}{\bfstack{rs2}{89}{87}} &
+    \bitbox{16}{\bfstack{imm16}{86}{71}} &
+    \bitbox{71}{\bfstack{reserved}{70}{0}}
+  \end{rightwordgroup}
+\end{bytefield}
+
+\vspace{1.2em}
+
+%================ I-Type ================
+\subsection*{I-type: Immediate operations of just complex scalars}
+\begin{bytefield}{128}
+  \EightBitTicks
+  \begin{rightwordgroup}{I}
+    \bitbox{8}{\bfstack{opcode}{127}{120}} &
+    \bitbox{8}{\bfstack{subop}{119}{112}} &
+    \bitbox{16}{\bfstack{flags}{111}{96}} &
+    \bitbox{3}{\bfstack{rd}{95}{93}} &
+    \bitbox{3}{\bfstack{rs1}{92}{90}} &
+    \bitbox{90}{\bfstack{imm\_90}{89}{0}}
+  \end{rightwordgroup}
+\end{bytefield}
+
+\vspace{1.2em}
+
+%================ J-Type ================
+\subsection*{J (conditional jump, 128-bit descriptor)}
+\begin{bytefield}{128}
+  \EightBitTicks
+  \begin{rightwordgroup}{JX}
+    \bitbox{8}{\bfstack{opc}{127}{120}} &
+    \bitbox{8}{\bfstack{subop}{119}{112}} &
+    \bitbox{16}{\bfstack{flags16}{111}{96}} &
+    \bitbox{3}{\bfstack{rs1}{95}{93}} &
+    \bitbox{33}{\bfstack{offs33 (PC\_rel)}{92}{60}} &
+    \bitbox{60}{\bfstack{reserved}{59}{0}}
+  \end{rightwordgroup}
+\end{bytefield}
+
+\vspace{1.2em}
+
+%================ S-Type ================
+\subsection*{S-type: matrix-bank load/store, 128-bit}
+\begin{bytefield}{128}
+  \EightBitTicks
+  \begin{rightwordgroup}{S-type (Vectors only; stride implicit)}
+    \bitbox{8}{\bfstack{opc}{127}{120}} &
+    \bitbox{8}{\bfstack{subop}{119}{112}} &
+    \bitbox{16}{\bfstack{flags16}{111}{96}} &
+    \bitbox{3}{\bfstack{vd}{95}{93}} &
+    \bitbox{4}{\bfstack{mbid}{92}{89}} &
+    \bitbox{1}{\centering\rotatebox{90}{\makecell{\scriptsize rc \tiny [88]}}} &
+    \bitbox{16}{\bfstack{idx16}{87}{72}} &
+    \bitbox{16}{\bfstack{len16}{71}{56}} &
+    \bitbox{56}{\bfstack{rsv}{55}{0}}
+  \end{rightwordgroup}
+\end{bytefield}
+
+
+\end{landscape}
+
+%======================
+% Register Layout
+%======================
+\section*{Register Layout}
+
+\subsection*{Architectural Registers (Summary)}
+\begin{center}
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\linewidth}{|l|l|l|Y|}
+\hline
+\textbf{Class} & \textbf{Names} & \textbf{Width / Elements} & \textbf{Notes} \\
+\hline
+Scalar (complex) & $s0..s7$ & 128\,b each (complex Q32.32 + Q32.32) &
+\textbf{$s0$ is hard-wired to 0}. $s1$ is the conventional branch predicate (0/1). \\
+\hline
+Vector (complex) & $v0..v7$ & VLEN elements; each element 128\,b complex &
+\textbf{$v0$ is hard-wired to all-zeros}. Vector ops always operate on \textbf{all VLEN elements}. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\end{center}
+
+\subsection*{Vector Length}
+\noindent \textbf{VLEN} is a hardware/HDL parameter fixed at synthesis time. It is constant at runtime. All vector instructions operate over the entire range $[0, \mathrm{VLEN}-1]$.
+
+\subsection*{Complex Number Format (Q32.32 + Q32.32)}
+Each scalar register and each vector element encodes a complex value $(\mathrm{Re}, \mathrm{Im})$ in fixed point:
+\[
+\mathrm{Re}, \mathrm{Im} \in \text{Q32.32 two’s complement} \quad\Rightarrow\quad
+x_{\text{real}} = \frac{X_{\text{int}}}{2^{32}},\;\;
+x_{\text{imag}} = \frac{Y_{\text{int}}}{2^{32}}.
+\]
+The 128-bit complex is stored little-endian in memory with \textbf{Re at the lower address} and \textbf{Im at the higher address}. Each half (Re or Im) is a 64-bit two’s-complement fixed-point integer with 32 integer bits and 32 fractional bits.
+
+\subsection*{Endianness}
+\noindent Instruction words (128\,b) and data are little-endian. For complex numbers in memory: bytes for \(\mathrm{Re}\) precede bytes for \(\mathrm{Im}\).
+
+\subsection*{Zero Registers}
+\noindent The following are architecturally fixed to zero and never written:
+\[
+s0 \equiv 0\quad\text{(complex zero)}, \qquad
+v0[i] \equiv 0\;\; \forall\, i \in [0,\mathrm{VLEN}-1].
+\]
+
+%==============================
+% Instruction Semantics section
+%==============================
+\clearpage
+\section*{Instruction Semantics}
+
+%---------------- R-type -----------------
+\section*{R-type — Register-to-Register (complex)}
+
+% --- Scalar ---
+\subsection*{Scalar}
+\begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
+\caption{Operate on scalar registers (\texttt{s*})}\label{tab:rscalar}\\
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endhead
+\texttt{cadd.c}   & 0x00 & d, a, b & d $\leftarrow$ a $+$ b & Truncating Q32.32+Q32.32. \\
+\texttt{csub.c}   & 0x01 & d, a, b & d $\leftarrow$ a $-$ b & Truncating. \\
+\texttt{cmul.c}   & 0x02 & d, a, b & d $\leftarrow$ a $\times$ b & Widen internally, truncate to Q32.32+Q32.32. \\
+\texttt{cdiv.c}   & 0x03 & d, a, b & d $\leftarrow$ a \,$\div$\, b & $(a\,\overline{b})/|b|^2$; if $|b|=0$ then d$:=0$. \\
+\texttt{cneg.c}   & 0x10 & d, a    & d $\leftarrow -a$ & Two’s-complement both halves. \\
+\texttt{conj.c}   & 0x20 & d, a    & d $\leftarrow \mathrm{conj}(a)$ & Negate imaginary half. \\
+\texttt{csqrt.c}  & 0x26 & d, a    & d $\leftarrow \sqrt{a}$ & Principal complex root; widen internally, truncate to Q32.32+Q32.32. \\
+\texttt{cabs2.c}  & 0x21 & d, a    & d$_\mathrm{re}\leftarrow \Re(a)^2{+}\Im(a)^2$, d$_\mathrm{im}\leftarrow 0$ & Magnitude$^2$; widen then truncate. \\
+\texttt{cabs.c}   & 0x22 & d, a    & d$_\mathrm{re}\leftarrow \sqrt{\Re(a)^2+\Im(a)^2}$, d$_\mathrm{im}\leftarrow 0$ & Fixed-point $\sqrt{\cdot}$; truncating. \\
+\texttt{creal.c}  & 0x50 & d, a    & d$_\mathrm{re}\leftarrow \Re(a)$,\; d$_\mathrm{im}\leftarrow 0$ & Extract real. \\
+\texttt{cimag.c}  & 0x51 & d, a    & d$_\mathrm{re}\leftarrow \Im(a)$,\; d$_\mathrm{im}\leftarrow 0$ & Extract imaginary to real half. \\
+\texttt{crecip.c} & 0x25 & d, a       & d $\leftarrow 1 \div a$ & $(\overline{a})/|a|^2$; if $a{=}0$ then d$:=0$. \\
+\texttt{cscale.c} & 0x30 & d, a, t    & d $\leftarrow a \times t$ & Real scale $t$ (Q32.32); widen then truncate. \\
+\texttt{cmadd.c}  & 0x33 & d, a, b, c & d $\leftarrow a \times b + c$ & Fused complex MAD; one rounding. \\
+\texttt{cmaxabs.c}& 0x62 & d, a, b    & d $\leftarrow \arg\max_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
+\texttt{cminabs.c}& 0x63 & d, a, b    & d $\leftarrow \arg\min_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
+
+\bottomrule
+\end{longtable}
+
+
+% --- Vector ---
+% --- Vector ---
+\subsection*{Vector}
+\begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
+\caption{Operate on vector registers (\texttt{v*}); always over all VLEN elements}\label{tab:rvector}\\
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endhead
+\texttt{cadd.v}   & 0x10 & vD, vA, vB       & vD[i] $\leftarrow$ vA[i] $+$ vB[i]                         & Saturating per lane. \\
+\texttt{csub.v}   & 0x11 & vD, vA, vB       & vD[i] $\leftarrow$ vA[i] $-$ vB[i]                         & Saturating per lane. \\
+\texttt{cmul.v}   & 0x12 & vD, vA, vB       & vD[i] $\leftarrow$ vA[i] $\times$ vB[i]                    & Complex lane-wise multiply. \\
+\texttt{cmac.v}   & 0x13 & vD, vA, vB       & vD[i] $\leftarrow$ vD[i] $+$ vA[i]\,$\times$\,vB[i]        & Fused complex MAC per lane. \\
+\texttt{cdiv.v}   & 0x16 & vD, vA, vB       & vD[i] $\leftarrow$ vA[i] \,$\div$\, vB[i]                   & $(a\,\overline{b})/|b|^2$ per lane; if $|b|{=}0$ then lane:=0. \\
+\texttt{conj.v}   & 0x21 & vD, vA           & vD[i] $\leftarrow$ \mathrm{conj}(vA[i])                     & Lane-wise conjugate. \\
+\texttt{dotc}     & 0x30 & sD, vA, vB       & sD $\leftarrow \sum_{i=0}^{\mathrm{VLEN}-1}\mathrm{conj}(vA[i])\cdot vB[i]$ & Reduce to scalar \texttt{sD}. \\
+\texttt{dotu} & 0x36 & sD, \={A}, \={B} & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}[i]$ & Complex dot (no conjugation). \\
+
+\texttt{iamax.v}  & 0x33 & sD, vA           & sD $\leftarrow \arg\max_i |vA[i]|$                          & Index (0..VLEN$-$1) in \texttt{sD} real half; imag:=0. \\
+% add these two rows to your Vector longtable (e.g., after nrm2/iamax)
+\texttt{sum.v}   & 0x34 & sD, \={A} & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]$ & Complex sum; reduces to scalar. \\
+\texttt{asum.v}  & 0x35 & sD, \={A} & $sD_{\mathrm{re}} \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\lvert \={A}[i]\rvert,\; sD_{\mathrm{im}} \leftarrow 0$ & Sum of magnitudes (real result). \\
+\bottomrule
+\end{longtable}
+
+
+%---------------- I-type -----------------
+\section*{I-type — Immediate (scalars only)}
+\begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
+\caption{I-type: Immediate operations (scalar complex)}\label{tab:itype}\\
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endhead
+\texttt{cloadi}  & 0x00 & sD, cIMM     & sD $\leftarrow$ cIMM & cIMM packed in \texttt{imm\_90} (Re/Im per spec). \\
+\texttt{cadd\_i} & 0x01 & sD, sA, cIMM & sD $\leftarrow$ sA $+$ cIMM & Saturating. \\
+\texttt{cmul\_i} & 0x02 & sD, sA, cIMM & sD $\leftarrow$ sA $\times$ cIMM & Widen then clamp to Q32.32. \\
+\bottomrule
+\end{longtable}
+
+%---------------- J-type -----------------
+\section*{J-type — Conditional Jump}
+\begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
+\caption{J-type: Conditional jump (single predicate)}\label{tab:jtype}\\
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endhead
+\texttt{jrel} & 0x00 & offs33 &
+If $s1 \neq 0$: $\mathrm{PC} \leftarrow \mathrm{PC} + \text{offs33}$ (instruction-relative). &
+$s0 \equiv 0$; $s1$ is the conventional branch predicate (0/1). \\
+\bottomrule
+\end{longtable}
+
+%---------------- S-type -----------------
+\section*{S-type — Matrix-bank Vector Load/Store (stride implicit)}
+\begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
+\caption{S-type: Matrix-bank vector load/store}\label{tab:stype}\\
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endhead
+\texttt{vld} & 0x00 & vD, mbid, rc, idx16, len16 &
+Load into vD the sequence:
+$\text{if } rc{=}0:\ (r{=}\text{idx16},\ c{=}0..L{-}1),\;
+\text{if } rc{=}1:\ (r{=}0..L{-}1,\ c{=}\text{idx16})$,
+where $L = \text{len16}$ if nonzero, else $L=\mathrm{VLEN}$. &
+Row stride $=1$;\; column stride $=\mathrm{VLEN}$. Elements are 128-bit complex (Re then Im). \\
+\addlinespace[0.25em]
+\texttt{vst} & 0x01 & vS, mbid, rc, idx16, len16 &
+Store from vS to the same address pattern as \texttt{vld}. &
+Vectors cover all lanes when $L{=}\mathrm{VLEN}$. \\
+\bottomrule
+\end{longtable}
+
+
+
+
+
+
+
+\end{document}
