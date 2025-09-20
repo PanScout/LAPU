@@ -16,10 +16,15 @@ package flat_tensors is
   constant PART_FRAC_BITS : natural  := 32;   -- fractional bits per part
   constant PART_WIDTH     : positive := COMPLEX_WIDTH/2;  -- derived
 
+  constant VECTOR_WORD_WIDTH   : positive := 8;  -- derived
+  constant VECTOR_BIT_WIDTH : positive := VECTOR_WORD_WIDTH * COMPLEX_WIDTH;
+
   -----------------------------------------------------------------------------
   -- Public flat type: [ REAL | IMAG ], each PART_WIDTH bits, two's complement
   -----------------------------------------------------------------------------
   subtype complex_t is std_logic_vector(COMPLEX_WIDTH-1 downto 0);
+  subtype vector_t is std_logic_vector(VECTOR_BIT_WIDTH-1 downto 0);
+  subtype matrix_t is std_logic_vector(VECTOR_BIT_WIDTH-1 * VECTOR_BIT_WIDTH - 1 downto 0);
 
   -----------------------------------------------------------------------------
   -- Accessors (read): raw PART_WIDTH-wide two's-complement bitfields
@@ -51,12 +56,20 @@ package flat_tensors is
   function add_parts(a, b : std_logic_vector) return std_logic_vector;
   function sub_parts(a, b : std_logic_vector) return std_logic_vector;
 
+  function get_vec_num(a : vector_t; n : integer) return complex_t;
+  function set_vec_num(a : vector_t; n : integer; c: complex_t) return vector_t;
+
+  function add_vec(a, b : vector_t) return vector_t;
+  function sub_vec(a, b : vector_t) return vector_t;
+
 
 
 end package flat_tensors;
 
 
 package body flat_tensors is
+
+
   -----------------------------------------------------------------------------
   -- Elaboration-time checks (tool-friendly)
   -----------------------------------------------------------------------------
@@ -184,6 +197,52 @@ package body flat_tensors is
   end function;
 
     ----------------------------------------------------------------------------
+
+  function get_vec_num(a : vector_t; n : integer) return complex_t is
+    variable complex_num: complex_t;
+  begin
+     complex_num := a(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH);
+     return complex_num; 
+  end function;
+
+
+  function set_vec_num(a : vector_t; n : integer; c: complex_t) return vector_t is
+    variable rvector: vector_t;
+  begin
+    rvector := a;
+    rvector(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH) := c;
+    return rvector;
+  end function;
+
+  function add_vec(a, b : vector_t ) return vector_t is
+    variable rvector: vector_t := (others => '0');
+    variable r_complex_t, a_complex, b_complex : complex_t;
+  begin
+    for n in 0 to VECTOR_WORD_WIDTH - 1 loop
+      a_complex := get_vec_num(a, n);
+      b_complex := get_vec_num(b, n);
+      r_complex_t := scalar_add(a_complex, b_complex);
+      rvector(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH) := r_complex_t;
+    end loop;
+    return rvector;
+  end function;
+
+  function sub_vec(a, b : vector_t ) return vector_t is
+    variable rvector: vector_t := (others => '0');
+    variable r_complex_t, a_complex, b_complex : complex_t := (others => '0');
+  begin
+    for n in 0 to VECTOR_WORD_WIDTH - 1 loop
+      a_complex := get_vec_num(a, n);
+      b_complex := get_vec_num(b, n);
+      r_complex_t := scalar_sub(a_complex, b_complex);
+      rvector(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH) := r_complex_t;
+    end loop;
+    return rvector;
+  end function;
+
+
+  
+  
 
 
 

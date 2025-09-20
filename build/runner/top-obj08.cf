@@ -1,7 +1,0 @@
-v 4
-file / "/Users/mwd/Developer/HDL/LAPU/src/and_gate.vhd" "4a7ed575db34763c05e8aaaf79878cbbb22e9efe" "20250910204928.518":
-  entity and_gate at 2( 22) + 0 on 4;
-  architecture rtl of and_gate at 13( 189) + 0 on 4;
-file / "/Users/mwd/Developer/HDL/LAPU/src/complex_mul_fsm.vhd" "512ebe0720d06cc35f010e20654172d33fd96528" "20250910204928.578":
-  entity complex_mul_fsm at 11( 496) + 0 on 11;
-  architecture rtl of complex_mul_fsm at 31( 1243) + 0 on 12;
