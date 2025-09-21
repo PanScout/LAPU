@@ -27,7 +27,7 @@ BINDIR_ABS   := $(abspath $(BINDIR))
 LIBROOT_ABS  := $(abspath $(LIBROOT))
 
 # Top-level testbench entity (default)
-TB           ?= tb_complex_mul
+TB           ?=tb_matrix_bank
 
 # Waves and runtime
 DUMP         ?= ghw             # fst|vcd|ghw

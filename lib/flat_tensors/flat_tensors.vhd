@@ -9,7 +9,7 @@ use ieee.numeric_std.all;
 
 package flat_tensors is
   -----------------------------------------------------------------------------
-  -- Configuration (NOW bound in the spec; edit here to reconfigure)
+  -- Elaboration time constants 
   -----------------------------------------------------------------------------
   constant COMPLEX_WIDTH  : positive := 128;  -- total width (must be even)
   constant PART_INT_BITS  : natural  := 32;   -- integer bits per part
@@ -18,49 +18,50 @@ package flat_tensors is
 
   constant VECTOR_WORD_WIDTH   : positive := 8;  -- derived
   constant VECTOR_BIT_WIDTH : positive := VECTOR_WORD_WIDTH * COMPLEX_WIDTH;
+  
+  constant MATRIX_FACTOR: positive := 2;
+  constant MATRIX_WORD_WIDTH : positive := (MATRIX_FACTOR * VECTOR_WORD_WIDTH) * (VECTOR_WORD_WIDTH * MATRIX_FACTOR);
+  constant MATRIX_BIT_WIDTH : positive := (MATRIX_FACTOR * VECTOR_WORD_WIDTH) * (MATRIX_FACTOR * VECTOR_WORD_WIDTH) * COMPLEX_WIDTH;
 
+  constant MATRIX_SUBVECTORS: positive := MATRIX_FACTOR;
+  constant WORDS_PER_AXIS: positive := MATRIX_FACTOR * VECTOR_WORD_WIDTH;
   -----------------------------------------------------------------------------
-  -- Public flat type: [ REAL | IMAG ], each PART_WIDTH bits, two's complement
+  -- Data types
   -----------------------------------------------------------------------------
   subtype complex_t is std_logic_vector(COMPLEX_WIDTH-1 downto 0);
   subtype vector_t is std_logic_vector(VECTOR_BIT_WIDTH-1 downto 0);
-  subtype matrix_t is std_logic_vector(VECTOR_BIT_WIDTH-1 * VECTOR_BIT_WIDTH - 1 downto 0);
+  subtype matrix_t is std_logic_vector(MATRIX_BIT_WIDTH - 1 downto 0);
 
   -----------------------------------------------------------------------------
-  -- Accessors (read): raw PART_WIDTH-wide two's-complement bitfields
+  -- Complex data type functions
   -----------------------------------------------------------------------------
   function get_re(x : complex_t) return std_logic_vector;
   function get_im(x : complex_t) return std_logic_vector;
-
-  -----------------------------------------------------------------------------
-  -- Accessors (write): return x with updated field
-  -----------------------------------------------------------------------------
   function set_re(x : complex_t; new_re : std_logic_vector) return complex_t;
   function set_im(x : complex_t; new_im : std_logic_vector) return complex_t;
-
-  -----------------------------------------------------------------------------
-  -- Constructor from raw parts
-  -----------------------------------------------------------------------------
-  function make_complex(re_part : std_logic_vector; im_part : std_logic_vector)
-    return complex_t;
-
-  -----------------------------------------------------------------------------
-  -- Arithmetic (same Q-format on both operands)
-  -----------------------------------------------------------------------------
+  function make_complex(re_part : std_logic_vector; im_part : std_logic_vector) return complex_t;
   function scalar_add(a, b : complex_t) return complex_t;
   function scalar_sub(a, b : complex_t) return complex_t;
-
-  -----------------------------------------------------------------------------
-  -- Public scalar helpers (PART_WIDTH-wide, two's complement)
-  -----------------------------------------------------------------------------
   function add_parts(a, b : std_logic_vector) return std_logic_vector;
   function sub_parts(a, b : std_logic_vector) return std_logic_vector;
 
+
+  -----------------------------------------------------------------------------
+  -- Vector data type functions
+  -----------------------------------------------------------------------------
   function get_vec_num(a : vector_t; n : integer) return complex_t;
   function set_vec_num(a : vector_t; n : integer; c: complex_t) return vector_t;
-
   function add_vec(a, b : vector_t) return vector_t;
   function sub_vec(a, b : vector_t) return vector_t;
+  function make_vec(a : std_logic_vector) return vector_t;
+  function vec_plus_complex(a: vector_t; b: complex_t) return vector_t;
+  function vec_minus_complex(a: vector_t; b: complex_t) return vector_t;
+
+  -----------------------------------------------------------------------------
+  -- Matrix data type functions
+  -----------------------------------------------------------------------------
+  function get_mat_num(a: matrix_t; i,j: integer) return complex_t;
+  function set_mat_num(a: matrix_t; i,j: integer; c: complex_t) return matrix_t;
 
 
 
@@ -201,7 +202,7 @@ package body flat_tensors is
   function get_vec_num(a : vector_t; n : integer) return complex_t is
     variable complex_num: complex_t;
   begin
-     complex_num := a(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH);
+     complex_num := a(n*COMPLEX_WIDTH + (COMPLEX_WIDTH - 1) downto n*COMPLEX_WIDTH);
      return complex_num; 
   end function;
 
@@ -210,7 +211,7 @@ package body flat_tensors is
     variable rvector: vector_t;
   begin
     rvector := a;
-    rvector(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH) := c;
+    rvector(n*COMPLEX_WIDTH + (COMPLEX_WIDTH - 1) downto n*COMPLEX_WIDTH) := c;
     return rvector;
   end function;
 
@@ -222,7 +223,7 @@ package body flat_tensors is
       a_complex := get_vec_num(a, n);
       b_complex := get_vec_num(b, n);
       r_complex_t := scalar_add(a_complex, b_complex);
-      rvector(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH) := r_complex_t;
+      rvector(n*COMPLEX_WIDTH + (COMPLEX_WIDTH -1) downto n*COMPLEX_WIDTH) := r_complex_t;
     end loop;
     return rvector;
   end function;
@@ -235,15 +236,57 @@ package body flat_tensors is
       a_complex := get_vec_num(a, n);
       b_complex := get_vec_num(b, n);
       r_complex_t := scalar_sub(a_complex, b_complex);
-      rvector(n*COMPLEX_WIDTH + COMPLEX_WIDTH downto n*COMPLEX_WIDTH) := r_complex_t;
+      rvector(n*COMPLEX_WIDTH + (COMPLEX_WIDTH - 1) downto n*COMPLEX_WIDTH) := r_complex_t;
     end loop;
     return rvector;
   end function;
 
 
-  
-  
+  function make_vec(a: std_logic_vector) return vector_t is 
+      variable rvector: vector_t := (others => '0');
+  begin
+    rvector := a;
+    return rvector;
+  end;
 
+  function vec_plus_complex (a: vector_t; b: complex_t) return vector_t is
+    variable rvector: vector_t := (others => '0');
+    variable x,y: complex_t := (others => '0');
+  begin
+    for n in 0 to VECTOR_WORD_WIDTH -1  loop
+      x := get_vec_num(a, n);
+      y := scalar_add(x, b);
+      rvector := set_vec_num(rvector, n, y);
+    end loop;
+   return rvector; 
+  end function;
+
+
+  function vec_minus_complex (a: vector_t; b: complex_t) return vector_t is
+    variable rvector: vector_t := (others => '0');
+    variable x,y: complex_t := (others => '0');
+  begin
+    for n in 0 to VECTOR_WORD_WIDTH -1  loop
+      x := get_vec_num(a, n);
+      y := scalar_sub(x, b);
+      rvector := set_vec_num(rvector, n, y);
+    end loop;
+   return rvector; 
+  end function;
+
+  function get_mat_num (a: matrix_t; i,j: integer) return complex_t is
+    variable rcomplex: complex_t := (others => '0');
+  begin
+    rcomplex := a( (i*MATRIX_FACTOR*VECTOR_BIT_WIDTH + j*COMPLEX_WIDTH  + COMPLEX_WIDTH) - 1 downto (i*MATRIX_FACTOR*VECTOR_BIT_WIDTH + (j*COMPLEX_WIDTH)));
+    return rcomplex;
+  end function;
+
+  function set_mat_num (a: matrix_t; i,j: integer; c: complex_t) return matrix_t is
+    variable buffer_matrix: matrix_t := a;
+  begin
+    buffer_matrix( (i*MATRIX_FACTOR*VECTOR_BIT_WIDTH + j*COMPLEX_WIDTH  + COMPLEX_WIDTH) - 1 downto (i*MATRIX_FACTOR*VECTOR_BIT_WIDTH + (j*COMPLEX_WIDTH))) := c;
+    return buffer_matrix;
+  end function;
 
 
 end package body flat_tensors;

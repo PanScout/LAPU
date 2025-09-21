@@ -1,13 +1,22 @@
 v 4
-file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_top.vhd" "e07fe0dd8db0eb99999a8aee122d15c022c68a00" "20250919220437.543":
-  entity tb_top at 2( 54) + 0 on 17;
-  architecture sim of tb_top at 13( 229) + 0 on 18;
-file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_mul_fsm.vhd" "512ebe0720d06cc35f010e20654172d33fd96528" "20250919220437.344":
-  entity complex_mul_fsm at 11( 496) + 0 on 13;
-  architecture rtl of complex_mul_fsm at 31( 1243) + 0 on 14;
-file "/Users/mwd/Developer/HDL/LAPU/" "src/and_gate.vhd" "4a7ed575db34763c05e8aaaf79878cbbb22e9efe" "20250919220437.319":
+file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_top.vhd" "e07fe0dd8db0eb99999a8aee122d15c022c68a00" "20250921234310.871":
+  entity tb_top at 2( 54) + 0 on 23;
+  architecture sim of tb_top at 13( 229) + 0 on 24;
+file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_complex_mul.vhd" "3865478a6086d13f1e7ae2693990871d27ac0990" "20250921234310.688":
+  entity tb_complex_mul at 2( 60) + 0 on 19;
+  architecture sim of tb_complex_mul at 13( 243) + 0 on 20;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_mul_fsm.vhd" "512ebe0720d06cc35f010e20654172d33fd96528" "20250921234310.524":
+  entity complex_mul_fsm at 11( 496) + 0 on 15;
+  architecture rtl of complex_mul_fsm at 31( 1243) + 0 on 16;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/and_gate.vhd" "4a7ed575db34763c05e8aaaf79878cbbb22e9efe" "20250921234310.478":
   entity and_gate at 2( 22) + 0 on 11;
   architecture rtl of and_gate at 13( 189) + 0 on 12;
-file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_complex_mul.vhd" "3865478a6086d13f1e7ae2693990871d27ac0990" "20250919220437.448":
-  entity tb_complex_mul at 2( 60) + 0 on 15;
-  architecture sim of tb_complex_mul at 13( 243) + 0 on 16;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_div_fsm.vhd" "35bc3b2e6a2a9660f390ec0e85a40cb38a040e43" "20250921234310.501":
+  entity complex_div_fsm at 1( 0) + 0 on 13;
+  architecture rtl of complex_div_fsm at 19( 326) + 0 on 14;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/matrix_bank.vhd" "59fc18a3a9c13b2e79e19e23615244341cf6c26e" "20250921234310.626":
+  entity matrix_bank at 1( 0) + 0 on 17;
+  architecture arch of matrix_bank at 31( 764) + 0 on 18;
+file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_matrix_bank.vhd" "5110b9bc16c24a7fb0ac44f152b9ad0bcbbb1559" "20250921234310.782":
+  entity tb_matrix_bank at 4( 36) + 0 on 21;
+  architecture sim of tb_matrix_bank at 20( 415) + 0 on 22;
