@@ -1,22 +1,34 @@
 v 4
-file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_top.vhd" "e07fe0dd8db0eb99999a8aee122d15c022c68a00" "20250921234310.871":
-  entity tb_top at 2( 54) + 0 on 23;
-  architecture sim of tb_top at 13( 229) + 0 on 24;
-file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_complex_mul.vhd" "3865478a6086d13f1e7ae2693990871d27ac0990" "20250921234310.688":
-  entity tb_complex_mul at 2( 60) + 0 on 19;
-  architecture sim of tb_complex_mul at 13( 243) + 0 on 20;
-file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_mul_fsm.vhd" "512ebe0720d06cc35f010e20654172d33fd96528" "20250921234310.524":
-  entity complex_mul_fsm at 11( 496) + 0 on 15;
-  architecture rtl of complex_mul_fsm at 31( 1243) + 0 on 16;
-file "/Users/mwd/Developer/HDL/LAPU/" "src/and_gate.vhd" "4a7ed575db34763c05e8aaaf79878cbbb22e9efe" "20250921234310.478":
-  entity and_gate at 2( 22) + 0 on 11;
-  architecture rtl of and_gate at 13( 189) + 0 on 12;
-file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_div_fsm.vhd" "35bc3b2e6a2a9660f390ec0e85a40cb38a040e43" "20250921234310.501":
-  entity complex_div_fsm at 1( 0) + 0 on 13;
-  architecture rtl of complex_div_fsm at 19( 326) + 0 on 14;
-file "/Users/mwd/Developer/HDL/LAPU/" "src/matrix_bank.vhd" "59fc18a3a9c13b2e79e19e23615244341cf6c26e" "20250921234310.626":
-  entity matrix_bank at 1( 0) + 0 on 17;
-  architecture arch of matrix_bank at 31( 764) + 0 on 18;
-file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_matrix_bank.vhd" "5110b9bc16c24a7fb0ac44f152b9ad0bcbbb1559" "20250921234310.782":
-  entity tb_matrix_bank at 4( 36) + 0 on 21;
-  architecture sim of tb_matrix_bank at 20( 415) + 0 on 22;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/alu.vhd" "c87edf71017ca7dc7da2e4fe4196367d352c71ef" "20250922223153.884":
+  entity alu at 1( 0) + 0 on 67;
+  architecture rtl of alu at 25( 465) + 0 on 68;
+file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_matrix_bank.vhd" "5110b9bc16c24a7fb0ac44f152b9ad0bcbbb1559" "20250922223154.357":
+  entity tb_matrix_bank at 4( 36) + 0 on 81;
+  architecture sim of tb_matrix_bank at 20( 415) + 0 on 82;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/vector_alu.vhd" "c5d46ad2022c05b939e534e78557be087691fbaa" "20250922163930.785":
+  entity vector_alu at 1( 0) + 0 on 23;
+  architecture rtl of vector_alu at 17( 312) + 0 on 24;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/matrix_bank.vhd" "416bfa54ade7746e276989e0ec7278553a493b2a" "20250922223154.078":
+  entity matrix_bank at 1( 0) + 0 on 75;
+  architecture arch of matrix_bank at 32( 769) + 0 on 76;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_div_fsm.vhd" "35bc3b2e6a2a9660f390ec0e85a40cb38a040e43" "20250922223153.948":
+  entity complex_div_fsm at 1( 0) + 0 on 71;
+  architecture rtl of complex_div_fsm at 19( 326) + 0 on 72;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/and_gate.vhd" "4a7ed575db34763c05e8aaaf79878cbbb22e9efe" "20250922223153.925":
+  entity and_gate at 2( 22) + 0 on 69;
+  architecture rtl of and_gate at 13( 189) + 0 on 70;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_alu.vhd" "06c0676aa8986902ae2986ea3d7c85adfa73e477" "20250922163930.460":
+  entity complex_alu at 1( 0) + 0 on 13;
+  architecture rtl of complex_alu at 20( 334) + 0 on 14;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/complex_mul_fsm.vhd" "512ebe0720d06cc35f010e20654172d33fd96528" "20250922223153.970":
+  entity complex_mul_fsm at 11( 496) + 0 on 73;
+  architecture rtl of complex_mul_fsm at 31( 1243) + 0 on 74;
+file "/Users/mwd/Developer/HDL/LAPU/" "src/register_file.vhd" "639c0d747510258426a1c0004924e689b1b3e78b" "20250922223154.142":
+  entity register_file at 1( 0) + 0 on 77;
+  architecture arch of register_file at 28( 749) + 0 on 78;
+file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_complex_mul.vhd" "3865478a6086d13f1e7ae2693990871d27ac0990" "20250922223154.259":
+  entity tb_complex_mul at 2( 60) + 0 on 79;
+  architecture sim of tb_complex_mul at 13( 243) + 0 on 80;
+file "/Users/mwd/Developer/HDL/LAPU/" "tb/tb_top.vhd" "e07fe0dd8db0eb99999a8aee122d15c022c68a00" "20250922223154.442":
+  entity tb_top at 2( 54) + 0 on 83;
+  architecture sim of tb_top at 13( 229) + 0 on 84;

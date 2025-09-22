@@ -6,6 +6,7 @@ use flat_tensors.flat_tensors.all;
 
 entity matrix_bank is
   port (
+    
     i_clock: in std_logic;
     i_reset: in std_logic;
     i_matrix_sel: in integer range 0 to 3;
