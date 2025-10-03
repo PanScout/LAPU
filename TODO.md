@@ -1,5 +1,6 @@
 # TODO
-- [ ] Add instructions for scalar load/store on the matrix.
-- [ ] Vector times a scalar
-- [ ] Vector plus a scalar
+- [ X ] Add instructions for scalar load/store on the matrix.
+- [ X ] Vector times a scalar
+- [ X ] Vector plus a scalar
+- [   ] Comparison operators for scalars the output either 1 or 0.
 

@@ -30,7 +30,7 @@ LIBROOT_ABS  := $(abspath $(LIBROOT))
 TB           ?=tb_matrix_bank
 
 # Waves and runtime
-DUMP         ?= vcd             # fst|vcd|ghw
+DUMP         ?= ghw             # fst|vcd|ghw
 STOP         ?=
 RUNARGS      ?=
 G            ?=

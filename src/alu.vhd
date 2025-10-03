@@ -21,49 +21,59 @@ entity alu is
         o_x: out complex_t;
         o_xv: out vector_t
         
-    
-        
     );
 end entity alu;
 
 architecture rtl of alu is
 
-type state_t is (S_IDLE_COMB, S_COMPUTE, S_RESULT);
-signal state, next_state: state_t;
+
+
+constant COMPLEX_ZERO : complex_t := (others => '0');
+
+constant COMPLEX_ONE : complex_t :=
+  ( (PART_WIDTH-1 downto PART_FRAC_BITS+1 => '0',
+     PART_FRAC_BITS                         => '1',
+     PART_FRAC_BITS-1 downto 0             => '0')  
+    &
+    (others => '0') );                                 
+
+constant COMPLEX_NEG_ONE : complex_t :=
+  ( (PART_WIDTH-1 downto PART_FRAC_BITS => '1',       
+     PART_FRAC_BITS-1 downto 0          => '0')
+    &
+    (others => '0') );
 
 begin
-
-
-
-state_register: process (i_clock)
-begin
-    if rising_edge(i_clock) then
-        state <= next_state;
-    end if;
-end process;
-
-next_state_logic: process(all)
-begin
-
-end process;
-
-output_logic: process(all)
-begin
-end process;
-
 
 
 comb_operations : process(all)
 begin
-if(state = S_IDLE_COMB) then
 case i_map_code is
     when "00" =>
         case i_opcode is
-            when x"00" => --example
-                o_x <= scalar_add(i_a,i_b);
-            when x"01" =>
-            when x"02" =>
-            when x"03" =>
+            when x"00" => --Negation
+                o_x <= scalar_mul(i_a, COMPLEX_NEG_ONE);
+            when x"01" => --Conjugation
+                o_x <= scalar_conj(i_a);
+            when x"02" => --Sqrt
+                null;
+            when x"03" => --abs2
+                o_x <= scalar_abs2(i_a);
+            when x"04" => --abs
+                o_x <= scalar_abs(i_a);
+            when x"05" => --real
+            when x"06" => --img
+            when x"07" => --recip
+            when x"08" => --add
+                o_x <= scalar_add(i_a, i_b);
+            when x"09" => --sub
+                o_x <= scalar_sub(i_a, i_b);
+            when x"0A" => --mul
+                o_x <= scalar_mul(i_a, i_b);
+            when x"0B" => --div
+                o_x <= scalar_div(i_a, i_b);
+            when x"0C" => --div
+            when x"0D" => --div
             when others =>
                 null;
         end case;
@@ -94,14 +104,7 @@ case i_map_code is
     when others =>
         null;
 end case;
-end if;
 end process;
 
-fsm_operations : process(i_clock)
-begin
-    if rising_edge(i_clock) then
-        
-    end if;
-end process;
 
 end architecture;

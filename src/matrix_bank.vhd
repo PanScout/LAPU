@@ -31,6 +31,8 @@ end matrix_bank ;
 
 architecture arch of matrix_bank is
 
+
+
 signal matrix_0, matrix_1, matrix_2, matrix_3: matrix_t := (others => '0');
 
 function write_vector( m : matrix_t; i, j : integer range 0 to MATRIX_SUBVECTORS-1; column_or_row_order : std_logic; v : vector_t ) return matrix_t is

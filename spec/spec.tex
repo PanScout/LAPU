@@ -226,8 +226,8 @@ These are register to register operations involve either two vectors, two scalar
 \begin{aligned}
 f(s_1,s_2)                 &\mapsto s \in \mathrm{S}            && \texttt{00} \\
 f(\mathbf v_1,\mathbf v_2) &\mapsto \mathbf v \in \mathrm{V}    && \texttt{01} \\
+f(\mathbf v_1,\mathbf v_2)             &\mapsto s \in \mathrm{S}            && \texttt{11} \\
 f(\mathbf v,s)             &\mapsto \mathbf v \in \mathrm{V}    && \texttt{10} \\
-f(\mathbf v,s)             &\mapsto s \in \mathrm{S}            && \texttt{11} \\
 \end{aligned}
 \]
 
@@ -252,26 +252,26 @@ The undefined flag fields are open to future use.
 
 \multicolumn{5}{@{}l@{}}{\emph{Unary: $\mathrm{S}\to\mathrm{S}$}}\\
 \addlinespace[2pt]
-\texttt{cneg.c}    & 0x10 & d, a        & d $\leftarrow -a$                                                & Two’s-complement both halves. \\
-\texttt{conj.c}    & 0x20 & d, a        & d $\leftarrow \mathrm{conj}(a)$                                  & Negate imaginary half. \\
-\texttt{csqrt.c}   & 0x26 & d, a        & d $\leftarrow \sqrt{a}$                                          & Principal root; widen, then truncate to Q32.32+Q32.32. \\
-\texttt{cabs2.c}   & 0x21 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)^2{+}\Im(a)^2$, d$_\mathrm{im}\leftarrow 0$ & Magnitude$^2$; widen then truncate. \\
-\texttt{cabs.c}    & 0x22 & d, a        & d$_\mathrm{re}\leftarrow \sqrt{\Re(a)^2+\Im(a)^2}$, d$_\mathrm{im}\leftarrow 0$ & Fixed-point $\sqrt{\cdot}$; truncating. \\
-\texttt{creal.c}   & 0x50 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract real. \\
-\texttt{cimag.c}   & 0x51 & d, a        & d$_\mathrm{re}\leftarrow \Im(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract imaginary to real half. \\
-\texttt{crecip.c}  & 0x25 & d, a        & d $\leftarrow 1 \div a$                                          & $(\overline{a})/|a|^2$; if $a{=}0$ then d$:=0$. \\
+\texttt{cneg.c}    & 0x00 & d, a        & d $\leftarrow -a$                                                & Two’s-complement both halves. \\
+\texttt{conj.c}    & 0x01 & d, a        & d $\leftarrow \mathrm{conj}(a)$                                  & Negate imaginary half. \\
+\texttt{csqrt.c}   & 0x02 & d, a        & d $\leftarrow \sqrt{a}$                                          & Principal root; widen, then truncate to Q32.32+Q32.32. \\
+\texttt{cabs2.c}   & 0x03 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)^2{+}\Im(a)^2$, d$_\mathrm{im}\leftarrow 0$ & Magnitude$^2$; widen then truncate. \\
+\texttt{cabs.c}    & 0x04 & d, a        & d$_\mathrm{re}\leftarrow \sqrt{\Re(a)^2+\Im(a)^2}$, d$_\mathrm{im}\leftarrow 0$ & Fixed-point $\sqrt{\cdot}$; truncating. \\
+\texttt{creal.c}   & 0x05 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract real. \\
+\texttt{cimag.c}   & 0x06 & d, a        & d$_\mathrm{re}\leftarrow \Im(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract imaginary to real half. \\
+\texttt{crecip.c}  & 0x07 & d, a        & d $\leftarrow 1 \div a$                                          & $(\overline{a})/|a|^2$; if $a{=}0$ then d$:=0$. \\
 \addlinespace[4pt]
 \cmidrule(lr){1-5}
 \addlinespace[4pt]
 
 \multicolumn{5}{@{}l@{}}{\emph{Binary: $\mathrm{S}\times\mathrm{S}\to\mathrm{S}$}}\\
 \addlinespace[2pt]
-\texttt{cadd.c}    & 0x00 & d, a, b & d $\leftarrow$ a $+$ b & Truncating Q32.32+Q32.32. \\
-\texttt{csub.c}    & 0x01 & d, a, b & d $\leftarrow$ a $-$ b & Truncating. \\
-\texttt{cmul.c}    & 0x02 & d, a, b & d $\leftarrow$ a $\times$ b & Widen internally, truncate to Q32.32+Q32.32. \\
-\texttt{cdiv.c}    & 0x03 & d, a, b & d $\leftarrow$ a \,$\div$\, b & $(a\,\overline{b})/|b|^2$; if $|b|=0$ then d$:=0$. \\
-\texttt{cmaxabs.c} & 0x62 & d, a, b & d $\leftarrow \arg\max_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
-\texttt{cminabs.c} & 0x63 & d, a, b & d $\leftarrow \arg\min_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
+\texttt{cadd.c}    & 0x08 & d, a, b & d $\leftarrow$ a $+$ b & Truncating Q32.32+Q32.32. \\
+\texttt{csub.c}    & 0x09 & d, a, b & d $\leftarrow$ a $-$ b & Truncating. \\
+\texttt{cmul.c}    & 0x0A & d, a, b & d $\leftarrow$ a $\times$ b & Widen internally, truncate to Q32.32+Q32.32. \\
+\texttt{cdiv.c}    & 0x0B & d, a, b & d $\leftarrow$ a \,$\div$\, b & $(a\,\overline{b})/|b|^2$; if $|b|=0$ then d$:=0$. \\
+\texttt{cmaxabs.c} & 0x0C & d, a, b & d $\leftarrow \arg\max_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
+\texttt{cminabs.c} & 0x0D & d, a, b & d $\leftarrow \arg\min_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
 
 \bottomrule
 \end{longtable}
@@ -290,12 +290,12 @@ The undefined flag fields are open to future use.
 \textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
 \midrule
 \endhead
-\texttt{cadd.v} & 0x10 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $+$ vB[i]                  & Saturating per lane. \\
-\texttt{csub.v} & 0x11 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $-$ vB[i]                  & Saturating per lane. \\
-\texttt{cmul.v} & 0x12 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $\times$ vB[i]             & Complex lane-wise multiply. \\
-\texttt{cmac.v} & 0x13 & vD, vA, vB & vD[i] $\leftarrow$ vD[i] + vA[i]\,$\times$\,vB[i]   & Fused complex MAC per lane. \\
-\texttt{cdiv.v} & 0x16 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] \,$\div$\, vB[i]           & $(a\,\overline{b})/|b|^2$; if $|b|{=}0$ then lane:=0. \\
-\texttt{conj.v} & 0x21 & vD, vA     & vD[i] $\leftarrow$ \mathrm{conj}(vA[i])             & Lane-wise conjugate. \\
+\texttt{cadd.v} & 0x00 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $+$ vB[i]                  & Saturating per lane. \\
+\texttt{csub.v} & 0x01 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $-$ vB[i]                  & Saturating per lane. \\
+\texttt{cmul.v} & 0x02 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $\times$ vB[i]             & Complex lane-wise multiply. \\
+\texttt{cmac.v} & 0x03 & vD, vA, vB & vD[i] $\leftarrow$ vD[i] + vA[i]\,$\times$\,vB[i]   & Fused complex MAC per lane. \\
+\texttt{cdiv.v} & 0x04 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] \,$\div$\, vB[i]           & $(a\,\overline{b})/|b|^2$; if $|b|{=}0$ then lane:=0. \\
+\texttt{conj.v} & 0x05 & vD, vA     & vD[i] $\leftarrow$ \mathrm{conj}(vA[i])             & Lane-wise conjugate. \\
 \bottomrule
 \end{longtable}
 
@@ -311,11 +311,11 @@ The undefined flag fields are open to future use.
 \textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
 \midrule
 \endhead
-\texttt{dotc}    & 0x30 & sD, vA, vB & $sD \leftarrow \sum_{i=0}^{\mathrm{VLEN}-1}\mathrm{conj}(vA[i])\cdot vB[i]$ & Reduce to scalar \texttt{sD}. \\
-\texttt{dotu}    & 0x36 & sD, \={A}, \={B} & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}[i]$ & Complex dot (no conjugation). \\
-\texttt{iamax.v} & 0x33 & sD, vA     & sD $\leftarrow \arg\max_i |vA[i]|$                   & Index in \texttt{sD} real half; imag:=0. \\
-\texttt{sum.v}   & 0x34 & sD, \={A}  & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]$ & Complex sum; reduces to scalar. \\
-\texttt{asum.v}  & 0x35 & sD, \={A}  & $sD_{\mathrm{re}} \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\lvert \={A}[i]\rvert,\; sD_{\mathrm{im}} \leftarrow 0$ & Sum of magnitudes (real result). \\
+\texttt{dotc}    & 0x00 & sD, vA, vB & $sD \leftarrow \sum_{i=0}^{\mathrm{VLEN}-1}\mathrm{conj}(vA[i])\cdot vB[i]$ & Reduce to scalar \texttt{sD}. \\
+\texttt{dotu}    & 0x01 & sD, \={A}, \={B} & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}[i]$ & Complex dot (no conjugation). \\
+\texttt{iamax.v} & 0x02 & sD, vA     & sD $\leftarrow \arg\max_i |vA[i]|$                   & Index in \texttt{sD} real half; imag:=0. \\
+\texttt{sum.v}   & 0x03 & sD, \={A}  & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]$ & Complex sum; reduces to scalar. \\
+\texttt{asum.v}  & 0x04 & sD, \={A}  & $sD_{\mathrm{re}} \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\lvert \={A}[i]\rvert,\; sD_{\mathrm{im}} \leftarrow 0$ & Sum of magnitudes (real result). \\
 \bottomrule
 \end{longtable}
 
