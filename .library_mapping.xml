@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.sigasi.hdt.shared.librarymapping.model:LibraryMappings xmlns:com.sigasi.hdt.shared.librarymapping.model="com.sigasi.hdt.vhdl.scoping.librarymapping" Version="2">
+  <Mappings Location="lib/fixed_pkg" Library="fixed_pkg"/>
+  <Mappings Location="lib/flat_tensors/flat_tensors.vhd" Library="flat_tensors"/>
+  <Mappings Location="Common Libraries/IEEE" Library="ieee"/>
+  <Mappings Location="Common Libraries/IEEE Synopsys" Library="ieee"/>
+  <Mappings Location="Common Libraries" Library="not mapped"/>
+  <Mappings Location="Common Libraries/STD" Library="std"/>
+  <Mappings Location="lib/tensors/tensors.vhd" Library="tensors"/>
+  <Mappings Location="src/alu.vhd" Library="work"/>
+  <Mappings Location="src/complex_div_fsm.vhd" Library="work"/>
+  <Mappings Location="src/complex_mul_fsm.vhd" Library="work"/>
+  <Mappings Location="src/matrix_bank.vhd" Library="work"/>
+  <Mappings Location="src/matrix_bank_two.vhd" Library="work"/>
+  <Mappings Location="src/register_file.vhd" Library="work"/>
+  <Mappings Location="tb/tb_complex_mul.vhd" Library="work"/>
+  <Mappings Location="tb/tb_matrix_bank.vhd" Library="work"/>
+  <Mappings Location="tb/tb_top.vhd" Library="work"/>
+</com.sigasi.hdt.shared.librarymapping.model:LibraryMappings>

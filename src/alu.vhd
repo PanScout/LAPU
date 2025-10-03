@@ -30,23 +30,14 @@ architecture rtl of alu is
 
 constant COMPLEX_ZERO : complex_t := (others => '0');
 
-constant COMPLEX_ONE : complex_t :=
-  ( (PART_WIDTH-1 downto PART_FRAC_BITS+1 => '0',
-     PART_FRAC_BITS                         => '1',
-     PART_FRAC_BITS-1 downto 0             => '0')  
-    &
-    (others => '0') );                                 
+constant COMPLEX_ONE : complex_t := (others => '0'); --Fix later too
 
-constant COMPLEX_NEG_ONE : complex_t :=
-  ( (PART_WIDTH-1 downto PART_FRAC_BITS => '1',       
-     PART_FRAC_BITS-1 downto 0          => '0')
-    &
-    (others => '0') );
+constant COMPLEX_NEG_ONE : complex_t := (others => '0'); --Fix later
 
 begin
 
 
-comb_operations : process(all)
+comb_operations : process(i_a, i_b, i_av, i_bv, i_opcode)
 begin
 case i_map_code is
     when "00" =>

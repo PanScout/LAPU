@@ -1,0 +1,55 @@
+m255
+K4
+z2
+!s11e vcom 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/mwd/LAPU
+Pflat_tensors
+Z1 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 27
+Z4 w1759461837
+R0
+Z5 8lib/flat_tensors/flat_tensors.vhd
+Z6 Flib/flat_tensors/flat_tensors.vhd
+l0
+L10 1
+V>^cniJ;o]dZaiPP00E@?X1
+!s100 P<9DhoSEQzd3GL:3WR19l3
+Z7 OV;C;2020.1;71
+31
+b1
+Z8 !s110 1759468677
+!i10b 1
+Z9 !s108 1759468677.000000
+Z10 !s90 -93|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|flat_tensors|lib/flat_tensors/flat_tensors.vhd|
+Z11 !s107 lib/flat_tensors/flat_tensors.vhd|
+!i113 1
+Z12 o-quiet -93 -work flat_tensors
+Z13 tCvgOpt 0
+Bbody
+Z14 DPx4 work 12 flat_tensors 0 22 >^cniJ;o]dZaiPP00E@?X1
+R1
+R2
+R3
+!i122 27
+l0
+Z15 L75 1
+Z16 VT_79gDkSoc3JWm`6fFI890
+Z17 !s100 Vf1_@kB2@[`NU;Vn^4:zo0
+R7
+31
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13

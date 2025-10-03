@@ -27,7 +27,7 @@ BINDIR_ABS   := $(abspath $(BINDIR))
 LIBROOT_ABS  := $(abspath $(LIBROOT))
 
 # Top-level testbench entity (default)
-TB           ?=tb_matrix_bank
+TB           ?=tb_top
 
 # Waves and runtime
 DUMP         ?= ghw             # fst|vcd|ghw
@@ -36,7 +36,7 @@ RUNARGS      ?=
 G            ?=
 
 # VHDL standard + flags
-GHDL_STD     ?= 08
+GHDL_STD     ?= 93
 GHDL_FLAGS   ?= --std=$(GHDL_STD) -frelaxed -fsynopsys -Wno-hide
 
 # -------- Auto-discover libraries (strip trailing '/') --------
@@ -277,3 +277,147 @@ cocotb: deps
 	@echo "[cocotb] virtualenv ready at $(VENV_DIR)"
 	@echo "[cocotb] packages installed from $(REQS_TXT) (or minimal defaults)."
 	@echo "To run: $(PYTHON) tests/<your_test>.py  (or: make py FILE=tests/<your_test>.py)"
+
+
+
+
+
+
+
+# MODELSIM
+# ===================== ModelSim / Questa (vcom/vsim) =====================
+# Layout mirrors the GHDL build tree; we keep msim artifacts segregated
+# so GHDL's .o/.cf aren't polluted.
+#   build/obj/vsim_work         -> ModelSim WORK library dir
+#   build/lib/<L>/vsim_lib      -> ModelSim user libs
+#   build/waves/<TB>.wlf        -> ModelSim waveform database
+
+# Tools (override if needed)
+VLIB ?= vlib
+VMAP ?= vmap
+VCOM ?= vcom
+VSIM ?= vsim
+
+# Map GHDL_STD -> ModelSim VHDL standard flag
+VCOM_STD := $(if $(filter $(GHDL_STD),08),2008,$(if $(filter $(GHDL_STD),02),2002,93))
+VCOM_FLAGS ?= -$(VCOM_STD) -quiet
+
+# ModelSim state
+MSIM_INI     := $(BUILD)/modelsim.ini
+MSIM_WORKDIR := $(OBJDIR_ABS)/vsim_work
+MSIM_WLF     := $(WAVDIR_ABS)/$(TB).wlf
+VSIM_FLAGS   ?= -voptargs=+acc
+# Reuse your generic parsing:
+VSIM_GENS    := $(foreach kv,$(G_LIST),$(if $(strip $(kv)),-g$(kv)))
+
+.PHONY: msim msim_prep msim_compile_libs msim_compile_work msim_clean
+
+# --- Top-level: compile libs+work and open ModelSim on the TB entity ---
+msim: msim_prep msim_compile_libs msim_compile_work check_tb
+	@echo "Launching ModelSim GUI for $(TB) -> $(MSIM_WLF)"
+	@$(VSIM) -gui -modelsimini "$(abspath $(MSIM_INI))" -wlf "$(MSIM_WLF)" \
+		$(VSIM_FLAGS) $(VSIM_GENS) work.$(TB) \
+		-do "onerror {quit -code 1}; \
+		     view wave; quietly log -r /*; add wave -r /*; \
+		     $(if $(STOP),run $(STOP),run -all);"
+
+# --- Setup: create modelsim.ini and map libraries mirroring build/ tree ---
+msim_prep: prep
+	@mkdir -p "$(dir $(MSIM_INI))" "$(MSIM_WORKDIR)"
+	@# Seed modelsim.ini with vendor defaults if missing/empty
+	@if [ ! -s "$(MSIM_INI)" ]; then \
+	  echo "[msim] Seeding $(MSIM_INI) from vendor defaults..."; \
+	  if $(VMAP) -modelsimini "$(abspath $(MSIM_INI))" -c >/dev/null 2>&1; then :; \
+	  else \
+	    MT=$$($(VSIM) -c -do 'puts $$::env(MODEL_TECH); quit -f' 2>/dev/null | tail -n1); \
+	    if [ -n "$$MT" ] && [ -f "$$MT/modelsim.ini" ]; then \
+	      cp "$$MT/modelsim.ini" "$(MSIM_INI)"; \
+	    elif [ -n "$$MODEL_TECH" ] && [ -f "$$MODEL_TECH/modelsim.ini" ]; then \
+	      cp "$$MODEL_TECH/modelsim.ini" "$(MSIM_INI)"; \
+	    else \
+	      echo "[msim][WARN] Could not locate vendor modelsim.ini (MODEL_TECH unset)."; \
+	      echo "             You can manually copy your installation's modelsim.ini to $(MSIM_INI)."; \
+	    fi; \
+	  fi; \
+	fi
+	@# Create/Map libraries
+	@$(VLIB) -quiet "$(MSIM_WORKDIR)" || true
+	@$(VMAP) -modelsimini "$(abspath $(MSIM_INI))" work "$(MSIM_WORKDIR)" || true
+ifneq ($(strip $(LIBS)),)
+	@set -e; \
+	for L in $(LIBS); do \
+	  D="$(abspath $(BUILD))/lib/$$L/vsim_lib"; \
+	  mkdir -p "$$D"; \
+	  $(VLIB) -quiet "$$D" || true; \
+	  $(VMAP) -modelsimini "$(abspath $(MSIM_INI))" "$$L" "$$D"; \
+	done
+endif
+
+
+# --- Compile user libraries (packages -> units -> package bodies) ---
+msim_compile_libs: msim_prep
+ifneq ($(strip $(LIBS)),)
+	@echo "Compiling user libraries for ModelSim: $(LIBS)"
+	@set -e; \
+	for L in $(LIBS); do \
+	  SRCDIR="$(LIBROOT)/$$L"; \
+	  SRCS=$$(find "$$SRCDIR" -type f \( -name '*.vhd' -o -name '*.vhdl' \) | sort); \
+	  if [ -n "$$SRCS" ]; then \
+	    for f in $$SRCS; do \
+	      if grep -qi '^[[:space:]]*package[[:space:]][[:alnum:]_]\+[[:space:]]\+is' "$$f" && \
+	         ! grep -qi '^[[:space:]]*package[[:space:]]\+body[[:space:]]' "$$f"; then \
+	        $(VCOM) $(VCOM_FLAGS) -modelsimini "$(abspath $(MSIM_INI))" -work "$$L" "$$f"; \
+	      fi; \
+	    done; \
+	    for f in $$SRCS; do \
+	      if ! grep -qi '^[[:space:]]*package[[:space:]]' "$$f"; then \
+	        $(VCOM) $(VCOM_FLAGS) -modelsimini "$(abspath $(MSIM_INI))" -work "$$L" "$$f"; \
+	      fi; \
+	    done; \
+	    for f in $$SRCS; do \
+	      if grep -qi '^[[:space:]]*package[[:space:]]\+body[[:space:]]' "$$f"; then \
+	        $(VCOM) $(VCOM_FLAGS) -modelsimini "$(abspath $(MSIM_INI))" -work "$$L" "$$f"; \
+	      fi; \
+	    done; \
+	  fi; \
+	done
+else
+	@true
+endif
+
+# --- Compile WORK (src + tb) in the same ordered manner ---
+msim_compile_work: msim_prep
+	@echo "Compiling WORK (src+tb) for ModelSim..."
+	@set -e; \
+	SRCS="$(SRC_FILES) $(TB_FILES)"; \
+	if [ -n "$$SRCS" ]; then \
+	  for f in $$SRCS; do \
+	    if grep -qi '^[[:space:]]*package[[:space:]][[:alnum:]_]\+[[:space:]]\+is' "$$f" && \
+	       ! grep -qi '^[[:space:]]*package[[:space:]]\+body[[:space:]]' "$$f"; then \
+	      $(VCOM) $(VCOM_FLAGS) -modelsimini "$(abspath $(MSIM_INI))" -work work "$$f"; \
+	    fi; \
+	  done; \
+	  for f in $$SRCS; do \
+	    if ! grep -qi '^[[:space:]]*package[[:space:]]' "$$f"; then \
+	      $(VCOM) $(VCOM_FLAGS) -modelsimini "$(abspath $(MSIM_INI))" -work work "$$f"; \
+	    fi; \
+	  done; \
+	  for f in $$SRCS; do \
+	    if grep -qi '^[[:space:]]*package[[:space:]]\+body[[:space:]]' "$$f"; then \
+	      $(VCOM) $(VCOM_FLAGS) -modelsimini "$(abspath $(MSIM_INI))" -work work "$$f"; \
+	    fi; \
+	  done; \
+	fi
+
+# --- Cleanup only ModelSim artifacts (keeps GHDL outputs intact) ---
+msim_clean:
+	@echo "Cleaning ModelSim libraries and waves..."
+	@rm -rf "$(MSIM_WORKDIR)"
+ifneq ($(strip $(LIBS)),)
+	@set -e; \
+	for L in $(LIBS); do \
+	  rm -rf "$(abspath $(BUILD))/lib/$$L/vsim_lib"; \
+	done
+endif
+	@rm -f "$(MSIM_WLF)" 2>/dev/null || true
+
