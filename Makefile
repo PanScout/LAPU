@@ -36,7 +36,7 @@ RUNARGS      ?=
 G            ?=
 
 # VHDL standard + flags
-GHDL_STD     ?= 93
+GHDL_STD     ?= 02
 GHDL_FLAGS   ?= --std=$(GHDL_STD) -frelaxed -fsynopsys -Wno-hide
 
 # -------- Auto-discover libraries (strip trailing '/') --------
@@ -310,16 +310,39 @@ VSIM_FLAGS   ?= -voptargs=+acc
 # Reuse your generic parsing:
 VSIM_GENS    := $(foreach kv,$(G_LIST),$(if $(strip $(kv)),-g$(kv)))
 
+
+# Optional Wave layout file. Disabled by default.
+WAVEDO        ?=
+# Allow `make msim wave.do` to act as a toggle:
+USE_WAVEDO    := $(filter wave.do,$(MAKECMDGOALS))
+# Default location if WAVEDO isn't provided:
+WAVEDO_PATH   := $(if $(strip $(WAVEDO)),$(WAVEDO),wave.do)
+
+# Only add the default 'add wave -r /*' when NOT using a wave.do
+VSIM_ADD_DEFAULT_WAVES := $(if $(USE_WAVEDO),,add wave -r /*;)
+
+# When using wave.do, clear the Wave pane and apply it; otherwise, nothing.
+VSIM_WAVEDO_CMDS := $(if $(USE_WAVEDO),restart -force -nowave; do \"$(WAVEDO_PATH)\";,)
+
+# Dummy target so `make msim wave.do` doesn't try to build a file
+.PHONY: wave.do
+wave.do: ; @true
+# -----------------------------------------------------------------------------
+
+
 .PHONY: msim msim_prep msim_compile_libs msim_compile_work msim_clean
 
 # --- Top-level: compile libs+work and open ModelSim on the TB entity ---
 msim: msim_prep msim_compile_libs msim_compile_work check_tb
 	@echo "Launching ModelSim GUI for $(TB) -> $(MSIM_WLF)"
 	@$(VSIM) -gui -modelsimini "$(abspath $(MSIM_INI))" -wlf "$(MSIM_WLF)" \
-		$(VSIM_FLAGS) $(VSIM_GENS) work.$(TB) \
-		-do "onerror {quit -code 1}; \
-		     view wave; quietly log -r /*; add wave -r /*; \
-		     $(if $(STOP),run $(STOP),run -all);"
+	    $(VSIM_FLAGS) $(VSIM_GENS) work.$(TB) \
+	    -do "onerror {quit -code 1}; \
+	         view wave; quietly log -r /*; \
+	         $(VSIM_ADD_DEFAULT_WAVES) \
+	         $(VSIM_WAVEDO_CMDS) \
+	         $(if $(STOP),run $(STOP),run -all);"
+
 
 # --- Setup: create modelsim.ini and map libraries mirroring build/ tree ---
 msim_prep: prep

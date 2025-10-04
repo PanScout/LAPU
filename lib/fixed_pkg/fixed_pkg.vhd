@@ -2578,6 +2578,9 @@ package body fixed_pkg is
     return result;
   end function divide;
 
+  -------------------------
+  ---LPM MEGA FUCNTION-----
+  -------------------------
   -- sfixed(a downto b) / sfixed(c downto d) = sfixed(a-d+1 downto b-c)
   function divide (
     l, r                 : UNRESOLVED_sfixed;

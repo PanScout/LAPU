@@ -84,7 +84,7 @@ package body tensors is
 
     function sf_div(L, R : sfixed) return sfixed is
     begin
-        return fit(L / R);
+        return L / R;
     end function;
 
     -- 3) sfix_t operator overloads, implemented via raw sfixed helpers + fit()
@@ -113,9 +113,9 @@ package body tensors is
         return fit(sf_div(sfixed(L), sfixed(R)));
     end function;
 
-    ------------------------------
+    -----------------------------
     ----- PUBLIC FUNCTIONS -------
-    ------------------------------
+    -----------------------------
 
     function make_complex(A, B : real) return complex_t is
         variable ret : complex_t;
@@ -196,10 +196,9 @@ package body tensors is
     function conj(A : complex_t)
     return complex_t is
         variable ret : complex_t;
-		  constant NEG_ONE: sfix_t := to_sfixed(-1.0);
     begin
         ret.re := A.re;
-        ret.im := NEG_ONE * A.im;
+        ret.im := -1 * A.im;
         return ret;
     end function conj;
 

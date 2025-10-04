@@ -1,0 +1,605 @@
+Analysis & Synthesis report for LAPU
+Fri Oct  3 21:22:47 2025
+Quartus Prime Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Summary
+  3. Analysis & Synthesis Settings
+  4. Parallel Compilation
+  5. Multiplexer Restructuring Statistics (Restructuring Performed)
+  6. Elapsed Time Per Partition
+  7. Analysis & Synthesis Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2025  Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus Prime License Agreement,
+the Altera IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Altera and sold by Altera or its authorized distributors.  Please
+refer to the Altera Software License Subscription Agreements 
+on the Quartus Prime software download page.
+
+
+
++--------------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                         ;
++------------------------------------+-------------------------------------------------+
+; Analysis & Synthesis Status        ; Failed - Fri Oct  3 21:22:47 2025               ;
+; Quartus Prime Version              ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
+; Revision Name                      ; LAPU                                            ;
+; Top-level Entity Name              ; alu                                             ;
+; Family                             ; MAX 10                                          ;
+; Total logic elements               ; N/A until Partition Merge                       ;
+;     Total combinational functions  ; N/A until Partition Merge                       ;
+;     Dedicated logic registers      ; N/A until Partition Merge                       ;
+; Total registers                    ; N/A until Partition Merge                       ;
+; Total pins                         ; N/A until Partition Merge                       ;
+; Total virtual pins                 ; N/A until Partition Merge                       ;
+; Total memory bits                  ; N/A until Partition Merge                       ;
+; Embedded Multiplier 9-bit elements ; N/A until Partition Merge                       ;
+; Total PLLs                         ; N/A until Partition Merge                       ;
+; UFM blocks                         ; N/A until Partition Merge                       ;
+; ADC blocks                         ; N/A until Partition Merge                       ;
++------------------------------------+-------------------------------------------------+
+
+
++------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Settings                                                                              ;
++------------------------------------------------------------------+--------------------+--------------------+
+; Option                                                           ; Setting            ; Default Value      ;
++------------------------------------------------------------------+--------------------+--------------------+
+; Device                                                           ; 10M50DAF484C7G     ;                    ;
+; Top-level entity name                                            ; alu                ; LAPU               ;
+; Family name                                                      ; MAX 10             ; Cyclone V          ;
+; Use smart compilation                                            ; Off                ; Off                ;
+; Enable parallel Assembler and Timing Analyzer during compilation ; On                 ; On                 ;
+; Enable compact report table                                      ; Off                ; Off                ;
+; Restructure Multiplexers                                         ; Auto               ; Auto               ;
+; Create Debugging Nodes for IP Cores                              ; Off                ; Off                ;
+; Preserve fewer node names                                        ; On                 ; On                 ;
+; Intel FPGA IP Evaluation Mode                                    ; Enable             ; Enable             ;
+; Verilog Version                                                  ; Verilog_2001       ; Verilog_2001       ;
+; VHDL Version                                                     ; VHDL_1993          ; VHDL_1993          ;
+; State Machine Processing                                         ; Auto               ; Auto               ;
+; Safe State Machine                                               ; Off                ; Off                ;
+; Extract Verilog State Machines                                   ; On                 ; On                 ;
+; Extract VHDL State Machines                                      ; On                 ; On                 ;
+; Ignore Verilog initial constructs                                ; Off                ; Off                ;
+; Iteration limit for constant Verilog loops                       ; 5000               ; 5000               ;
+; Iteration limit for non-constant Verilog loops                   ; 250                ; 250                ;
+; Add Pass-Through Logic to Inferred RAMs                          ; On                 ; On                 ;
+; Infer RAMs from Raw Logic                                        ; On                 ; On                 ;
+; Parallel Synthesis                                               ; On                 ; On                 ;
+; DSP Block Balancing                                              ; Auto               ; Auto               ;
+; NOT Gate Push-Back                                               ; On                 ; On                 ;
+; Power-Up Don't Care                                              ; On                 ; On                 ;
+; Remove Redundant Logic Cells                                     ; Off                ; Off                ;
+; Remove Duplicate Registers                                       ; On                 ; On                 ;
+; Ignore CARRY Buffers                                             ; Off                ; Off                ;
+; Ignore CASCADE Buffers                                           ; Off                ; Off                ;
+; Ignore GLOBAL Buffers                                            ; Off                ; Off                ;
+; Ignore ROW GLOBAL Buffers                                        ; Off                ; Off                ;
+; Ignore LCELL Buffers                                             ; Off                ; Off                ;
+; Ignore SOFT Buffers                                              ; On                 ; On                 ;
+; Limit AHDL Integers to 32 Bits                                   ; Off                ; Off                ;
+; Optimization Technique                                           ; Balanced           ; Balanced           ;
+; Carry Chain Length                                               ; 70                 ; 70                 ;
+; Auto Carry Chains                                                ; On                 ; On                 ;
+; Auto Open-Drain Pins                                             ; On                 ; On                 ;
+; Perform WYSIWYG Primitive Resynthesis                            ; Off                ; Off                ;
+; Auto ROM Replacement                                             ; On                 ; On                 ;
+; Auto RAM Replacement                                             ; On                 ; On                 ;
+; Auto DSP Block Replacement                                       ; On                 ; On                 ;
+; Auto Shift Register Replacement                                  ; Auto               ; Auto               ;
+; Allow Shift Register Merging across Hierarchies                  ; Auto               ; Auto               ;
+; Auto Clock Enable Replacement                                    ; On                 ; On                 ;
+; Strict RAM Replacement                                           ; Off                ; Off                ;
+; Allow Synchronous Control Signals                                ; On                 ; On                 ;
+; Force Use of Synchronous Clear Signals                           ; Off                ; Off                ;
+; Auto RAM Block Balancing                                         ; On                 ; On                 ;
+; Auto RAM to Logic Cell Conversion                                ; Off                ; Off                ;
+; Auto Resource Sharing                                            ; Off                ; Off                ;
+; Allow Any RAM Size For Recognition                               ; Off                ; Off                ;
+; Allow Any ROM Size For Recognition                               ; Off                ; Off                ;
+; Allow Any Shift Register Size For Recognition                    ; Off                ; Off                ;
+; Use LogicLock Constraints during Resource Balancing              ; On                 ; On                 ;
+; Ignore translate_off and synthesis_off directives                ; Off                ; Off                ;
+; Timing-Driven Synthesis                                          ; On                 ; On                 ;
+; Report Parameter Settings                                        ; On                 ; On                 ;
+; Report Source Assignments                                        ; On                 ; On                 ;
+; Report Connectivity Checks                                       ; On                 ; On                 ;
+; Ignore Maximum Fan-Out Assignments                               ; Off                ; Off                ;
+; Synchronization Register Chain Length                            ; 2                  ; 2                  ;
+; Power Optimization During Synthesis                              ; Normal compilation ; Normal compilation ;
+; HDL message level                                                ; Level2             ; Level2             ;
+; Suppress Register Optimization Related Messages                  ; Off                ; Off                ;
+; Number of Removed Registers Reported in Synthesis Report         ; 5000               ; 5000               ;
+; Number of Swept Nodes Reported in Synthesis Report               ; 5000               ; 5000               ;
+; Number of Inverted Registers Reported in Synthesis Report        ; 100                ; 100                ;
+; Clock MUX Protection                                             ; On                 ; On                 ;
+; Auto Gated Clock Conversion                                      ; Off                ; Off                ;
+; Block Design Naming                                              ; Auto               ; Auto               ;
+; SDC constraint protection                                        ; Off                ; Off                ;
+; Synthesis Effort                                                 ; Auto               ; Auto               ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal     ; On                 ; On                 ;
+; Pre-Mapping Resynthesis Optimization                             ; Off                ; Off                ;
+; Analysis & Synthesis Message Level                               ; Medium             ; Medium             ;
+; Disable Register Merging Across Hierarchies                      ; Auto               ; Auto               ;
+; Resource Aware Inference For Block RAM                           ; On                 ; On                 ;
++------------------------------------------------------------------+--------------------+--------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 32          ;
+; Maximum allowed            ; 16          ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
++----------------------------+-------------+
+
+
++------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                           ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 3:1                ; 65 bits   ; 130 LEs       ; 130 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
+; 4:1                ; 63 bits   ; 126 LEs       ; 126 LEs              ; 0 LEs                  ; No         ; |alu|result                ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
+
+
++-------------------------------+
+; Elapsed Time Per Partition    ;
++----------------+--------------+
+; Partition Name ; Elapsed Time ;
++----------------+--------------+
+; Top            ; 00:09:41     ;
++----------------+--------------+
+
+
++-------------------------------+
+; Analysis & Synthesis Messages ;
++-------------------------------+
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
+    Info: Processing started: Fri Oct  3 21:12:55 2025
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off LAPU -c LAPU
+Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
+Info (20030): Parallel compilation is enabled and will use 16 of the 24 processors detected
+Info (12021): Found 2 design units, including 0 entities, in source file lib/tensors/tensors.vhd
+    Info (12022): Found design unit 1: tensors (tensors) File: //wsl.localhost/Debian/home/mwd/LAPU/lib/tensors/tensors.vhd Line: 8
+    Info (12022): Found design unit 2: tensors-body File: //wsl.localhost/Debian/home/mwd/LAPU/lib/tensors/tensors.vhd Line: 48
+Info (12021): Found 2 design units, including 0 entities, in source file lib/fixed_pkg/fixed_pkg.vhd
+    Info (12022): Found design unit 1: fixed_pkg (fixed_pkg) File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 25
+    Info (12022): Found design unit 2: fixed_pkg-body File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 1466
+Info (12021): Found 1 design units, including 0 entities, in source file lib/fixed_pkg/fixed_float_types.vhd
+    Info (12022): Found design unit 1: fixed_float_types (fixed_pkg) File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_float_types.vhd Line: 16
+Info (12021): Found 2 design units, including 1 entities, in source file src/matrix_bank_two.vhd
+    Info (12022): Found design unit 1: matrix_bank_two-RTL File: //wsl.localhost/Debian/home/mwd/LAPU/src/matrix_bank_two.vhd Line: 28
+    Info (12023): Found entity 1: matrix_bank_two File: //wsl.localhost/Debian/home/mwd/LAPU/src/matrix_bank_two.vhd Line: 8
+Info (12021): Found 2 design units, including 1 entities, in source file src/alu.vhd
+    Info (12022): Found design unit 1: alu-rtl File: //wsl.localhost/Debian/home/mwd/LAPU/src/alu.vhd Line: 19
+    Info (12023): Found entity 1: alu File: //wsl.localhost/Debian/home/mwd/LAPU/src/alu.vhd Line: 8
+Info (12127): Elaborating entity "alu" for the top level hierarchy
+Warning (10445): VHDL Subtype or Type Declaration warning at fixed_pkg.vhd(1470): subtype or type has null range File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 1470
+Warning (10445): VHDL Subtype or Type Declaration warning at fixed_pkg.vhd(1471): subtype or type has null range File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 1471
+Warning (10445): VHDL Subtype or Type Declaration warning at fixed_pkg.vhd(1472): subtype or type has null range File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 1472
+Warning (10325): VHDL Choice warning at std_1164_vhdl1993.vhd(1092): ignored choice containing meta-value "'U'" File: c:/intelfpga_lite/24.1std/quartus/libraries/vhdl/ieee/1993/std_1164_vhdl1993.vhd Line: 1092
+Warning (10325): VHDL Choice warning at std_1164_vhdl1993.vhd(1092): ignored choice containing meta-value "'X'" File: c:/intelfpga_lite/24.1std/quartus/libraries/vhdl/ieee/1993/std_1164_vhdl1993.vhd Line: 1092
+Warning (10325): VHDL Choice warning at std_1164_vhdl1993.vhd(1092): ignored choice containing meta-value "'Z'" File: c:/intelfpga_lite/24.1std/quartus/libraries/vhdl/ieee/1993/std_1164_vhdl1993.vhd Line: 1092
+Warning (10325): VHDL Choice warning at std_1164_vhdl1993.vhd(1092): ignored choice containing meta-value "'W'" File: c:/intelfpga_lite/24.1std/quartus/libraries/vhdl/ieee/1993/std_1164_vhdl1993.vhd Line: 1092
+Warning (10325): VHDL Choice warning at std_1164_vhdl1993.vhd(1092): ignored choice containing meta-value "'-'" File: c:/intelfpga_lite/24.1std/quartus/libraries/vhdl/ieee/1993/std_1164_vhdl1993.vhd Line: 1092
+Info (278001): Inferred 145 megafunctions from design logic
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult5" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult7" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div8" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult10" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div11" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult2" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div2" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult3" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div5" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult0" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult1" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div1" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div4" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult4" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div7" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div10" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult14" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult37" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div14" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult40" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div17" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult13" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div13" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div16" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult17" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult43" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div20" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult46" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div23" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult16" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div19" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div22" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult20" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult49" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div26" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult52" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div29" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult19" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div25" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div28" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult23" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult55" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div32" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult58" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div35" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult22" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div31" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div34" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult26" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult61" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div38" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult64" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div41" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult25" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div37" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div40" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult29" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult67" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div44" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult70" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div47" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult28" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div43" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div46" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult32" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult73" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div50" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult76" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div53" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult31" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div49" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div52" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult35" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult79" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div56" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult82" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div59" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult34" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div55" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div58" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult6" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div6" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult9" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div9" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult12" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div0" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div3" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult8" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult11" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult15" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div12" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult39" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div15" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult42" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult38" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult41" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult18" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div18" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult45" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div21" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult48" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult44" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult47" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult21" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div24" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult51" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div27" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult54" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult50" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult53" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult24" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div30" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult57" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div33" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult60" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult56" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult59" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult27" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div36" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult63" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div39" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult66" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult62" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult65" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult30" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div42" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult69" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div45" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult72" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult68" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult71" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult33" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div48" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult75" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div51" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult78" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult74" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult77" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult36" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div54" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult81" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "Div57" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult84" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult80" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (278003): Inferred multiplier megafunction ("lpm_mult") from the following logic: "Mult83" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+Info (12130): Elaborated megafunction instantiation "lpm_mult:Mult5" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+Info (12133): Instantiated megafunction "lpm_mult:Mult5" with the following parameter: File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2520
+    Info (12134): Parameter "LPM_WIDTHA" = "64"
+    Info (12134): Parameter "LPM_WIDTHB" = "64"
+    Info (12134): Parameter "LPM_WIDTHP" = "128"
+    Info (12134): Parameter "LPM_WIDTHR" = "128"
+    Info (12134): Parameter "LPM_WIDTHS" = "1"
+    Info (12134): Parameter "LPM_REPRESENTATION" = "SIGNED"
+    Info (12134): Parameter "INPUT_A_IS_CONSTANT" = "NO"
+    Info (12134): Parameter "INPUT_B_IS_CONSTANT" = "NO"
+    Info (12134): Parameter "MAXIMIZE_SPEED" = "5"
+Info (12021): Found 1 design units, including 1 entities, in source file db/mult_lis.tdf
+    Info (12023): Found entity 1: mult_lis File: //wsl.localhost/Debian/home/mwd/LAPU/db/mult_lis.tdf Line: 31
+Error (272006): In lpm_divide megafunction, LPM_WIDTHN must be less than or equals to 64 File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+Error (12154): Can't elaborate inferred hierarchy "lpm_divide:Div8" File: //wsl.localhost/Debian/home/mwd/LAPU/lib/fixed_pkg/fixed_pkg.vhd Line: 2611
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 2 errors, 9 warnings
+    Error: Peak virtual memory: 5507 megabytes
+    Error: Processing ended: Fri Oct  3 21:22:47 2025
+    Error: Elapsed time: 00:09:52
+    Error: Total CPU time (on all processors): 00:09:32
+
+
