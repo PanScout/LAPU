@@ -11,6 +11,7 @@
   <Mappings Location="src/complex_div_fsm.vhd" Library="work"/>
   <Mappings Location="src/complex_mul_fsm.vhd" Library="work"/>
   <Mappings Location="src/control_unit.vhd" Library="work"/>
+  <Mappings Location="src/instruction_memory.vhd" Library="work"/>
   <Mappings Location="src/matrix_bank.vhd" Library="work"/>
   <Mappings Location="src/matrix_bank_two.vhd" Library="work"/>
   <Mappings Location="src/register_file.vhd" Library="work"/>
