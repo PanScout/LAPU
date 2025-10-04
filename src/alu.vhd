@@ -53,7 +53,9 @@ case i_map_code is
             when x"04" => --abs
                 o_x <= scalar_abs(i_a);
             when x"05" => --real
+                o_x <= get_re(i_a);
             when x"06" => --img
+                o_x <= get_im(i_a);
             when x"07" => --recip
             when x"08" => --add
                 o_x <= scalar_add(i_a, i_b);
@@ -70,9 +72,18 @@ case i_map_code is
         end case;
     when "01" =>
         case i_opcode is
-            when x"01" =>
-            when x"02" =>
-            when x"03" =>
+            when x"00" => --add
+                o_xv <= add_vec(i_av, i_bv);
+            when x"01" => --sub
+                o_xv <= sub_vec(i_av, i_bv);
+            when x"02" => --complex add
+                o_xv <= vec_plus_complex(i_av, i_b);
+            when x"03" => --complex sub
+                o_xv <= vec_minus_complex(i_av, i_b)
+            when x"04" => --mul
+            when x"05" => --mac
+            when x"06" => --div
+            when x"07" => --conj
             when others =>
                 null;
         end case;
@@ -86,9 +97,12 @@ case i_map_code is
         end case;
     when "11" =>
         case i_opcode is
-            when x"01" =>
-            when x"02" =>
-            when x"03" =>
+            when x"00" => --
+
+            when x"01" => --
+            when x"02" => --
+            when x"03" => --
+            when x"04" => --
             when others =>
                 null;
         end case;
