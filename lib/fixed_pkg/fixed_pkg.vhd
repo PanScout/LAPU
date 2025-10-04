@@ -2611,7 +2611,8 @@ package body fixed_pkg is
         & "DIVIDE(sfixed) Division by zero" severity error;
       result := saturate (result'high, result'low);
     else
-      result_slv := lslv / rslv;
+      -- result_slv := lslv / rslv;
+      result_slv := resize( resize(lslv, 64) / resize(rslv, 64), result_slv'length );
       dresult    := to_fixed (result_slv, dresult'high, dresult'low);
       result := resize (arg            => dresult,
                         left_index     => result'high,

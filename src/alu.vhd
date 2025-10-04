@@ -67,17 +67,15 @@ begin
             when VECTOR_TO_VECTOR =>
                 case i_opcode is
                     when x"00" => --add
-                        o_xv <= add_vec(i_av, i_bv);
+                        o_xv <= vadd(i_av, i_bv);
                     when x"01" => ---sub
-                        o_xv <= sub_vec(i_av, i_bv);
+                        o_xv <= vsub(i_av, i_bv);
                     when x"02" => --cadd
-                        o_xv <= vec_plus_complex(i_av, i_b);
+                        o_xv <= vmul(i_av, i_bv);
                     when x"03" => --csub
-                        o_xv <= vec_minus_complex(i_av, i_b);
+                        o_xv <= vdiv(i_av, i_bv);
                     when x"04" => --conj
-                        for i in 0 to VECTOR_SIZE-1 loop
-                            o_xv(i) <= conj(i_av(i));
-                        end loop;
+                        o_xv <= vlaneconj(i_av);
                     when x"05" => 
                         
                     when others =>

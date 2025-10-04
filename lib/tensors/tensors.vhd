@@ -11,6 +11,8 @@ package tensors is
     constant FIXED_FRAC_BITS : integer := -32;
     constant FIXED_BIT_SIZE  : integer := FIXED_INT_BITS - FIXED_FRAC_BITS; -- 64
     constant VECTOR_SIZE     : integer := 8;
+    constant MATRIX_FACTOR : integer := 4;
+    
 
     subtype sfix_t   is sfixed((FIXED_INT_BITS - 1) downto FIXED_FRAC_BITS);
     type    complex_t is record
@@ -18,10 +20,10 @@ package tensors is
         im : sfix_t;
     end record complex_t;
     type    vector_t is array (VECTOR_SIZE - 1 downto 0) of complex_t;
-    type    matrix_t is array (VECTOR_SIZE - 1 downto 0) of vector_t;
+    type    matrix_t is array ((VECTOR_SIZE * MATRIX_FACTOR) - 1 downto 0, (VECTOR_SIZE * MATRIX_FACTOR) -1 downto 0) of complex_t;
 
     constant COMPLEX_ZERO : complex_t := ((others => (others => '0')));
-    constant VECTOR_ZERO : vector_t := ((others => (others => (others => '0'))));
+    constant VECTOR_ZERO  : vector_t  := ((others => (others => (others => '0'))));
 
     --Complex Numbers!
     function make_complex(A, B : real) return complex_t;
@@ -41,6 +43,13 @@ package tensors is
     function vsub(A, B : vector_t) return vector_t;
     function vmul(A, B : vector_t) return vector_t;
     function vdiv(A, B : vector_t) return vector_t;
+    function vlaneconj(A : vector_t) return vector_t;
+
+    --Vector Times Scalar
+    function vlaneadd(A : vector_t; B : complex_t) return vector_t;
+    function vlanesub(A : vector_t; B : complex_t) return vector_t;
+    function vlanemul(A : vector_t; B : complex_t) return vector_t;
+    function vlanediv(A : vector_t; B : complex_t) return vector_t;
 
     --Matrices
 end package tensors;
@@ -195,8 +204,8 @@ package body tensors is
 
     function conj(A : complex_t)
     return complex_t is
-        variable ret : complex_t;
-		  constant NEG_ONE: sfix_t := to_sfixed(-1.0);
+        variable ret     : complex_t;
+        constant NEG_ONE : sfix_t := to_sfixed(-1.0);
     begin
         ret.re := A.re;
         ret.im := NEG_ONE * A.im;
@@ -261,24 +270,74 @@ package body tensors is
         return ret;
     end function vsub;
 
-    function vmul(A,B: vector_t)
-        return vector_t is
-         variable ret : vector_t;
+    function vmul(A, B : vector_t)
+    return vector_t is
+        variable ret : vector_t;
     begin
-        for i in 0 to VECTOR_SIZE-1 loop
-            ret(i) := A(i) * B(i);    
+        for i in 0 to VECTOR_SIZE - 1 loop
+            ret(i) := A(i) * B(i);
         end loop;
         return ret;
     end function vmul;
 
-    function vdiv(A,B: vector_t)
-        return vector_t is
-         variable ret : vector_t;
+    function vdiv(A, B : vector_t)
+    return vector_t is
+        variable ret : vector_t;
     begin
-        for i in 0 to VECTOR_SIZE-1 loop
-            ret(i) := A(i) /  B(i);    
+        for i in 0 to VECTOR_SIZE - 1 loop
+            ret(i) := A(i) / B(i);
         end loop;
         return ret;
     end function vdiv;
+
+    function vlaneconj(A : vector_t)
+    return vector_t is
+        variable ret : vector_t;
+    begin
+        for i in 0 to VECTOR_SIZE - 1 loop
+            ret(i) := conj(A(i));
+        end loop;
+        return ret;
+    end function vlaneconj;
+
+    -------------------------------------------
+    -----------VECTORS TIMES SCALAR------------
+    -------------------------------------------
+
+    function vlaneadd(A : vector_t; B : complex_t) return vector_t is
+        variable ret : vector_t;
+    begin
+        for i in 0 to VECTOR_SIZE - 1 loop
+            ret(i) := A(i) + B;
+        end loop;
+        return ret;
+    end;
+
+    function vlanesub(A : vector_t; B : complex_t) return vector_t is
+        variable ret : vector_t;
+    begin
+        for i in 0 to VECTOR_SIZE - 1 loop
+            ret(i) := A(i) - B;
+        end loop;
+        return ret;
+    end;
+
+    function vlanemul(A : vector_t; B : complex_t) return vector_t is
+        variable ret : vector_t;
+    begin
+        for i in 0 to VECTOR_SIZE - 1 loop
+            ret(i) := A(i) * B;
+        end loop;
+        return ret;
+    end;
+
+    function vlanediv(A : vector_t; B : complex_t) return vector_t is
+        variable ret : vector_t;
+    begin
+        for i in 0 to VECTOR_SIZE - 1 loop
+            ret(i) := A(i) / B;
+        end loop;
+        return ret;
+    end;
 
 end package body tensors;
