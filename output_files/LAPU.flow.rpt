@@ -1,5 +1,5 @@
 Flow report for LAPU
-Fri Oct  3 21:22:47 2025
+Sat Oct  4 19:13:27 2025
 Quartus Prime Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 
 
@@ -38,28 +38,29 @@ on the Quartus Prime software download page.
 
 
 
-+--------------------------------------------------------------------------------------+
-; Flow Summary                                                                         ;
-+------------------------------------+-------------------------------------------------+
-; Flow Status                        ; Flow Failed - Fri Oct  3 21:22:47 2025          ;
-; Quartus Prime Version              ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
-; Revision Name                      ; LAPU                                            ;
-; Top-level Entity Name              ; alu                                             ;
-; Family                             ; MAX 10                                          ;
-; Device                             ; 10M50DAF484C7G                                  ;
-; Timing Models                      ; Final                                           ;
-; Total logic elements               ; N/A until Partition Merge                       ;
-;     Total combinational functions  ; N/A until Partition Merge                       ;
-;     Dedicated logic registers      ; N/A until Partition Merge                       ;
-; Total registers                    ; N/A until Partition Merge                       ;
-; Total pins                         ; N/A until Partition Merge                       ;
-; Total virtual pins                 ; N/A until Partition Merge                       ;
-; Total memory bits                  ; N/A until Partition Merge                       ;
-; Embedded Multiplier 9-bit elements ; N/A until Partition Merge                       ;
-; Total PLLs                         ; N/A until Partition Merge                       ;
-; UFM blocks                         ; N/A until Partition Merge                       ;
-; ADC blocks                         ; N/A until Partition Merge                       ;
-+------------------------------------+-------------------------------------------------+
++-----------------------------------------------------------------------------------+
+; Flow Summary                                                                      ;
++---------------------------------+-------------------------------------------------+
+; Flow Status                     ; Successful - Sat Oct  4 19:13:21 2025           ;
+; Quartus Prime Version           ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
+; Revision Name                   ; LAPU                                            ;
+; Top-level Entity Name           ; alu                                             ;
+; Family                          ; Cyclone V                                       ;
+; Device                          ; 5CEFA9F27C7                                     ;
+; Timing Models                   ; Final                                           ;
+; Logic utilization (in ALMs)     ; N/A                                             ;
+; Total registers                 ; 0                                               ;
+; Total pins                      ; 3,466                                           ;
+; Total virtual pins              ; 0                                               ;
+; Total block memory bits         ; 0                                               ;
+; Total DSP Blocks                ; 342                                             ;
+; Total HSSI RX PCSs              ; 0                                               ;
+; Total HSSI PMA RX Deserializers ; 0                                               ;
+; Total HSSI TX PCSs              ; 0                                               ;
+; Total HSSI PMA TX Serializers   ; 0                                               ;
+; Total PLLs                      ; 0                                               ;
+; Total DLLs                      ; 0                                               ;
++---------------------------------+-------------------------------------------------+
 
 
 +-----------------------------------------+
@@ -67,7 +68,7 @@ on the Quartus Prime software download page.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 10/03/2025 21:12:56 ;
+; Start date & time ; 10/04/2025 19:08:53 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; LAPU                ;
 +-------------------+---------------------+
@@ -78,7 +79,7 @@ on the Quartus Prime software download page.
 +-------------------------------------+----------------------------------------+---------------+-------------+------------+
 ; Assignment Name                     ; Value                                  ; Default Value ; Entity Name ; Section Id ;
 +-------------------------------------+----------------------------------------+---------------+-------------+------------+
-; COMPILER_SIGNATURE_ID               ; 165962373546323.175954037618116        ; --            ; --          ; --         ;
+; COMPILER_SIGNATURE_ID               ; 154239758685938.175961933303532        ; --            ; --          ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --            ; --          ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --            ; --          ; --         ;
 ; PARTITION_COLOR                     ; -- (Not supported for targeted family) ; --            ; alu         ; Top        ;
@@ -98,8 +99,8 @@ on the Quartus Prime software download page.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:09:52     ; 1.0                     ; 5507 MB             ; 00:09:32                           ;
-; Total                ; 00:09:52     ; --                      ; --                  ; 00:09:32                           ;
+; Analysis & Synthesis ; 00:04:03     ; 3.4                     ; 7877 MB             ; 00:09:32                           ;
+; Total                ; 00:04:03     ; --                      ; --                  ; 00:09:32                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

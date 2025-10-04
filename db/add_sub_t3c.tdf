@@ -1,4 +1,4 @@
---lpm_add_sub CARRY_CHAIN="MANUAL" CARRY_CHAIN_LENGTH=48 DEVICE_FAMILY="MAX 10" LPM_DIRECTION="SUB" LPM_WIDTH=1 cout dataa datab result
+--lpm_add_sub CARRY_CHAIN="MANUAL" CARRY_CHAIN_LENGTH=48 DEVICE_FAMILY="Cyclone V" LPM_DIRECTION="SUB" LPM_WIDTH=1 cout dataa datab result
 --VERSION_BEGIN 24.1 cbx_cycloneii 2025:03:05:20:06:36:SC cbx_lpm_add_sub 2025:03:05:20:06:36:SC cbx_mgl 2025:03:05:20:07:01:SC cbx_nadder 2025:03:05:20:06:36:SC cbx_stratix 2025:03:05:20:06:36:SC cbx_stratixii 2025:03:05:20:06:36:SC  VERSION_END
 
 
@@ -19,7 +19,7 @@
 
 
 
---synthesis_resources = 
+--synthesis_resources = lut 2 
 SUBDESIGN add_sub_t3c
 ( 
 	cout	:	output;
@@ -27,18 +27,11 @@ SUBDESIGN add_sub_t3c
 	datab[0..0]	:	input;
 	result[0..0]	:	output;
 ) 
-VARIABLE 
-	carry_eqn[0..0]	: WIRE;
-	cin_wire	: WIRE;
-	datab_node[0..0]	: WIRE;
-	sum_eqn[0..0]	: WIRE;
-
+VARIABLE
+	result_int[1..0]	:	WIRE;
 BEGIN 
-	carry_eqn[] = ( ((dataa[0..0] & datab_node[0..0]) # ((dataa[0..0] # datab_node[0..0]) & cin_wire)));
-	cin_wire = B"1";
-	cout = carry_eqn[0..0];
-	datab_node[] = (! datab[]);
-	result[] = sum_eqn[];
-	sum_eqn[] = ( ((dataa[0..0] $ datab_node[0..0]) $ cin_wire));
+	result_int[] = (0, dataa[]) - (0, datab[]);
+	result[] = result_int[0..0];
+	cout = !result_int[1];
 END;
 --VALID FILE

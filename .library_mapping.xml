@@ -14,6 +14,7 @@
   <Mappings Location="src/instruction_memory.vhd" Library="work"/>
   <Mappings Location="src/matrix_bank.vhd" Library="work"/>
   <Mappings Location="src/matrix_bank_two.vhd" Library="work"/>
+  <Mappings Location="src/program_counter.vhd" Library="work"/>
   <Mappings Location="src/register_file.vhd" Library="work"/>
   <Mappings Location="tb/tb_complex_mul.vhd" Library="work"/>
   <Mappings Location="tb/tb_matrix_bank.vhd" Library="work"/>
