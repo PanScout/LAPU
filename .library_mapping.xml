@@ -17,6 +17,7 @@
   <Mappings Location="src/program_counter.vhd" Library="work"/>
   <Mappings Location="src/register_file.vhd" Library="work"/>
   <Mappings Location="tb/tb_complex_mul.vhd" Library="work"/>
+  <Mappings Location="tb/tb_lapu.vhd" Library="work"/>
   <Mappings Location="tb/tb_matrix_bank.vhd" Library="work"/>
   <Mappings Location="tb/tb_top.vhd" Library="work"/>
 </com.sigasi.hdt.shared.librarymapping.model:LibraryMappings>

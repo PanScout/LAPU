@@ -2567,7 +2567,7 @@ package body fixed_pkg is
         & "DIVIDE(ufixed) Division by zero" severity error;
       result := saturate (result'high, result'low);    -- saturate
     else
-      result_slv := lslv / rslv;
+      result_slv := resize(lslv / rslv, result_slv'length);
       dresult    := to_fixed (result_slv, dresult'high, dresult'low);
       result := resize (arg            => dresult,
                         left_index     => result'high,
@@ -2578,9 +2578,6 @@ package body fixed_pkg is
     return result;
   end function divide;
 
-  -------------------------
-  ---LPM MEGA FUCNTION-----
-  -------------------------
   -- sfixed(a downto b) / sfixed(c downto d) = sfixed(a-d+1 downto b-c)
   function divide (
     l, r                 : UNRESOLVED_sfixed;
@@ -2611,8 +2608,7 @@ package body fixed_pkg is
         & "DIVIDE(sfixed) Division by zero" severity error;
       result := saturate (result'high, result'low);
     else
-      -- result_slv := lslv / rslv;
-      result_slv := resize( resize(lslv, 64) / resize(rslv, 64), result_slv'length );
+      result_slv := resize(lslv / rslv, result_slv'length);
       dresult    := to_fixed (result_slv, dresult'high, dresult'low);
       result := resize (arg            => dresult,
                         left_index     => result'high,

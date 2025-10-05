@@ -10,66 +10,61 @@ use fixed_pkg.fixed_pkg.all;
 library tensors;
 use tensors.tensors.all;
 
-entity tb_top is
+entity tb_lapu is
 end entity;
 
-architecture sim of tb_top is
+architecture sim of tb_lapu is
 
   -- Tiny clock so waveform viewers always get timestamps
-  signal clk                    : std_logic                    := '0';
-  signal X, Y, Z, i_a, i_b, o_x : complex_t                    := (others => (others => '0'));
-  signal i_av, i_bv, o_xv       : vector_t                     := (others => ((others => (others => '0'))));
-  signal i_map_code             : std_logic_vector(1 downto 0) := "00";
-  signal i_opcode               : std_logic_vector(7 downto 0) := ((others => '0'));
-  -- Signals under test
-begin
-  -- Free-running clk (2 ns period)
-  clk <= not clk after 1 ns;
+  signal w_clock, w_reset, w_cu_start, w_done, w_program_count_ready, w_rom_ready : std_logic                        := '0';
+  signal w_jump_flag                                                              : std_logic                        := '0';
+  signal w_program_count, w_new_program_count, w_rom_address                      : std_logic_vector(31 downto 0)    := (others => '0');
+  signal w_instruction                                                            : std_logic_vector((127) downto 0) := (others => '0');
 
-  -- DUT ops (pure combinational)
-  alu_inst : entity work.alu
+begin
+  w_clock <= not w_clock after 1 ns;
+
+  program_counter_inst : entity work.program_counter
     port map(
-      i_a        => i_a,
-      i_b        => i_b,
-      i_av       => i_av,
-      i_bv       => i_bv,
-      i_map_code => i_map_code,
-      i_opcode   => i_opcode,
-      o_x        => o_x,
-      o_xv       => o_xv
+      i_clock             => w_clock,
+      i_reset             => w_reset,
+      i_pc_ready          => w_program_count_ready,
+      o_program_count     => w_program_count,
+      i_new_program_count => w_new_program_count,
+      i_jump_flag         => w_jump_flag
+    );
+
+  control_unit_inst : entity work.control_unit
+    port map(
+      i_clock                 => w_clock,
+      i_reset                 => w_reset,
+      i_cu_start              => w_cu_start,
+      o_cu_done               => w_done,
+      i_program_count         => w_program_count,
+      o_program_counter_ready => w_program_count_ready,
+      o_new_program_count     => w_new_program_count,
+      o_jump_flag             => w_jump_flag
+    );
+
+  instruction_memory_inst : entity work.instruction_memory
+    generic map(
+      MAX_ADDRESS      => 256,
+      INSTRUCTION_SIZE => 128
+    )
+    port map(
+      i_clock       => w_clock,
+      i_rom_ready   => w_rom_ready,
+      i_rom_address => w_rom_address,
+      o_instruction => w_instruction
     );
 
   stim : process
   begin
     -- Wait past t=0 so changes land at real time
-    wait for 2 ns;
-    i_a        <= make_complex(-3.0, -4.0);
-    i_b        <= make_complex(4.0, 3.0);
-    i_opcode   <= x"03";
-    i_map_code <= "00";
-    wait for 2 ns;
-    i_map_code <= "01";
-    i_opcode  <= x"00";
-    i_av       <= make_vector(
-      make_complex(1, 1),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2));
-
-    i_bv       <= make_vector(
-      make_complex(1, 1),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2),
-      make_complex(2, 2));
-    wait for 2 ns;
+    w_reset    <= '0';
+    wait for 100 ns;
+    w_cu_start <= '1';
+    wait for 100 ns;
     stop;
     wait;
   end process;

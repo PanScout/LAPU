@@ -1,0 +1,6 @@
+v 4
+file "/home/mwd/LAPU/" "lib/fixed_pkg/fixed_pkg.vhd" "b280bf76543f8f2347aab5357836062469a153b8" "20251005184625.808":
+  package fixed_pkg at 18( 827) + 0 on 15 body;
+  package body fixed_pkg at 1463( 67557) + 0 on 16;
+file "/home/mwd/LAPU/" "lib/fixed_pkg/fixed_float_types.vhd" "35e495b221dd6a380a043abe6adb94ab8d6f65b5" "20251005184625.789":
+  package fixed_float_types at 16( 703) + 0 on 14;
