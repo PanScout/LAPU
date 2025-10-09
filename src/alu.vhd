@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 
 library tensors;
 use tensors.tensors.all;
+
 entity alu is
     port(
         i_a, i_b   : in  complex_t;
