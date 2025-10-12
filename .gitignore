@@ -1,19 +1,17 @@
-*.qpf *.qdb *.vstf 
+# Custom ignores
+*.qpf
+*.qdb
+*.vstf
 .venv
 .vscode
 *.ini
-db
-incremental_db
+db/
+incremental_db/
 *.lnk
-output_files
-build/*
+output_files/
+build/
 
-
-# Ignore everything
+# Ignore extensionless files (carefully)
 *
-
-# But don’t ignore directories (so Git can recurse)
 !*/
-
-# But don’t ignore files *with* extensions
 !*.*
