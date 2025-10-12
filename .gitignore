@@ -9,5 +9,6 @@ db/
 incremental_db/
 *.lnk
 output_files/
-build/
+build/*
+transcript
 
