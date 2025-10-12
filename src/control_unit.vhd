@@ -26,6 +26,7 @@ architecture rtl of control_unit is
     type   state_t               is (S_IDLE, S_FETCH, S_DECODE, S_EXECUTE, S_MEM, S_WRITEBACK, S_ERROR, S_DONE);
     signal state, state_next     : state_t;
     signal r_current_instruction : std_logic_vector(127 downto 0);
+    signal r_current_address : std_logic_vector(31 downto 0);
 
 begin
 
@@ -54,8 +55,9 @@ begin
                 when S_IDLE =>
                     null;
                 when S_FETCH =>
-                    r_current_instruction <= i_current_instruction;
+                    r_current_address <= i_program_count;
                 when S_DECODE =>
+                    r_current_instruction <= i_current_instruction;
                     null;
                 when S_EXECUTE =>
                     null;
@@ -72,11 +74,10 @@ begin
     end process registers;
 
     --------------------------------------------------------------------
-    -- 3) Next-state + Mealy output logic (combinational)
+    -- 3) Next-state 
     --------------------------------------------------------------------
-    p_next : process(state, i_cu_start, i_reset)
+    next_state_logic: process(state, i_cu_start, i_reset)
     begin
-        -- safe defaults (avoid inferred latches)
         state_next <= state;
         case state is
             when S_IDLE =>
@@ -125,5 +126,35 @@ begin
         end case;
 
     end process;
+
+    output_logic: process is
+    begin
+        o_cu_done <= '0';
+        o_jump_flag <= '0';
+        o_new_program_count <= (others => '0');
+        o_program_counter_ready <= '0';
+        o_rom_addresss <= (others => '0');
+        o_rom_ready <= '0';
+        case state is
+            when S_IDLE =>
+                null;
+            when S_FETCH =>
+                o_rom_addresss <= i_program_count;
+            when S_DECODE =>
+                o_rom_addresss <= r_current_address;
+                null;
+            when S_EXECUTE =>
+                null;
+            when S_MEM =>
+                null;
+            when S_WRITEBACK =>
+                null;
+            when S_ERROR =>
+                null;
+            when S_DONE =>
+                null;
+        end case;
+    end process output_logic;
+    
 
 end architecture;

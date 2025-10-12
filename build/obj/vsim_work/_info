@@ -10,26 +10,26 @@ z2
 cModel Technology
 Z0 d/home/mwd/LAPU
 Ealu
-Z1 w1759614108
+Z1 w1759780491
 Z2 DPx9 fixed_pkg 17 fixed_float_types 0 22 MF[3Qn6iV;FGQPSnhbMj]1
 Z3 DPx9 fixed_pkg 9 fixed_pkg 0 22 eCM[AUgX`XhO0Mj:1BSGa3
 Z4 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
 Z5 DPx7 tensors 7 tensors 0 22 l:dLQc:3J>VE^f4n9SH9z0
 Z6 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
 Z7 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
-!i122 422
+!i122 434
 R0
 Z8 8src/alu.vhd
 Z9 Fsrc/alu.vhd
 l0
-L6 1
-V8>Jl@TTzYX^5OgPYffI?13
-!s100 TTF`K2?WeSA5e=CzmKmW[0
+L7 1
+VgmJ]bnMH2fT]AILIFG7[a3
+!s100 oa?QPP^2gNgE3_P_]Qa^F2
 Z10 OV;C;2020.1;71
 32
-Z11 !s110 1759684068
+Z11 !s110 1760225349
 !i10b 1
-Z12 !s108 1759684068.000000
+Z12 !s108 1760225349.000000
 Z13 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/alu.vhd|
 Z14 !s107 src/alu.vhd|
 !i113 1
@@ -42,12 +42,12 @@ R4
 R5
 R6
 R7
-Z17 DEx4 work 3 alu 0 22 8>Jl@TTzYX^5OgPYffI?13
-!i122 422
-l27
-L17 89
-VfJ_Jz8?Q3M9]c9<[`X^@Y0
-!s100 1:L0_kW_T2^ZHK_JLb5[`1
+Z17 DEx4 work 3 alu 0 22 gmJ]bnMH2fT]AILIFG7[a3
+!i122 434
+l28
+L18 89
+VU@;lUUV^0<V3on7OkCnV;0
+!s100 OUa3UVhJe>NJdeP5PzheR0
 R10
 32
 R11
@@ -59,18 +59,18 @@ R14
 R15
 R16
 Econtrol_unit
-Z18 w1759683917
+Z18 w1760225348
 R4
 R6
 R7
-!i122 423
+!i122 435
 R0
 Z19 8src/control_unit.vhd
 Z20 Fsrc/control_unit.vhd
 l0
 L5 1
-VNLTBKZXg^R>kiYZ71Q>Jd0
-!s100 UFVNbzW`JZKT]d?Q43J<I3
+VLR>l4YB]zHh0kzn8O59Xl1
+!s100 m_VIJc020i@CgBgbgNi=Y2
 R10
 32
 R11
@@ -85,12 +85,12 @@ Artl
 R4
 R6
 R7
-Z23 DEx4 work 12 control_unit 0 22 NLTBKZXg^R>kiYZ71Q>Jd0
-!i122 423
-l28
-L23 71
-VAoX]n1Lf1:Q1T6f6<R<4M0
-!s100 YDDbMB5FjZf<ICjTnN`zZ0
+Z23 DEx4 work 12 control_unit 0 22 LR>l4YB]zHh0kzn8O59Xl1
+!i122 435
+l31
+L24 137
+V`ilkLeB>Vgz8H[DlgcTQn0
+!s100 :ROYBdeEgP^WPX?ffPf7Q0
 R10
 32
 R11
@@ -145,60 +145,62 @@ R22
 R15
 R16
 Einstruction_memory
-Z27 w1759683941
+Z27 w1760225200
+Z28 DPx4 ieee 16 std_logic_textio 0 22 ^l:n6VFdg74Q?CKDhjD]D3
 R4
 R6
 R7
-!i122 424
+!i122 436
 R0
-Z28 8src/instruction_memory.vhd
-Z29 Fsrc/instruction_memory.vhd
+Z29 8src/instruction_memory.vhd
+Z30 Fsrc/instruction_memory.vhd
 l0
-L5 1
-VH2WmO@H>NZVhAK23:V[?a0
-!s100 j^R:MdEUi;01R4kJ7FST=0
+L7 1
+V`F3AKO1^Y6fAYWhGgJkd:3
+!s100 aJU?k@BCGUabPVa_KVinY2
 R10
 32
 R11
 !i10b 1
 R12
-Z30 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/instruction_memory.vhd|
-Z31 !s107 src/instruction_memory.vhd|
+Z31 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/instruction_memory.vhd|
+Z32 !s107 src/instruction_memory.vhd|
 !i113 1
 R15
 R16
 Artl
+R28
 R4
 R6
 R7
-Z32 DEx4 work 18 instruction_memory 0 22 H2WmO@H>NZVhAK23:V[?a0
-!i122 424
-l23
-L20 14
-VKVFVjzf;e4Z`f0>J3=d?n2
-!s100 UnXOZ]fAHQBgORF`UV:_R0
+Z33 DEx4 work 18 instruction_memory 0 22 `F3AKO1^Y6fAYWhGgJkd:3
+!i122 436
+l43
+L20 31
+V`O9OFJ4gVAnmH6Tm=hg_E0
+!s100 2aWFSBm?>LcSX7L5=ffYB0
 R10
 32
 R11
 !i10b 1
 R12
-R30
 R31
+R32
 !i113 1
 R15
 R16
 Ematrix_bank
-Z33 w1759616470
+Z34 w1759780377
 R2
 R3
 R5
 R4
 R6
 R7
-!i122 425
+!i122 437
 R0
-Z34 8src/matrix_bank.vhd
-Z35 Fsrc/matrix_bank.vhd
+Z35 8src/matrix_bank.vhd
+Z36 Fsrc/matrix_bank.vhd
 l0
 L8 1
 V6V[RI1b@8Y67a@DPKL7jL2
@@ -208,8 +210,8 @@ R10
 R11
 !i10b 1
 R12
-Z36 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/matrix_bank.vhd|
-Z37 !s107 src/matrix_bank.vhd|
+Z37 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/matrix_bank.vhd|
+Z38 !s107 src/matrix_bank.vhd|
 !i113 1
 R15
 R16
@@ -221,27 +223,27 @@ R4
 R6
 R7
 DEx4 work 11 matrix_bank 0 22 6V[RI1b@8Y67a@DPKL7jL2
-!i122 425
+!i122 437
 l33
-L28 41
-VW@F`<cWKkGT83WA7kjQY=1
-!s100 >zU97chQc^]kc_AgbmO_f2
+L28 45
+VEa]jE<<CaabTAP:DilESi2
+!s100 LFl<kl4^IJMh>Y14^2SSF3
 R10
 32
 R11
 !i10b 1
 R12
-R36
 R37
+R38
 !i113 1
 R15
 R16
 Aarch
 R4
-Z38 DPx12 flat_tensors 12 flat_tensors 0 22 IDgOdXO0HiinccEX`LV[M3
+Z39 DPx12 flat_tensors 12 flat_tensors 0 22 IDgOdXO0HiinccEX`LV[M3
 R6
 R7
-Z39 DEx4 work 11 matrix_bank 0 22 kX8SCoLn`NZAoHP;d4m`j0
+Z40 DEx4 work 11 matrix_bank 0 22 kX8SCoLn`NZAoHP;d4m`j0
 !i122 315
 l92
 L32 138
@@ -249,17 +251,17 @@ VeUY^XUUf;5U343cL>1^9M3
 !s100 J4VTcj781<IFKdXQPGV4i0
 R10
 32
-Z40 !s110 1759600839
+Z41 !s110 1759600839
 !i10b 1
-Z41 !s108 1759600839.000000
-R36
+Z42 !s108 1759600839.000000
 R37
+R38
 !i113 1
 R15
 R16
 w1759458324
 Ematrix_bank_two
-Z42 w1759614527
+Z43 w1759614527
 R2
 R3
 R5
@@ -268,8 +270,8 @@ R6
 R7
 !i122 324
 R0
-Z43 8src/matrix_bank_two.vhd
-Z44 Fsrc/matrix_bank_two.vhd
+Z44 8src/matrix_bank_two.vhd
+Z45 Fsrc/matrix_bank_two.vhd
 l0
 L8 1
 V]12=RziGBciAhbE^Y18X80
@@ -279,8 +281,8 @@ R10
 !s110 1759614581
 !i10b 1
 !s108 1759614581.000000
-Z45 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/matrix_bank_two.vhd|
-Z46 !s107 src/matrix_bank_two.vhd|
+Z46 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/matrix_bank_two.vhd|
+Z47 !s107 src/matrix_bank_two.vhd|
 !i113 1
 R15
 R16
@@ -299,23 +301,23 @@ VH[<hl5f:0HQ1OMBeEjmD51
 !s100 GhL3J`7o`nmXRg1FO2Go>1
 R10
 32
-R40
-!i10b 1
 R41
-R45
+!i10b 1
+R42
 R46
+R47
 !i113 1
 R15
 R16
 Eprogram_counter
-Z47 w1759680064
+Z48 w1759680064
 R4
 R6
 R7
-!i122 426
+!i122 438
 R0
-Z48 8src/program_counter.vhd
-Z49 Fsrc/program_counter.vhd
+Z49 8src/program_counter.vhd
+Z50 Fsrc/program_counter.vhd
 l0
 L5 1
 V:P4Ve3`Qa<no65m?I`ga23
@@ -325,8 +327,8 @@ R10
 R11
 !i10b 1
 R12
-Z50 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/program_counter.vhd|
-Z51 !s107 src/program_counter.vhd|
+Z51 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/program_counter.vhd|
+Z52 !s107 src/program_counter.vhd|
 !i113 1
 R15
 R16
@@ -334,8 +336,8 @@ Artl
 R4
 R6
 R7
-Z52 DEx4 work 15 program_counter 0 22 :P4Ve3`Qa<no65m?I`ga23
-!i122 426
+Z53 DEx4 work 15 program_counter 0 22 :P4Ve3`Qa<no65m?I`ga23
+!i122 438
 l20
 L16 22
 VC:aT]h]hD9ZMS3zI10`N53
@@ -345,23 +347,23 @@ R10
 R11
 !i10b 1
 R12
-R50
 R51
+R52
 !i113 1
 R15
 R16
 Eregister_file
-Z53 w1759678993
+Z54 w1759678993
 R2
 R3
 R5
 R4
 R6
 R7
-!i122 427
+!i122 439
 R0
-Z54 8src/register_file.vhd
-Z55 Fsrc/register_file.vhd
+Z55 8src/register_file.vhd
+Z56 Fsrc/register_file.vhd
 l0
 L8 1
 V1XzHKmd5F9lc=f7R^mn260
@@ -371,8 +373,8 @@ R10
 R11
 !i10b 1
 R12
-Z56 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/register_file.vhd|
-Z57 !s107 src/register_file.vhd|
+Z57 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|src/register_file.vhd|
+Z58 !s107 src/register_file.vhd|
 !i113 1
 R15
 R16
@@ -384,7 +386,7 @@ R4
 R6
 R7
 DEx4 work 13 register_file 0 22 1XzHKmd5F9lc=f7R^mn260
-!i122 427
+!i122 439
 l37
 L25 51
 V:4okOj?YVKLJ6kQ:H3[TQ2
@@ -394,15 +396,15 @@ R10
 R11
 !i10b 1
 R12
-R56
 R57
+R58
 !i113 1
 R15
 R16
 Etb_complex_mul
-Z58 w1759457860
+Z59 w1759457860
 DPx12 flat_tensors 12 flat_tensors 0 22 >^cniJ;o]dZaiPP00E@?X1
-Z59 DPx3 std 3 env 0 22 d?`1ck@NdeD@H3RZG7FgZ2
+Z60 DPx3 std 3 env 0 22 d?`1ck@NdeD@H3RZG7FgZ2
 R4
 R6
 R7
@@ -425,20 +427,20 @@ R10
 o-quiet -93 -work work
 R16
 Etb_lapu
-Z60 w1759684003
+Z61 w1760224978
 R5
 R2
 R3
-R59
+R60
 R4
 R6
 R7
-!i122 428
+!i122 440
 R0
-Z61 8tb/tb_lapu.vhd
-Z62 Ftb/tb_lapu.vhd
+Z62 8tb/tb_lapu.vhd
+Z63 Ftb/tb_lapu.vhd
 l0
-Z63 L13 1
+Z64 L13 1
 Vn`lD0fmdUz]_[@91HKd>X0
 !s100 fDl8<RUbXZj0Z:hTLRfbY1
 R10
@@ -446,42 +448,43 @@ R10
 R11
 !i10b 1
 R12
-Z64 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|tb/tb_lapu.vhd|
-Z65 !s107 tb/tb_lapu.vhd|
+Z65 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|tb/tb_lapu.vhd|
+Z66 !s107 tb/tb_lapu.vhd|
 !i113 1
 R15
 R16
 Asim
-R32
+R28
+R33
 R23
-R52
+R53
 R5
 R2
 R3
-R59
+R60
 R4
 R6
 R7
 DEx4 work 7 tb_lapu 0 22 n`lD0fmdUz]_[@91HKd>X0
-!i122 428
-l25
-Z66 L16 61
-VKL=DmKWSl4_3hWane^e]<2
-!s100 L3ZHSBEJ6@lV9ILV5Abg?0
+!i122 440
+l24
+L16 57
+VMmeKcNR^ZfS1jUO@bi;Q:1
+!s100 nBS4n?4g=QklLT<ZD_?__1
 R10
 32
 R11
 !i10b 1
 R12
-R64
 R65
+R66
 !i113 1
 R15
 R16
 Etb_matrix_bank
-R58
 R59
-R38
+R60
+R39
 R4
 R6
 R7
@@ -504,9 +507,9 @@ Z70 !s107 tb/tb_matrix_bank.vhd|
 R15
 R16
 Asim
+R40
+R60
 R39
-R59
-R38
 R4
 R6
 R7
@@ -518,9 +521,9 @@ VAX__c]H6B7U`AX<`F8_2[2
 !s100 ?`k7=azUE^dlkf7?oGmPK2
 R10
 32
-R40
-!i10b 1
 R41
+!i10b 1
+R42
 R69
 R70
 !i113 1
@@ -531,25 +534,25 @@ Z71 w1759529863
 R5
 R2
 R3
-R59
+R60
 R4
 R6
 R7
-!i122 429
+!i122 441
 R0
 Z72 8tb/tb_top.vhd
 Z73 Ftb/tb_top.vhd
 l0
-R63
+R64
 VbXMA;`d<9j`:[`UTYjFe>0
 !s100 oFjQJWWBjoIH30D44ZdKU3
 R10
 32
-R11
+Z74 !s110 1760225350
 !i10b 1
 R12
-Z74 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|tb/tb_top.vhd|
-Z75 !s107 tb/tb_top.vhd|
+Z75 !s90 -2002|-quiet|-modelsimini|/home/mwd/LAPU/build/modelsim.ini|-work|work|tb/tb_top.vhd|
+Z76 !s107 tb/tb_top.vhd|
 !i113 1
 R15
 R16
@@ -558,23 +561,23 @@ R17
 R5
 R2
 R3
-R59
+R60
 R4
 R6
 R7
-Z76 DEx4 work 6 tb_top 0 22 bXMA;`d<9j`:[`UTYjFe>0
-!i122 429
+Z77 DEx4 work 6 tb_top 0 22 bXMA;`d<9j`:[`UTYjFe>0
+!i122 441
 l25
-R66
-Z77 VIeH0HSWW=NJT]4N;YHjm80
-Z78 !s100 ?628]MYE64K1A`C_iH:=`1
+Z78 L16 61
+Z79 VIeH0HSWW=NJT]4N;YHjm80
+Z80 !s100 ?628]MYE64K1A`C_iH:=`1
 R10
 32
-R11
+R74
 !i10b 1
 R12
-R74
 R75
+R76
 !i113 1
 R15
 R16

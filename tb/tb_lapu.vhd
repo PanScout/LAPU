@@ -43,7 +43,8 @@ begin
       i_program_count         => w_program_count,
       o_program_counter_ready => w_program_count_ready,
       o_new_program_count     => w_new_program_count,
-      o_jump_flag             => w_jump_flag
+      o_jump_flag             => w_jump_flag,
+      i_current_instruction   => w_instruction
     );
 
   instruction_memory_inst : entity work.instruction_memory
