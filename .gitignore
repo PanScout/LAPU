@@ -5,6 +5,8 @@
 db
 incremental_db
 *.lnk
+output_files
+build/*
 
 
 # Ignore everything
