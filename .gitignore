@@ -11,7 +11,3 @@ incremental_db/
 output_files/
 build/
 
-# Ignore extensionless files (carefully)
-*
-!*/
-!*.*
