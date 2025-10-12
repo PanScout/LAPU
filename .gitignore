@@ -1,0 +1,17 @@
+*.qpf *.qdb *.vstf 
+.venv
+.vscode
+*.ini
+db
+incremental_db
+*.lnk
+
+
+# Ignore everything
+*
+
+# But don’t ignore directories (so Git can recurse)
+!*/
+
+# But don’t ignore files *with* extensions
+!*.*

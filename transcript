@@ -1,2 +1,0 @@
-# puts $::env(MODEL_TECH)
-#  quit -f
