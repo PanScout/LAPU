@@ -11,4 +11,5 @@ incremental_db/
 output_files/
 build/*
 transcript
+.settings
 

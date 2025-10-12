@@ -1,4 +1,0 @@
-v 4
-file "/Users/mwd/Developer/HDL/LAPU/" "lib/flat_tensors/flat_tensors.vhd" "ba87c8877ca0f0898015175bed2ca3f243b8c544" "20251002214009.696":
-  package flat_tensors at 6( 158) + 0 on 39 body;
-  package body flat_tensors at 74( 3869) + 0 on 40;
