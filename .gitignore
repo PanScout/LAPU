@@ -12,4 +12,9 @@ output_files/
 build/*
 transcript
 .settings
+.DS_Store
+.project
+*.qsf
+*.qws
+.library_mapping.xml
 
