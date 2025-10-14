@@ -11,7 +11,6 @@ entity instruction_memory is
     );
     port(
         i_clock       : in  std_logic;
-        i_rom_ready   : in  std_logic;
         i_rom_address : in  std_logic_vector(31 downto 0);
         o_instruction : out std_logic_vector(INSTRUCTION_SIZE - 1 downto 0)
     );
@@ -39,11 +38,11 @@ architecture RTL of instruction_memory is
         return ram;
     end function;
 
-    signal mem : mem_t := init_rom_hex("prog.hex");
+    signal mem : mem_t := init_rom_hex("src/prog.hex");
 begin
     process(i_clock) is
     begin
-        if rising_edge(i_clock) and i_rom_ready = '1' and to_integer(unsigned(i_rom_address)) < MAX_ADDRESS then
+        if rising_edge(i_clock) and to_integer(unsigned(i_rom_address)) < MAX_ADDRESS then
             o_instruction <= mem(to_integer(unsigned(i_rom_address)));
         end if;
     end process;

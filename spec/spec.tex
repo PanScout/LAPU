@@ -48,8 +48,6 @@
 \usepackage{booktabs}   % nicer rules (optional)
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X} % auto-wrap ragged-right
 
-
-
 % Small tick labels; set bitwidth to snap 128 bits to the line
 \bytefieldsetup{bitformatting=\scriptsize}
 \newcommand{\SetBitwidthToLine}{%
@@ -63,7 +61,6 @@
   \bitheader{0,8,16,24,32,40,48,56,64,72,80,88,96,104,112,120,127}\\%
 }
 
-
 \begin{document}
 
 %======================
@@ -75,8 +72,8 @@
 \end{center}
 
 \begin{abstract}
-This document outline the 128-bit instruction formats for LAPU-128,
-focused on complex arithmetic and vector descriptors. LAPU-128 is small focused ISA designed perform complex tensor operations in an embedded enviroment. The following page
+This document outlines the 128-bit instruction formats for LAPU-128,
+focused on complex arithmetic and vector descriptors. LAPU-128 is a small, focused ISA designed to perform complex tensor operations in an embedded environment. The following page
 shows the canonical XL, XC, XV, and XM encodings with 8-bit tick marks.
 \end{abstract}
 
@@ -208,6 +205,10 @@ s0 \equiv 0\quad\text{(complex zero)}, \qquad
 v0[i] \equiv 0\;\; \forall\, i \in [0,\mathrm{VLEN}-1].
 \]
 
+\subsection*{Matrix Banks}
+There will be $4$ matrix banks to choose from. Each matrix bank is a square matrix of side N times VLEN where N is some predefined integer greater than $1$. The matrix bank will be accessed either through scalar (individual) read/writes or vector read/writes. Vector read/writes will access vectors in either row or major column order and will have no overlap between each other in either mode.
+
+
 %==============================
 % Instruction Semantics section
 %==============================
@@ -219,23 +220,18 @@ v0[i] \equiv 0\;\; \forall\, i \in [0,\mathrm{VLEN}-1].
 \subsection*{OPCODE: \texttt{0x01}}
 \subsection*{Description}
 
-
 These are register to register operations involve either two vectors, two scalars, or a vector and a scalar. To determine mapping check bit position [97:96] under flags. Additionally each subop code range will be defined per mapping\\\\
 
 \[
 \begin{aligned}
-f(s_1,s_2)                 &\mapsto s \in \mathrm{S}            && \texttt{00} \\
-f(\mathbf v_1,\mathbf v_2) &\mapsto \mathbf v \in \mathrm{V}    && \texttt{01} \\
-f(\mathbf v_1,\mathbf v_2)             &\mapsto s \in \mathrm{S}            && \texttt{11} \\
-f(\mathbf v,s)             &\mapsto \mathbf v \in \mathrm{V}    && \texttt{10} \\
+f(s_1,s_2)                  &\mapsto s \in \mathrm{S}            && \texttt{00} \\
+f(\mathbf v_1,\mathbf v_2)  &\mapsto \mathbf v \in \mathrm{V}    && \texttt{01} \\
+f(\mathbf v_1,\mathbf v_2)  &\mapsto s \in \mathrm{S}            && \texttt{10} \\
+f(\mathbf v,s)              &\mapsto \mathbf v \in \mathrm{V}    && \texttt{11} \\
 \end{aligned}
 \]
 
-
-
-The undefined flag fields are open to future use. 
-
-
+\noindent\textbf{Encoding notes:} The mapping selector lives in \texttt{flags[97:96]}. Field \texttt{imm16} is currently unused and \textbf{must be zero}. All \textbf{reserved} bits \texttt{[70:0]} \textbf{must be zero}.
 
 %=== Scalar ops (unary and binary) in one table =====================
 \subsection*{Scalar ops (unary and binary)}
@@ -252,31 +248,43 @@ The undefined flag fields are open to future use.
 
 \multicolumn{5}{@{}l@{}}{\emph{Unary: $\mathrm{S}\to\mathrm{S}$}}\\
 \addlinespace[2pt]
-\texttt{cneg.c}    & 0x00 & d, a        & d $\leftarrow -a$                                                & Two’s-complement both halves. \\
-\texttt{conj.c}    & 0x01 & d, a        & d $\leftarrow \mathrm{conj}(a)$                                  & Negate imaginary half. \\
-\texttt{csqrt.c}   & 0x02 & d, a        & d $\leftarrow \sqrt{a}$                                          & Principal root; widen, then truncate to Q32.32+Q32.32. \\
-\texttt{cabs2.c}   & 0x03 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)^2{+}\Im(a)^2$, d$_\mathrm{im}\leftarrow 0$ & Magnitude$^2$; widen then truncate. \\
-\texttt{cabs.c}    & 0x04 & d, a        & d$_\mathrm{re}\leftarrow \sqrt{\Re(a)^2+\Im(a)^2}$, d$_\mathrm{im}\leftarrow 0$ & Fixed-point $\sqrt{\cdot}$; truncating. \\
-\texttt{creal.c}   & 0x05 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract real. \\
-\texttt{cimag.c}   & 0x06 & d, a        & d$_\mathrm{re}\leftarrow \Im(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract imaginary to real half. \\
-\texttt{crecip.c}  & 0x07 & d, a        & d $\leftarrow 1 \div a$                                          & $(\overline{a})/|a|^2$; if $a{=}0$ then d$:=0$. \\
+\texttt{cneg}    & 0x00 & d, a        & d $\leftarrow -a$                                                & Two’s-complement both halves. \\
+\texttt{conj}    & 0x01 & d, a        & d $\leftarrow \mathrm{conj}(a)$                                  & Negate imaginary half. \\
+\texttt{csqrt}   & 0x02 & d, a        & d $\leftarrow \sqrt{a}$                                          & Principal root; widen, then truncate to Q32.32+Q32.32. \\
+\texttt{cabs2}   & 0x03 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)^2{+}\Im(a)^2$, d$_\mathrm{im}\leftarrow 0$ & Magnitude$^2$; widen then truncate. \\
+\texttt{cabs}    & 0x04 & d, a        & d$_\mathrm{re}\leftarrow \sqrt{\Re(a)^2+\Im(a)^2}$, d$_\mathrm{im}\leftarrow 0$ & Fixed-point $\sqrt{\cdot}$; truncating. \\
+\texttt{creal}   & 0x05 & d, a        & d$_\mathrm{re}\leftarrow \Re(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract real. \\
+\texttt{cimag}   & 0x06 & d, a        & d$_\mathrm{re}\leftarrow \Im(a)$,\; d$_\mathrm{im}\leftarrow 0$  & Extract imaginary to real half. \\
+\texttt{crecip}  & 0x07 & d, a        & d $\leftarrow 1 \div a$                                          & $(\overline{a})/|a|^2$; if $a{=}0$ then d$:=0$. \\
 \addlinespace[4pt]
 \cmidrule(lr){1-5}
 \addlinespace[4pt]
 
 \multicolumn{5}{@{}l@{}}{\emph{Binary: $\mathrm{S}\times\mathrm{S}\to\mathrm{S}$}}\\
 \addlinespace[2pt]
-\texttt{cadd.c}    & 0x08 & d, a, b & d $\leftarrow$ a $+$ b & Truncating Q32.32+Q32.32. \\
-\texttt{csub.c}    & 0x09 & d, a, b & d $\leftarrow$ a $-$ b & Truncating. \\
-\texttt{cmul.c}    & 0x0A & d, a, b & d $\leftarrow$ a $\times$ b & Widen internally, truncate to Q32.32+Q32.32. \\
-\texttt{cdiv.c}    & 0x0B & d, a, b & d $\leftarrow$ a \,$\div$\, b & $(a\,\overline{b})/|b|^2$; if $|b|=0$ then d$:=0$. \\
-\texttt{cmaxabs.c} & 0x0C & d, a, b & d $\leftarrow \arg\max_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
-\texttt{cminabs.c} & 0x0D & d, a, b & d $\leftarrow \arg\min_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
+\texttt{cadd}    & 0x08 & d, a, b & d $\leftarrow$ a $+$ b & Truncating Q32.32+Q32.32. \\
+\texttt{csub}    & 0x09 & d, a, b & d $\leftarrow$ a $-$ b & Truncating. \\
+\texttt{cmul}    & 0x0A & d, a, b & d $\leftarrow$ a $\times$ b & Widen internally, truncate to Q32.32+Q32.32. \\
+\texttt{cdiv}    & 0x0B & d, a, b & d $\leftarrow$ a \,$\div$\, b & $(a\,\overline{b})/|b|^2$; if $|b|=0$ then d$:=0$. \\
+\texttt{cmaxabs} & 0x0C & d, a, b & d $\leftarrow \arg\max_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
+\texttt{cminabs} & 0x0D & d, a, b & d $\leftarrow \arg\min_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
+\texttt{cmplt.re} & 0x0E & d, a, b & 
+d$_\mathrm{re} \leftarrow 1$ if $\Re(a) < \Re(b)$ else $0$;\;
+d$_\mathrm{im} \leftarrow 0$ &
+Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
+
+\texttt{cmpgt.re} & 0x0F & d, a, b & 
+d$_\mathrm{re} \leftarrow 1$ if $\Re(a) > \Re(b)$ else $0$;\;
+d$_\mathrm{im} \leftarrow 0$ &
+Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
+
+\texttt{cmple.re} & 0x10 & d, a, b & 
+d$_\mathrm{re} \leftarrow 1$ if $\Re(a) \le \Re(b)$ else $0$;\;
+d$_\mathrm{im} \leftarrow 0$ &
+Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
 
 \bottomrule
 \end{longtable}
-
-
 
 %=== V -> V (lane-wise) =============================================
 \subsection*{Vector $\to$ Vector}
@@ -290,12 +298,12 @@ The undefined flag fields are open to future use.
 \textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
 \midrule
 \endhead
-\texttt{cadd.v} & 0x00 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $+$ vB[i]                  & Saturating per lane. \\
-\texttt{csub.v} & 0x01 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $-$ vB[i]                  & Saturating per lane. \\
-\texttt{cmul.v} & 0x02 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $\times$ vB[i]             & Complex lane-wise multiply. \\
-\texttt{cmac.v} & 0x03 & vD, vA, vB & vD[i] $\leftarrow$ vD[i] + vA[i]\,$\times$\,vB[i]   & Fused complex MAC per lane. \\
-\texttt{cdiv.v} & 0x04 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] \,$\div$\, vB[i]           & $(a\,\overline{b})/|b|^2$; if $|b|{=}0$ then lane:=0. \\
-\texttt{conj.v} & 0x05 & vD, vA     & vD[i] $\leftarrow$ \mathrm{conj}(vA[i])             & Lane-wise conjugate. \\
+\texttt{vadd} & 0x00 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $+$ vB[i]                  & Saturating per lane. \\
+\texttt{vsub} & 0x01 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $-$ vB[i]                  & Saturating per lane. \\
+\texttt{vmul} & 0x02 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $\times$ vB[i]             & Complex lane-wise multiply. \\
+\texttt{vmac} & 0x03 & vD, vA, vB & vD[i] $\leftarrow$ vD[i] + vA[i]\,$\times$\,vB[i]   & Fused complex MAC per lane. \\
+\texttt{vdiv} & 0x04 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] \,$\div$\, vB[i]           & $(a\,\overline{b})/|b|^2$; if $|b|{=}0$ then lane:=0. \\
+\texttt{vconj} & 0x05 & vD, vA     & vD[i] $\leftarrow$ \mathrm{conj}(vA[i])             & Lane-wise conjugate. \\
 \bottomrule
 \end{longtable}
 
@@ -313,9 +321,9 @@ The undefined flag fields are open to future use.
 \endhead
 \texttt{dotc}    & 0x00 & sD, vA, vB & $sD \leftarrow \sum_{i=0}^{\mathrm{VLEN}-1}\mathrm{conj}(vA[i])\cdot vB[i]$ & Reduce to scalar \texttt{sD}. \\
 \texttt{dotu}    & 0x01 & sD, \={A}, \={B} & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}[i]$ & Complex dot (no conjugation). \\
-\texttt{iamax.v} & 0x02 & sD, vA     & sD $\leftarrow \arg\max_i |vA[i]|$                   & Index in \texttt{sD} real half; imag:=0. \\
-\texttt{sum.v}   & 0x03 & sD, \={A}  & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]$ & Complex sum; reduces to scalar. \\
-\texttt{asum.v}  & 0x04 & sD, \={A}  & $sD_{\mathrm{re}} \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\lvert \={A}[i]\rvert,\; sD_{\mathrm{im}} \leftarrow 0$ & Sum of magnitudes (real result). \\
+\texttt{iamax} & 0x02 & sD, vA     & sD $\leftarrow \arg\max_i |vA[i]|$                   & Index in \texttt{sD} real half; imag:=0. \\
+\texttt{sum}   & 0x03 & sD, \={A}  & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]$ & Complex sum; reduces to scalar. \\
+\texttt{asum}  & 0x04 & sD, \={A}  & $sD_{\mathrm{re}} \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\lvert \={A}[i]\rvert,\; sD_{\mathrm{im}} \leftarrow 0$ & Sum of magnitudes (real result). \\
 \bottomrule
 \end{longtable}
 
@@ -331,25 +339,27 @@ The undefined flag fields are open to future use.
 \textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
 \midrule
 \endhead
-\texttt{cadd.vs} & 0x18 & vD, vA, sB & vD[i] $\leftarrow$ vA[i] $+$ sB
+\texttt{vsadd} & 0x18 & vD, vA, sB & vD[i] $\leftarrow$ vA[i] $+$ sB
   & Broadcast add; saturating per lane. \\
-\texttt{csub.vs} & 0x19 & vD, vA, sB & vD[i] $\leftarrow$ vA[i] $-$ sB
+\texttt{vssub} & 0x19 & vD, vA, sB & vD[i] $\leftarrow$ vA[i] $-$ sB
   & Broadcast sub (vector minus scalar); saturating per lane. \\
-\texttt{cmul.vs} & 0x1A & vD, vA, sB & vD[i] $\leftarrow$ vA[i] $\times$ sB
+\texttt{vsmul} & 0x1A & vD, vA, sB & vD[i] $\leftarrow$ vA[i] $\times$ sB
   & Complex lane-wise multiply by complex scalar; widen then truncate. \\
-\texttt{cdiv.vs} & 0x1B & vD, vA, sB & vD[i] $\leftarrow$ vA[i] \,$\div$\, sB
+\texttt{vsdiv} & 0x1B & vD, vA, sB & vD[i] $\leftarrow$ vA[i] \,$\div$\, sB
   & $(a\,\overline{b})/|b|^2$ per lane; if $|sB|{=}0$ then lane:=0. \\
-\texttt{cscale.vs} & 0x1C & vD, vA, t & vD[i] $\leftarrow$ vA[i] \,$\times$\, t
-  & Real scale $t$ (Q32.32) broadcast to all lanes; widen then truncate. \\
 \bottomrule
 \end{longtable}
-
-
-
 
 %---------------- I-type -----------------
 \section*{I-type — Immediate (scalars only)}
 \subsection*{OPCODE: \texttt{0x02}}
+\subsection*{Description}
+\noindent \texttt{imm\_90} is a complex number split into two 45-bit \textbf{signed} fixed-point halves (Q22.23, two’s complement), packed as:
+\[
+\text{Re} \;\to\; \texttt{imm\_90}[44{:}0], \qquad
+\text{Im} \;\to\; \texttt{imm\_90}[89{:}45].
+\]
+
 \begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
 \caption{I-type: Immediate operations (scalar complex)}\label{tab:itype}\\
 \toprule
@@ -361,7 +371,7 @@ The undefined flag fields are open to future use.
 \midrule
 \endhead
 \texttt{cloadi}   & 0x00 & sD, cIMM       & sD $\leftarrow$ cIMM
-  & cIMM packed in \texttt{imm\_90} (Re/Im per spec). \\
+  & cIMM packed in \texttt{imm\_90} (Re/Im per above). \\
 
 \texttt{cadd\_i}  & 0x01 & sD, sA, cIMM   & sD $\leftarrow$ sA $+$ cIMM
   & Saturating per scalar; Q32.32 truncation as needed. \\
@@ -382,11 +392,10 @@ The undefined flag fields are open to future use.
   & Ties pick \texttt{sA}. \\
 
 \texttt{cscale\_i} & 0x10 & sD, sA, rIMM  & sD $\leftarrow$ sA $\times$ rIMM
-  & Real scale rIMM (Q32.32 in \texttt{imm\_90}); widen then truncate. \\
+  & Real scale rIMM packed in \texttt{imm\_90} as Q22.23 with $\mathrm{Im}{=}0$. \\
 
 \bottomrule
 \end{longtable}
-
 
 %---------------- J-type -----------------
 \section*{J-type — Conditional Jump}
@@ -403,7 +412,7 @@ The undefined flag fields are open to future use.
 \endhead
 \texttt{jrel} & 0x00 & offs33 &
 If $s1 \neq 0$: $\mathrm{PC} \leftarrow \mathrm{PC} + \text{offs33}$ (instruction-relative). &
-$s0 \equiv 0$; $s1$ is the conventional branch predicate (0/1). \\
+\textbf{Encoding:} \texttt{offs33} is \emph{signed} two’s complement in \emph{instruction units} (128-bit words); base is the address of \emph{this} instruction. Field \texttt{rs1} must be \texttt{001b} (predicated on \texttt{s1}). All \texttt{flags16} and reserved bits must be zero. \\
 \bottomrule
 \end{longtable}
 
@@ -425,26 +434,24 @@ Load into vD the sequence:
 $\text{if } rc{=}0:\ (r{=}\text{idx16},\ c{=}0..L{-}1),\;
 \text{if } rc{=}1:\ (r{=}0..L{-}1,\ c{=}\text{idx16})$,
 where $L = \text{len16}$ if nonzero, else $L=\mathrm{VLEN}$. &
-Row stride $=1$;\; column stride $=\mathrm{VLEN}$. Elements are 128-bit complex (Re then Im). \\
+\textbf{Encoding:} \texttt{FLAGS16.rc} is bit~\textbf{111} (MSB of \texttt{FLAGS16}); \texttt{rc}{=}0 means row, \texttt{rc}{=}1 means column. Fields \texttt{idx16} and \texttt{len16} are \textbf{unsigned 16-bit}; \texttt{len16}{=}0 selects $L=\mathrm{VLEN}$. Row stride $=1$; column stride $=\mathrm{VLEN}$. Elements are 128-bit complex (Re then Im). \\
 \addlinespace[0.25em]
 \texttt{vst} & 0x01 & vS, mbid, rc, idx16, len16 &
 Store from vS to the same address pattern as \texttt{vld}. &
-Vectors cover all lanes when $L{=}\mathrm{VLEN}$. \\
+Same encoding and field conventions as \texttt{vld}. \\
 \addlinespace[0.25em]
 \texttt{sld.xy} & 0x02 & sD, mbid, x16, y16 &
 Load the single element at coordinates $(r{=}\text{y16},\, c{=}\text{x16})$ from matrix-bank \texttt{mbid} into scalar register \texttt{sD}. &
-Coordinates are 0-based unsigned 16-bit. Element size is one 128-bit complex (Re then Im). Out-of-bounds coordinates trap. \\
+Coordinates are 0-based \textbf{unsigned 16-bit}. \textbf{Mapping:} $x16 \to i16\,[88{:}73]$, $y16 \to j16\,[72{:}57]$. Element size is one 128-bit complex (Re then Im). Out-of-bounds coordinates trap. \\
 \addlinespace[0.25em]
 \texttt{sst.xy} & 0x03 & sS, mbid, x16, y16 &
 Store scalar \texttt{sS} to the element at $(r{=}\text{y16},\, c{=}\text{x16})$ in matrix-bank \texttt{mbid}. &
-Same addressing and trapping rules as \texttt{sld.xy}. Element is 128-bit complex (Re then Im). \\
+Same addressing and trapping rules as \texttt{sld.xy}.\ \textbf{Mapping:} $x16 \to i16\,[88{:}73]$, $y16 \to j16\,[72{:}57]$. \\
 \bottomrule
 \end{longtable}
 
-
-
-
-
-
+%---------------- Global encoding rules -----------------
+\paragraph{Global encoding rules.}
+Unless otherwise specified, all \textbf{reserved} fields are \textbf{must-be-zero} and all currently \textbf{unused} fields are encoded as \textbf{zero}.
 
 \end{document}

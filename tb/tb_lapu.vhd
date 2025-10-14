@@ -24,6 +24,7 @@ architecture sim of tb_lapu is
   signal w_in_vector, w_out_vector                                                                                                                            : vector_t                           := VECTOR_ZERO;
   signal w_in_scalar, w_out_scalar                                                                                                                            : complex_t                          := COMPLEX_ZERO;
 begin
+
   w_clock <= not w_clock after 1 ns;
 
   program_counter_inst : entity work.program_counter
@@ -50,7 +51,6 @@ begin
       o_jump_flag               => w_jump_flag,
       o_rom_address             => w_rom_address,
       i_current_instruction     => w_instruction,
-      o_rom_ready               => w_rom_ready,
       o_matrix_sel              => w_matrix_sel,
       o_scalar_or_vector_action => w_scalar_or_vector_action,
       o_rw_vector               => w_rw_vector,
@@ -73,7 +73,6 @@ begin
     port map
     (
       i_clock       => w_clock,
-      i_rom_ready   => w_rom_ready,
       i_rom_address => w_rom_address,
       o_instruction => w_instruction
     );
@@ -100,10 +99,10 @@ begin
   stim : process
   begin
     -- Wait past t=0 so changes land at real time
+    w_reset <= '1';
+    wait for 100 ns;
     w_reset <= '0';
-    wait for 100 ns;
     w_cu_start <= '1';
-    wait for 100 ns;
     stop_sim <= '1';
     wait;
   end process;
