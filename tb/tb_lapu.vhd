@@ -15,21 +15,23 @@ architecture sim of tb_lapu is
 
   signal stop_sim : std_logic := '0';
 
-  signal w_clock, w_reset, w_cu_start, w_done, w_program_count_ready, w_rom_ready, w_scalar_or_vector_action, w_rw_vector, w_column_or_row_order, w_rw_scalar : std_logic                          := '0';
-  signal w_jump_flag                                                                                                                                          : std_logic                          := '0';
-  signal w_program_count, w_new_program_count, w_rom_address                                                                                                  : std_logic_vector(31 downto 0)      := (others => '0');
-  signal w_instruction                                                                                                                                        : std_logic_vector((127) downto 0)   := (others => '0');
-  signal w_matrix_sel                                                                                                                                         : integer range 0 to 3               := 0;
+  signal w_clock, w_reset, w_cu_start, w_done, w_program_count_ready, w_rom_ready, w_scalar_or_vector_action, w_rw_vector, w_column_or_row_order, w_rw_scalar : std_logic                            := '0';
+  signal w_jump_flag                                                                                                                                          : std_logic                            := '0';
+  signal w_program_count, w_new_program_count, w_rom_address                                                                                                  : std_logic_vector(31 downto 0)        := (others => '0');
+  signal w_instruction                                                                                                                                        : std_logic_vector((127) downto 0)     := (others => '0');
+  signal w_matrix_sel                                                                                                                                         : integer range 0 to 3                 := 0;
   signal w_vector_i, w_vector_j, w_scalar_i, w_scalar_j                                                                                                       : integer range 0 to (VECTOR_SIZE - 1) := 0;
-  signal w_in_vector, w_out_vector                                                                                                                            : vector_t                           := VECTOR_ZERO;
-  signal w_in_scalar, w_out_scalar                                                                                                                            : complex_t                          := COMPLEX_ZERO;
+  signal w_in_vector, w_out_vector, w_av, w_bv, w_xv                                                                                                          : vector_t                             := VECTOR_ZERO;
+  signal w_in_scalar, w_out_scalar, w_a, w_b, w_x                                                                                                             : complex_t                            := COMPLEX_ZERO;
+  signal w_map_code                                                                                                                                           : std_logic_vector(1 downto 0)         := (others => '0');
+  signal w_opcode                                                                                                                                             : std_logic_vector(7 downto 0)         := (others => '0');
+
 begin
 
   w_clock <= not w_clock after 1 ns;
 
   program_counter_inst : entity work.program_counter
-    port map
-    (
+    port map(
       i_clock             => w_clock,
       i_reset             => w_reset,
       i_pc_ready          => w_program_count_ready,
@@ -38,9 +40,20 @@ begin
       i_jump_flag         => w_jump_flag
     );
 
+  alu_inst : entity work.alu
+    port map(
+      i_a        => w_a,
+      i_b        => w_b,
+      i_av       => w_av,
+      i_bv       => w_bv,
+      i_map_code => w_map_code,
+      i_opcode   => w_opcode,
+      o_x        => w_x,
+      o_xv       => w_xv
+    );
+
   control_unit_inst : entity work.control_unit
-    port map
-    (
+    port map(
       i_clock                   => w_clock,
       i_reset                   => w_reset,
       i_cu_start                => w_cu_start,
@@ -63,23 +76,29 @@ begin
       o_scalar_i                => w_scalar_i,
       o_scalar_j                => w_scalar_j,
       o_scalar                  => w_out_scalar,
-      i_scalar                  => w_in_scalar
+      i_scalar                  => w_in_scalar,
+      o_a                       => w_a,
+      o_b                       => w_b,
+      o_av                      => w_av,
+      o_bv                      => w_bv,
+      o_map_code                => w_map_code,
+      i_x                       => w_x,
+      i_xv                      => w_xv
     );
+
   instruction_memory_inst : entity work.instruction_memory
     generic map(
       MAX_ADDRESS      => 256,
       INSTRUCTION_SIZE => 128
     )
-    port map
-    (
+    port map(
       i_clock       => w_clock,
       i_rom_address => w_rom_address,
       o_instruction => w_instruction
     );
 
   matrix_bank_inst : entity work.matrix_bank
-    port map
-    (
+    port map(
       i_clock                   => w_clock,
       i_reset                   => w_reset,
       i_matrix_sel              => w_matrix_sel,
@@ -99,11 +118,11 @@ begin
   stim : process
   begin
     -- Wait past t=0 so changes land at real time
-    w_reset <= '1';
+    w_reset    <= '1';
     wait for 100 ns;
-    w_reset <= '0';
+    w_reset    <= '0';
     w_cu_start <= '1';
-    stop_sim <= '1';
+    stop_sim   <= '1';
     wait;
   end process;
 end architecture sim;
