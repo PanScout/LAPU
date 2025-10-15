@@ -58,8 +58,15 @@ architecture rtl of control_unit is
     signal r_vector, r_av, r_bv                                                                                                      : vector_t                           := VECTOR_ZERO;
     signal r_scalar, r_a, r_b                                                                                                        : complex_t                          := COMPLEX_ZERO;
     signal r_map_code                                                                                                                : std_logic_vector(1 downto 0)       := (others => '0');
-    signal r_opcode                                                                                                                  : std_logic_vector(7 downto 0)       := (others => '0');
     signal r_error_flag                                                                                                              : std_logic                          := '0';
+    --3) Field Registers (Some of these are mapped to outputs though)
+    signal r_opcode, r_subop                                                                                                         : std_logic_vector(7 downto 0)       := (others => '0');
+    signal r_flags                                                                                                                   : std_logic_vector(15 downto 0)      := (others => '0');
+    signal r_function_mapping                                                                                                        : std_logic_vector(1 downto 0)       := (others => '0');
+    signal r_rd, r_rs1, r_rs2                                                                                                        : std_logic_vector(2 downto 0)       := (others => '0');
+    signal r_imm16                                                                                                                   : std_logic_vector(15 downto 0)      := (others => '0');
+    signal r_imm90                                                                                                                   : std_logic_vector(89 downto 0)      := (others => '0');
+    signal r_offs33                                                                                                                  : unsigned(32 downto 0)              := (others => '0');
 
 begin
     -- Gated Output Registers
@@ -280,4 +287,5 @@ begin
     --             null;
     --     end case;
     -- end process output_logic;
+
 end architecture;

@@ -40,6 +40,27 @@ begin
       i_jump_flag         => w_jump_flag
     );
 
+    register_file_inst : entity work.register_file
+      port map(
+        i_clock               => w_clock,
+        i_reset               => w_reset,
+        i_scalar_reg_sel_1    => w_scalar_reg_sel_1,
+        i_scalar_reg_sel_2    => w_scalar_reg_sel_2,
+        o_scalar_reg_1        => w_scalar_reg_1,
+        o_scalar_reg_2        => w_scalar_reg_2,
+        i_scalar_reg_input    => w_scalar_reg_input,
+        i_scalar_write_sel    => w_scalar_write_sel,
+        i_scalar_write_enable => w_scalar_write_enable,
+        i_vector_reg_sel_1    => w_vector_reg_sel_1,
+        i_vector_reg_sel_2    => w_vector_reg_sel_2,
+        o_vector_reg_1        => w_vector_reg_1,
+        o_vector_reg_2        => w_vector_reg_2,
+        i_vector_reg_input    => w_vector_reg_input,
+        i_vector_write_sel    => w_vector_write_sel,
+        i_vector_write_enable => w_vector_write_enable
+      );
+    
+
   alu_inst : entity work.alu
     port map(
       i_a        => w_a,
