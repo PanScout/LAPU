@@ -10,70 +10,84 @@ use constants.constants.all;
 
 entity control_unit is
     port(
-        i_clock                   : in  std_logic;
-        i_reset                   : in  std_logic; -- synchronous, active-high
+        i_clock                                                    : in  std_logic;
+        i_reset                                                    : in  std_logic; -- synchronous, active-high
         -- inputs
-        i_cu_start                : in  std_logic;
-        o_cu_done                 : out std_logic;
-        --Program Counter inteface
-        i_program_count           : in  std_logic_vector(31 downto 0);
-        o_program_counter_ready   : out std_logic;
-        o_new_program_count       : out std_logic_vector(31 downto 0);
-        o_jump_flag               : out std_logic;
+        i_cu_start                                                 : in  std_logic;
+        o_cu_done                                                  : out std_logic;
         --Instruction memory interface
-        o_rom_address             : out std_logic_vector(31 downto 0);
-        i_current_instruction     : in  std_logic_vector(127 downto 0);
+        o_rom_address                                              : out std_logic_vector(31 downto 0);
+        i_current_instruction                                      : in  std_logic_vector(127 downto 0);
         --Matrix Bank Interface
-        o_matrix_sel              : out integer range 0 to 3;
-        o_scalar_or_vector_action : out std_logic;
-        o_rw_vector               : out std_logic;
-        o_column_or_row_order     : out std_logic;
-        o_vector_i, o_vector_j    : out integer range 0 to VECTOR_SIZE - 1;
-        o_vector                  : out vector_t;
-        i_vector                  : in  vector_t;
-        o_rw_scalar               : out std_logic;
-        o_scalar_i, o_scalar_j    : out integer range 0 to VECTOR_SIZE - 1;
-        o_scalar                  : out complex_t;
-        i_scalar                  : in  complex_t;
+        o_matrix_sel                                               : out integer range 0 to 3;
+        o_scalar_or_vector_action                                  : out std_logic;
+        o_rw_vector                                                : out std_logic;
+        o_column_or_row_order                                      : out std_logic;
+        o_vector_i, o_vector_j                                     : out integer range 0 to VECTOR_SIZE - 1;
+        o_vector                                                   : out vector_t;
+        i_vector                                                   : in  vector_t;
+        o_rw_scalar                                                : out std_logic;
+        o_scalar_i, o_scalar_j                                     : out integer range 0 to VECTOR_SIZE - 1;
+        o_scalar                                                   : out complex_t;
+        i_scalar                                                   : in  complex_t;
         --ALU Interface
-        o_a, o_b                  : out complex_t;
-        o_av, o_bv                : out vector_t;
-        o_map_code                : out std_logic_vector(1 downto 0);
-        o_opcode                  : out std_logic_vector(7 downto 0);
-        i_x                       : in  complex_t;
-        i_xv                      : in  vector_t
+        o_a, o_b                                                   : out complex_t;
+        o_av, o_bv                                                 : out vector_t;
+        o_map_code                                                 : out std_logic_vector(1 downto 0);
+        o_opcode                                                   : out std_logic_vector(7 downto 0);
+        i_x                                                        : in  complex_t;
+        i_xv                                                       : in  vector_t;
+        --Register File Interface
+        o_scalar_reg_sel_1, o_scalar_reg_sel_2, o_scalar_write_sel : out integer range 0 to VECTOR_SIZE - 1;
+        i_scalar_reg_1, i_scalar_reg_2                             : in  complex_t;
+        o_scalar_reg_input                                         : out complex_t;
+        o_scalar_write_enable, o_vector_write_enable               : out std_logic;
+        o_vector_reg_sel_1, o_vector_reg_sel_2, o_vector_write_sel : out integer range 0 to VECTOR_SIZE - 1;
+        i_vector_reg_1, i_vector_reg_2                             : in  vector_t;
+        o_vector_reg_input                                         : out vector_t
     );
 end entity;
 
 architecture rtl of control_unit is
     -- 1) State type
-    type   state_t                                                                                                                   is (S_IDLE, S_ADDRESS_FETCH, S_INSTRUCTION_FETCH, S_DECODE, S_EXECUTE, S_WRITEBACK, S_ERROR, S_DONE);
-    signal state, state_next                                                                                                         : state_t;
-    --2) Output Registers
-    signal r_current_instruction                                                                                                     : std_logic_vector(127 downto 0)     := (others => '0');
-    signal r_current_address, r_new_program_count                                                                                    : std_logic_vector(31 downto 0)      := (others => '0');
-    signal r_cu_done, r_jump_flag, r_rw_scalar, r_program_count_ready, r_column_or_row_order, r_rw_vector, r_scalar_or_vector_action : std_logic                          := '0';
-    signal r_matrix_sel                                                                                                              : integer range 0 to 3               := 0;
-    signal r_vector_i, r_vector_j, r_scalar_i, r_scalar_j                                                                            : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_vector, r_av, r_bv                                                                                                      : vector_t                           := VECTOR_ZERO;
-    signal r_scalar, r_a, r_b                                                                                                        : complex_t                          := COMPLEX_ZERO;
-    signal r_map_code                                                                                                                : std_logic_vector(1 downto 0)       := (others => '0');
-    signal r_error_flag                                                                                                              : std_logic                          := '0';
-    --3) Field Registers (Some of these are mapped to outputs though)
-    signal r_opcode, r_subop                                                                                                         : std_logic_vector(7 downto 0)       := (others => '0');
-    signal r_flags                                                                                                                   : std_logic_vector(15 downto 0)      := (others => '0');
-    signal r_function_mapping                                                                                                        : std_logic_vector(1 downto 0)       := (others => '0');
-    signal r_rd, r_rs1, r_rs2                                                                                                        : std_logic_vector(2 downto 0)       := (others => '0');
-    signal r_imm16                                                                                                                   : std_logic_vector(15 downto 0)      := (others => '0');
-    signal r_imm90                                                                                                                   : std_logic_vector(89 downto 0)      := (others => '0');
-    signal r_offs33                                                                                                                  : unsigned(32 downto 0)              := (others => '0');
+    type   state_t                                                                                                      is (S_IDLE, S_ADDRESS_FETCH, S_INSTRUCTION_FETCH, S_DECODE, S_EXECUTE, S_WRITEBACK, S_ERROR, S_DONE);
+    signal state, state_next                                                                                            : state_t;
+    --2) Program Counter
+    signal r_PC                                                                                                         : unsigned(31 downto 0)              := (others => '0');
+    signal r_jump_flag                                                                                                  : std_logic                          := '0';
+    --3) Output Registers
+    signal r_current_instruction                                                                                        : std_logic_vector(127 downto 0)     := (others => '0');
+    signal r_current_address, r_new_program_count                                                                       : std_logic_vector(31 downto 0)      := (others => '0');
+    signal r_cu_done, r_rw_scalar, r_program_count_ready, r_column_or_row_order, r_rw_vector, r_scalar_or_vector_action : std_logic                          := '0';
+    signal r_matrix_sel                                                                                                 : integer range 0 to 3               := 0;
+    signal r_vector_i, r_vector_j, r_scalar_i, r_scalar_j                                                               : integer range 0 to VECTOR_SIZE - 1 := 0;
+    signal r_vector, r_av, r_bv                                                                                         : vector_t                           := VECTOR_ZERO;
+    signal r_scalar, r_a, r_b                                                                                           : complex_t                          := COMPLEX_ZERO;
+    signal r_map_code                                                                                                   : std_logic_vector(1 downto 0)       := (others => '0');
+    signal r_error_flag                                                                                                 : std_logic                          := '0';
+    signal r_scalar_reg_sel_1                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
+    signal r_scalar_reg_sel_2                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
+    signal r_scalar_write_sel                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
+    signal r_scalar_reg_input                                                                                           : complex_t                          := COMPLEX_ZERO;
+    signal r_scalar_write_enable                                                                                        : std_logic                          := '0';
+    signal r_vector_write_enable                                                                                        : std_logic                          := '0';
+    signal r_vector_reg_sel_1                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
+    signal r_vector_reg_sel_2                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
+    signal r_vector_write_sel                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
+    signal r_vector_reg_input                                                                                           : vector_t                           := VECTOR_ZERO; -- assuming o_vector_reg_input : out vector_t
+
+    --4) Field Registers (Some of these are mapped to outputs though)
+    signal r_opcode, r_subop  : std_logic_vector(7 downto 0)  := (others => '0');
+    signal r_flags            : std_logic_vector(15 downto 0) := (others => '0');
+    signal r_function_mapping : std_logic_vector(1 downto 0)  := (others => '0');
+    signal r_rd, r_rs1, r_rs2 : std_logic_vector(2 downto 0)  := (others => '0');
+    signal r_imm16            : std_logic_vector(15 downto 0) := (others => '0');
+    signal r_imm90            : std_logic_vector(89 downto 0) := (others => '0');
+    signal r_offs33           : unsigned(32 downto 0)         := (others => '0');
 
 begin
     -- Gated Output Registers
     o_cu_done                 <= r_cu_done;
-    o_jump_flag               <= r_jump_flag;
-    o_new_program_count       <= r_new_program_count;
-    o_program_counter_ready   <= r_program_count_ready;
     o_rom_address             <= r_current_address;
     o_matrix_sel              <= r_matrix_sel;
     o_scalar_or_vector_action <= r_scalar_or_vector_action;
@@ -92,6 +106,16 @@ begin
     o_b                       <= r_b;
     o_av                      <= r_av;
     o_bv                      <= r_bv;
+    o_scalar_reg_sel_1        <= r_scalar_reg_sel_1;
+    o_scalar_reg_sel_2        <= r_scalar_reg_sel_2;
+    o_scalar_write_sel        <= r_scalar_write_sel;
+    o_scalar_reg_input        <= r_scalar_reg_input;
+    o_scalar_write_enable     <= r_scalar_write_enable;
+    o_vector_write_enable     <= r_vector_write_enable;
+    o_vector_reg_sel_1        <= r_vector_reg_sel_1;
+    o_vector_reg_sel_2        <= r_vector_reg_sel_2;
+    o_vector_write_sel        <= r_vector_write_sel;
+    o_vector_reg_input        <= r_vector_reg_input;
 
     --------------------------------------------------------------------
     -- 2) State register, advances to next state and determines if reset is needed
@@ -106,11 +130,9 @@ begin
             end if;
         end if;
     end process;
-
     --------------------------------------------------------------------
     -- 2) Register, for normal registers and clocked behavior
     --------------------------------------------------------------------
-
     registers : process(i_clock) is
         variable opcode, subop    : std_logic_vector(7 downto 0)  := (others => '0');
         variable flags            : std_logic_vector(15 downto 0) := (others => '0');
@@ -126,7 +148,7 @@ begin
                 when S_IDLE =>
                     null;
                 when S_ADDRESS_FETCH =>
-                    r_current_address <= i_program_count;
+                    r_current_address <= std_logic_vector(r_PC); --NOTE this is delayed one cycle for no reason, get rid of it later.
                 when S_INSTRUCTION_FETCH =>
                     r_current_instruction <= i_current_instruction;
                 when S_DECODE =>
@@ -173,6 +195,7 @@ begin
                 when S_EXECUTE =>
                     null;
                 when S_WRITEBACK =>
+                    r_PC <= r_PC + 1;
                     null;
                 when S_ERROR =>
                     null;
@@ -247,45 +270,5 @@ begin
         end case;
 
     end process;
-
-    -- output_logic : process(i_cu_start, i_program_count, i_current_instruction, i_vector, i_scalar, i_reset) is
-    -- begin
-    --     o_cu_done                 <= '0';
-    --     o_jump_flag               <= '0';
-    --     o_program_counter_ready   <= '0';
-    --     o_rom_ready               <= '0';
-    --     o_scalar_or_vector_action <= '0';
-    --     o_rw_vector               <= '0';
-    --     o_rw_scalar               <= '0';
-    --     o_column_or_row_order     <= '0';
-    --     o_matrix_sel              <= 0;
-    --     o_vector_i                <= 0;
-    --     o_vector_j                <= 0;
-    --     o_scalar_i                <= 0;
-    --     o_scalar_j                <= 0;
-    --     o_new_program_count       <= (others => '0');
-    --     o_rom_address             <= (others => '0');
-    --     o_vector                  <= VECTOR_ZERO;
-    --     o_scalar                  <= COMPLEX_ZERO;
-    --     case state is
-    --         when S_IDLE =>
-    --             null;
-    --         when S_FETCH =>
-    --             o_rom_address <= i_program_count;
-    --         when S_DECODE =>
-    --             o_rom_address <= r_current_address;
-    --             null;
-    --         when S_EXECUTE =>
-    --             null;
-    --         when S_MEM =>
-    --             null;
-    --         when S_WRITEBACK =>
-    --             null;
-    --         when S_ERROR =>
-    --             null;
-    --         when S_DONE =>
-    --             null;
-    --     end case;
-    -- end process output_logic;
 
 end architecture;

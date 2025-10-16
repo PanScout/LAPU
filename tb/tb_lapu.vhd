@@ -25,41 +25,35 @@ architecture sim of tb_lapu is
   signal w_in_scalar, w_out_scalar, w_a, w_b, w_x                                                                                                             : complex_t                            := COMPLEX_ZERO;
   signal w_map_code                                                                                                                                           : std_logic_vector(1 downto 0)         := (others => '0');
   signal w_opcode                                                                                                                                             : std_logic_vector(7 downto 0)         := (others => '0');
+  signal w_scalar_reg_sel_1, w_scalar_reg_sel_2, w_scalar_write_sel, w_vector_reg_sel_1, w_vector_reg_sel_2, w_vector_write_sel                               : integer range 0 to 7                 := 0;
+  signal w_scalar_reg_1, w_scalar_reg_2, w_scalar_reg_input                                                                                                   : complex_t                            := COMPLEX_ZERO;
+  signal w_scalar_write_enable, w_vector_write_enable                                                                                                         : std_logic                            := '0';
+  signal w_vector_reg_1, w_vector_reg_2, w_vector_reg_input                                                                                                   : vector_t                             := VECTOR_ZERO;
 
 begin
 
   w_clock <= not w_clock after 1 ns;
 
-  program_counter_inst : entity work.program_counter
-    port map(
-      i_clock             => w_clock,
-      i_reset             => w_reset,
-      i_pc_ready          => w_program_count_ready,
-      o_program_count     => w_program_count,
-      i_new_program_count => w_new_program_count,
-      i_jump_flag         => w_jump_flag
-    );
 
-    register_file_inst : entity work.register_file
-      port map(
-        i_clock               => w_clock,
-        i_reset               => w_reset,
-        i_scalar_reg_sel_1    => w_scalar_reg_sel_1,
-        i_scalar_reg_sel_2    => w_scalar_reg_sel_2,
-        o_scalar_reg_1        => w_scalar_reg_1,
-        o_scalar_reg_2        => w_scalar_reg_2,
-        i_scalar_reg_input    => w_scalar_reg_input,
-        i_scalar_write_sel    => w_scalar_write_sel,
-        i_scalar_write_enable => w_scalar_write_enable,
-        i_vector_reg_sel_1    => w_vector_reg_sel_1,
-        i_vector_reg_sel_2    => w_vector_reg_sel_2,
-        o_vector_reg_1        => w_vector_reg_1,
-        o_vector_reg_2        => w_vector_reg_2,
-        i_vector_reg_input    => w_vector_reg_input,
-        i_vector_write_sel    => w_vector_write_sel,
-        i_vector_write_enable => w_vector_write_enable
-      );
-    
+  register_file_inst : entity work.register_file
+    port map(
+      i_clock               => w_clock,
+      i_reset               => w_reset,
+      i_scalar_reg_sel_1    => w_scalar_reg_sel_1,
+      i_scalar_reg_sel_2    => w_scalar_reg_sel_2,
+      o_scalar_reg_1        => w_scalar_reg_1,
+      o_scalar_reg_2        => w_scalar_reg_2,
+      i_scalar_reg_input    => w_scalar_reg_input,
+      i_scalar_write_sel    => w_scalar_write_sel,
+      i_scalar_write_enable => w_scalar_write_enable,
+      i_vector_reg_sel_1    => w_vector_reg_sel_1,
+      i_vector_reg_sel_2    => w_vector_reg_sel_2,
+      o_vector_reg_1        => w_vector_reg_1,
+      o_vector_reg_2        => w_vector_reg_2,
+      i_vector_reg_input    => w_vector_reg_input,
+      i_vector_write_sel    => w_vector_write_sel,
+      i_vector_write_enable => w_vector_write_enable
+    );
 
   alu_inst : entity work.alu
     port map(
@@ -79,10 +73,6 @@ begin
       i_reset                   => w_reset,
       i_cu_start                => w_cu_start,
       o_cu_done                 => w_done,
-      i_program_count           => w_program_count,
-      o_program_counter_ready   => w_program_count_ready,
-      o_new_program_count       => w_new_program_count,
-      o_jump_flag               => w_jump_flag,
       o_rom_address             => w_rom_address,
       i_current_instruction     => w_instruction,
       o_matrix_sel              => w_matrix_sel,
@@ -104,7 +94,21 @@ begin
       o_bv                      => w_bv,
       o_map_code                => w_map_code,
       i_x                       => w_x,
-      i_xv                      => w_xv
+      i_xv                      => w_xv,
+      o_scalar_reg_sel_1        => w_scalar_reg_sel_1,
+      o_scalar_reg_sel_2        => w_scalar_reg_sel_2,
+      o_scalar_write_sel        => w_scalar_write_sel,
+      i_scalar_reg_1            => w_scalar_reg_1,
+      i_scalar_reg_2            => w_scalar_reg_2,
+      o_scalar_reg_input        => w_scalar_reg_input,
+      o_scalar_write_enable     => w_scalar_write_enable,
+      o_vector_write_enable     => w_vector_write_enable,
+      o_vector_reg_sel_1        => w_vector_reg_sel_1,
+      o_vector_reg_sel_2        => w_vector_reg_sel_2,
+      o_vector_write_sel        => w_vector_write_sel,
+      i_vector_reg_1            => w_vector_reg_1,
+      i_vector_reg_2            => w_vector_reg_2,
+      o_vector_reg_input        => w_vector_reg_input
     );
 
   instruction_memory_inst : entity work.instruction_memory
