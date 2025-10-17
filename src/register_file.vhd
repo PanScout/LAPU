@@ -22,54 +22,65 @@ entity register_file is
   );
 end register_file;
 
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+library tensors;
+use tensors.tensors.all;
+
 architecture arch of register_file is
+  constant REGISTER_FILE_LENGTH : integer := 8;
 
-  constant READ                 : std_logic := '0';
-  constant WRITE                : std_logic := '1';
-  constant REGISTER_FILE_LENGTH : integer   := 8;
+  -- Storage
+  type scalar_regs_t is array (0 to REGISTER_FILE_LENGTH - 1) of complex_t;
+  signal scalar_regs : scalar_regs_t;
 
-  type   scalar_regs_t is array (0 to REGISTER_FILE_LENGTH - 1) of complex_t;
-  signal scalar_regs   : scalar_regs_t;
-
-  type   vector_regs_t is array (0 to REGISTER_FILE_LENGTH - 1) of vector_t;
-  signal vector_regs   : vector_regs_t;
-
+  type vector_regs_t is array (0 to REGISTER_FILE_LENGTH - 1) of vector_t;
+  signal vector_regs : vector_regs_t;
 begin
-  --First register is always hardwired to 0
-  scalar_regs(0) <= COMPLEX_ZERO;
-  vector_regs(0) <= VECTOR_ZERO;
-
-  scalars : process(i_clock) is
+  ---------------------------------------------------------------------------
+  -- Synchronous write + synchronous reset
+  ---------------------------------------------------------------------------
+  process(i_clock)
   begin
-    if (rising_edge(i_clock) and i_reset = '0') then
-      if (i_scalar_write_enable = READ) then
-        o_scalar_reg_1 <= scalar_regs(i_scalar_reg_sel_1);
-        o_scalar_reg_2 <= scalar_regs(i_scalar_reg_sel_2);
-      elsif (i_scalar_write_enable = WRITE) then
-        scalar_regs(i_scalar_write_sel) <= i_scalar_reg_input;
+    if rising_edge(i_clock) then
+      if i_reset = '1' then
+        for i in 0 to REGISTER_FILE_LENGTH - 1 loop
+          scalar_regs(i) <= COMPLEX_ZERO;
+          vector_regs(i) <= VECTOR_ZERO;
+        end loop;
+      else
+        -- Scalar write (block writes to x0)
+        if i_scalar_write_enable = '1' then
+          if i_scalar_write_sel /= 0 then
+            scalar_regs(i_scalar_write_sel) <= i_scalar_reg_input;
+          end if;
+        end if;
+
+        -- Vector write (block writes to x0)
+        if i_vector_write_enable = '1' then
+          if i_vector_write_sel /= 0 then
+            vector_regs(i_vector_write_sel) <= i_vector_reg_input;
+          end if;
+        end if;
       end if;
-    elsif(rising_edge(i_clock) and i_reset = '1') then
-      for i in 0 to REGISTER_FILE_LENGTH loop
-       scalar_regs(i) <= COMPLEX_ZERO; 
-      end loop;
     end if;
+  end process;
 
-  end process scalars;
+  ---------------------------------------------------------------------------
+  -- Asynchronous reads (combinational muxes)
+  -- x0 is hardwired to zero via the conditional
+  ---------------------------------------------------------------------------
+  o_scalar_reg_1 <= COMPLEX_ZERO when i_scalar_reg_sel_1 = 0
+                    else scalar_regs(i_scalar_reg_sel_1);
 
-  vectors : process(i_clock) is
-  begin
-    if (rising_edge(i_clock)) then
-      if (i_vector_write_enable = READ) then
-        o_vector_reg_1 <= vector_regs(i_vector_reg_sel_1);
-        o_vector_reg_2 <= vector_regs(i_vector_reg_sel_2);
-      elsif (i_vector_write_enable = WRITE) then
-        vector_regs(i_vector_write_sel) <= i_vector_reg_input;
-      end if;
-    elsif(rising_edge(i_clock) and i_reset = '1') then
-      for i in 0 to REGISTER_FILE_LENGTH loop
-       vector_regs(i) <= VECTOR_ZERO; 
-      end loop;
-    end if;
-  end process vectors;
+  o_scalar_reg_2 <= COMPLEX_ZERO when i_scalar_reg_sel_2 = 0
+                    else scalar_regs(i_scalar_reg_sel_2);
 
+  o_vector_reg_1 <= VECTOR_ZERO when i_vector_reg_sel_1 = 0
+                    else vector_regs(i_vector_reg_sel_1);
+
+  o_vector_reg_2 <= VECTOR_ZERO when i_vector_reg_sel_2 = 0
+                    else vector_regs(i_vector_reg_sel_2);
 end architecture;

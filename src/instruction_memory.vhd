@@ -38,7 +38,7 @@ architecture RTL of instruction_memory is
         return ram;
     end function;
 
-    signal mem : mem_t := init_rom_hex("src/prog.hex");
+    signal mem : mem_t := init_rom_hex("src/rtype_all.hex");
 begin
     process(i_clock) is
     begin

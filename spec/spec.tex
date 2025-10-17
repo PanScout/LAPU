@@ -349,6 +349,22 @@ Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
   & $(a\,\overline{b})/|b|^2$ per lane; if $|sB|{=}0$ then lane:=0. \\
 \bottomrule
 \end{longtable}
+\newpage
+%=== V x S -> V  =============================================
+\subsection*{Scalar register Vector register load}
+\begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
+\midrule
+\endhead
+\texttt{vsload} & 0x1C & vD, a, i & vD[i] $\leftarrow$ a
+  & Load from scalar register $a$ into vector subcomponent $vD[i]$ \\
+\bottomrule
+\end{longtable}
 
 %---------------- I-type -----------------
 \section*{I-type — Immediate (scalars only)}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2025.10.14)  14 OCT 2025 18:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2025.10.14)  17 OCT 2025 15:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -825,51 +825,68 @@ Overfull \hbox (34.37543pt too wide) in alignment at lines 341--351
  []
 
 
-Overfull \hbox (47.07043pt too wide) in alignment at lines 363--368
- [] [] [] [] [] 
- []
-
-
-Overfull \hbox (47.07043pt too wide) in alignment at lines 368--372
- [] [] [] [] [] 
- []
-
-
-Overfull \hbox (47.07043pt too wide) in alignment at lines 372--398
- [] [] [] [] [] 
- []
-
-
 
 [5]
-Overfull \hbox (33.68925pt too wide) in alignment at lines 403--408
+Overfull \hbox (33.68925pt too wide) in alignment at lines 355--359
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 408--412
+Overfull \hbox (33.68925pt too wide) in alignment at lines 359--363
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 412--417
+Overfull \hbox (33.68925pt too wide) in alignment at lines 363--367
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (99.48625pt too wide) in alignment at lines 422--427
+Overfull \hbox (47.07043pt too wide) in alignment at lines 379--384
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (99.48625pt too wide) in alignment at lines 427--431
+Overfull \hbox (47.07043pt too wide) in alignment at lines 384--388
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (99.48625pt too wide) in alignment at lines 431--451
+Overfull \hbox (47.07043pt too wide) in alignment at lines 388--414
  [] [] [] [] [] 
  []
+
+
+Overfull \hbox (33.68925pt too wide) in alignment at lines 419--424
+ [] [] [] [] [] 
+ []
+
+
+Overfull \hbox (33.68925pt too wide) in alignment at lines 424--428
+ [] [] [] [] [] 
+ []
+
+
+Overfull \hbox (33.68925pt too wide) in alignment at lines 428--433
+ [] [] [] [] [] 
+ []
+
+
+Overfull \hbox (99.48625pt too wide) in alignment at lines 438--443
+ [] [] [] [] [] 
+ []
+
+
+Overfull \hbox (99.48625pt too wide) in alignment at lines 443--447
+ [] [] [] [] [] 
+ []
+
+
+Overfull \hbox (99.48625pt too wide) in alignment at lines 447--467
+ [] [] [] [] [] 
+ []
+
+
 
 [6]
 
@@ -880,10 +897,10 @@ L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 5491 strings out of 473197
- 89926 string characters out of 5718604
- 509625 words of memory out of 5000000
- 28636 multiletter control sequences out of 15000+600000
+ 5492 strings out of 473197
+ 89931 string characters out of 5718604
+ 509706 words of memory out of 5000000
+ 28637 multiletter control sequences out of 15000+600000
  638919 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  89i,19n,95p,424b,519s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -898,7 +915,7 @@ fonts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb
 /public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/
 share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/publi
 c/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on spec.pdf (7 pages, 345111 bytes).
+Output written on spec.pdf (7 pages, 345094 bytes).
 PDF statistics:
  130 PDF objects out of 1000 (max. 8388607)
  82 compressed objects within 1 object stream
