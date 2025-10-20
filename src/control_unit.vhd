@@ -81,7 +81,6 @@ architecture rtl of control_unit is
     signal r_opcode, r_subop  : std_logic_vector(7 downto 0)  := (others => '0');
     signal r_flags            : std_logic_vector(15 downto 0) := (others => '0');
     signal r_function_mapping : std_logic_vector(1 downto 0)  := (others => '0');
-    signal r_rd, r_rs1, r_rs2 : std_logic_vector(2 downto 0)  := (others => '0');
     signal r_imm16            : std_logic_vector(15 downto 0) := (others => '0');
     signal r_imm90            : std_logic_vector(89 downto 0) := (others => '0');
     signal r_offs33           : unsigned(32 downto 0)         := (others => '0');
@@ -157,23 +156,32 @@ begin
 
                 when S_DECODE =>
                     --These fields are used for all types of instructions
-                    opcode := r_current_instruction(127 downto 120);
-                    subop  := r_current_instruction(119 downto 112);
-                    flags  := r_current_instruction(111 downto 96);
+                    opcode           := r_current_instruction(127 downto 120);
+                    subop            := r_current_instruction(119 downto 112);
+                    flags            := r_current_instruction(111 downto 96);
+                    function_mapping := r_current_instruction(97 downto 96);
                     case opcode is
                         when R_TYPE =>
                             rd    := r_current_instruction(95 downto 93);
                             rs1   := r_current_instruction(92 downto 90);
                             rs2   := r_current_instruction(89 downto 87);
                             imm16 := r_current_instruction(86 downto 71);
-                            case subop is
-                                when R_CNEG =>
+                            case function_mapping is
+                                when SCALAR_TO_SCALAR =>
                                     r_scalar_reg_sel_1 <= to_integer(unsigned(rs1));
                                     r_scalar_reg_sel_2 <= to_integer(unsigned(rs2));
-                                when R_CCONJ =>
-                                    null;
-                                when others =>
-                                    r_error_flag <= '1';
+                                    r_scalar_write_sel <= to_integer(unsigned(rd));
+                                    r_opcode           <= opcode;
+                                    r_map_code         <= function_mapping;
+                                when VECTOR_TO_VECTOR =>
+                                    r_vector_reg_sel_1 <= to_integer(unsigned(rs1));
+                                    r_vector_reg_sel_2 <= to_integer(unsigned(rs2));
+                                    r_vector_write_sel <= to_integer(unsigned(rd));
+                                    r_opcode           <= opcode;
+                                    r_map_code         <= function_mapping;
+                                when VECTOR_TO_SCALAR            => null;
+                                when VECTOR_AND_SCALAR_TO_VECTOR => null;
+                                when others                      => r_error_flag <= '1';
                             end case;
                         when I_TYPE =>
                             rd    := r_current_instruction(95 downto 93);
@@ -198,29 +206,31 @@ begin
 
                     null;
                 when S_REGISTER_SELECT =>
-                    case opcode is
+                    case r_opcode is
                         when R_TYPE =>
-                            case subop is
-                                when R_CNEG =>
-                                    r_a        <= i_scalar_reg_1;
-                                    r_b        <= i_scalar_reg_2;
-                                    r_opcode   <= R_CNEG;
-                                    r_map_code <= SCALAR_TO_SCALAR;
-
-                                when others => r_error_flag <= '1';
+                            case r_map_code is
+                                when SCALAR_TO_SCALAR =>
+                                    r_a <= i_scalar_reg_1;
+                                    r_b <= i_scalar_reg_2;
+                                when VECTOR_TO_VECTOR => null;
+                                    r_av <= i_vector_reg_1;
+                                    r_bv <= i_vector_reg_2;
+                                when others =>
+                                    r_error_flag <= '1';
                             end case;
 
                         when others => r_error_flag <= '1';
                     end case;
                 when S_EXECUTE =>
-                    case opcode is
+                    case r_opcode is
                         when R_TYPE =>
-                            case subop is
-                                when R_CNEG =>
-                                    r_scalar_reg_input    <= i_x;
-                                    r_scalar_write_sel    <= to_integer(unsigned(r_rd));
-                                    r_scalar_write_enable <= '1';
-
+                            case r_map_code is
+                                when SCALAR_TO_SCALAR =>
+                                    o_scalar_reg_input    <= i_x;
+                                    o_scalar_write_enable <= '1';
+                                when VECTOR_TO_VECTOR => null;
+                                    o_vector_reg_input    <= i_xv;
+                                    o_vector_write_enable <= '1';
                                 when others => r_error_flag <= '1';
                             end case;
                         when others => r_error_flag <= '1';
@@ -228,28 +238,48 @@ begin
 
                 when S_WRITEBACK =>
 
-                    case opcode is
-                        when R_TYPE =>
-                            case subop is
-                                when R_CNEG =>
-                                    r_scalar_write_enable <= '0';
-
-                                when others => r_error_flag <= '1';
-                            end case;
-                        when others => r_error_flag <= '1';
-                    end case;
-
-                    --ZERO OUT ALL REGISTERS
+                    r_matrix_sel              <= 0;
+                    r_vector_i                <= 0;
+                    r_vector_j                <= 0;
+                    r_scalar_i                <= 0;
+                    r_scalar_j                <= 0;
+                    r_scalar_reg_sel_1        <= 0;
+                    r_scalar_reg_sel_2        <= 0;
+                    r_scalar_write_sel        <= 0;
+                    r_vector_reg_sel_1        <= 0;
+                    r_vector_reg_sel_2        <= 0;
+                    r_vector_write_sel        <= 0;
+                    r_cu_done                 <= '0';
+                    r_rw_vector               <= '0';
+                    r_column_or_row_order     <= '0';
+                    r_rw_scalar               <= '0';
+                    r_scalar_or_vector_action <= '0';
+                    r_scalar_write_enable     <= '0';
+                    r_vector_write_enable     <= '0';
+                    r_error_flag              <= '0';
+                    r_current_address         <= (others => '0');
+                    r_opcode                  <= (others => '0');
+                    r_map_code                <= (others => '0');
+                    r_scalar                  <= COMPLEX_ZERO;
+                    r_a                       <= COMPLEX_ZERO;
+                    r_b                       <= COMPLEX_ZERO;
+                    r_scalar_reg_input        <= COMPLEX_ZERO;
+                    r_vector                  <= VECTOR_ZERO;
+                    r_av                      <= VECTOR_ZERO;
+                    r_bv                      <= VECTOR_ZERO;
+                    r_vector_reg_input        <= VECTOR_ZERO;
 
                     if (r_jump_flag = '0') then
                         r_PC <= r_PC + 1;
                     else
-                        r_PC <= resize(unsigned(offs33), 31);
+                        r_PC <= resize(unsigned(offs33), 32);
                     end if;
+
                 when S_ERROR =>
                     null;
                 when S_DONE =>
                     null;
+
             end case;
         end if;
     end process registers;
