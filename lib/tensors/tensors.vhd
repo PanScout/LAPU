@@ -11,16 +11,17 @@ package tensors is
     constant FIXED_FRAC_BITS : integer := -32;
     constant FIXED_BIT_SIZE  : integer := FIXED_INT_BITS - FIXED_FRAC_BITS; -- 64
     constant VECTOR_SIZE     : integer := 8;
-    constant MATRIX_FACTOR : integer := 4;
-    
+    constant MATRIX_FACTOR   : integer := 4;
 
-    subtype sfix_t   is sfixed((FIXED_INT_BITS - 1) downto FIXED_FRAC_BITS);
-    type    complex_t is record
+    subtype sfix_t is sfixed((FIXED_INT_BITS - 1) downto FIXED_FRAC_BITS);
+
+    type complex_t is record
         re : sfix_t;
         im : sfix_t;
     end record complex_t;
-    type    vector_t is array (VECTOR_SIZE - 1 downto 0) of complex_t;
-    type    matrix_t is array ((VECTOR_SIZE * MATRIX_FACTOR) - 1 downto 0, (VECTOR_SIZE * MATRIX_FACTOR) -1 downto 0) of complex_t;
+
+    type vector_t is array (VECTOR_SIZE - 1 downto 0) of complex_t;
+    type matrix_t is array ((VECTOR_SIZE * MATRIX_FACTOR) - 1 downto 0, (VECTOR_SIZE * MATRIX_FACTOR) - 1 downto 0) of complex_t;
 
     constant COMPLEX_ZERO : complex_t := ((others => (others => '0')));
     constant VECTOR_ZERO  : vector_t  := ((others => (others => (others => '0'))));
@@ -59,7 +60,6 @@ package body tensors is
     --- HELPER FUNCTIONS (local) ---
     -------------------------------
 
-    -- 1) Unambiguous narrowing back to sfix_t
     function fit(A : sfixed) return sfix_t is
     begin
         return resize(A, (FIXED_INT_BITS - 1), FIXED_FRAC_BITS);
@@ -125,7 +125,6 @@ package body tensors is
     ------------------------------
     ----- PUBLIC FUNCTIONS -------
     ------------------------------
-
     function make_complex(A, B : real) return complex_t is
         variable ret : complex_t;
     begin

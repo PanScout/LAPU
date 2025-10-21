@@ -31,5 +31,11 @@ package constants is
     constant R_VMAC                      : std_logic_vector(7 downto 0) := x"03";
     constant R_VDIV                      : std_logic_vector(7 downto 0) := x"04";
     constant R_VCONJ                     : std_logic_vector(7 downto 0) := x"05";
+    constant I_CLOADI                    : std_logic_vector(7 downto 0) := x"00";
+    constant I_CADDI                     : std_logic_vector(7 downto 0) := x"01";
+    constant I_CMULI                     : std_logic_vector(7 downto 0) := x"02";
+    constant I_CDIVI                     : std_logic_vector(7 downto 0) := x"03";
+    constant I_MAXABSI                   : std_logic_vector(7 downto 0) := x"04";
+    constant I_MINABSI                   : std_logic_vector(7 downto 0) := x"05";
 
 end package constants;

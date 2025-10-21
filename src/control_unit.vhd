@@ -8,6 +8,9 @@ use tensors.tensors.all;
 library constants;
 use constants.constants.all;
 
+library fixed_pkg;
+use fixed_pkg.fixed_pkg.all;
+
 entity control_unit is
     port(
         i_clock                                                    : in  std_logic;
@@ -83,7 +86,7 @@ architecture rtl of control_unit is
     signal r_function_mapping : std_logic_vector(1 downto 0)  := (others => '0');
     signal r_imm16            : std_logic_vector(15 downto 0) := (others => '0');
     signal r_imm90            : std_logic_vector(89 downto 0) := (others => '0');
-    signal r_offs33           : unsigned(32 downto 0)         := (others => '0');
+    signal r_offs33           : std_logic_vector(32 downto 0) := (others => '0');
 
 begin
     -- Gated Output Registers
@@ -142,7 +145,7 @@ begin
         variable rd, rs1, rs2     : std_logic_vector(2 downto 0)  := (others => '0');
         variable imm16            : std_logic_vector(15 downto 0) := (others => '0');
         variable imm90            : std_logic_vector(89 downto 0) := (others => '0');
-        variable offs33           : unsigned(32 downto 0)         := (others => '0');
+        variable offs33           : std_logic_vector(32 downto 0) := (others => '0');
 
     begin
         if (rising_edge(i_clock)) then
@@ -153,49 +156,71 @@ begin
                     r_current_address <= std_logic_vector(r_PC); --NOTE this is delayed one cycle for no reason, get rid of it later.
                 when S_INSTRUCTION_FETCH =>
                     r_current_instruction <= i_current_instruction;
-
                 when S_DECODE =>
                     --These fields are used for all types of instructions
-                    opcode           := r_current_instruction(127 downto 120);
-                    subop            := r_current_instruction(119 downto 112);
-                    flags            := r_current_instruction(111 downto 96);
-                    function_mapping := r_current_instruction(97 downto 96);
+                    opcode := r_current_instruction(127 downto 120);
+                    subop  := r_current_instruction(119 downto 112);
+                    flags  := r_current_instruction(111 downto 96);
+
+                    r_opcode <= opcode;
+                    r_subop  <= subop;
+                    r_flags  <= flags;
                     case opcode is
                         when R_TYPE =>
-                            rd    := r_current_instruction(95 downto 93);
-                            rs1   := r_current_instruction(92 downto 90);
-                            rs2   := r_current_instruction(89 downto 87);
-                            imm16 := r_current_instruction(86 downto 71);
+                            rd               := r_current_instruction(95 downto 93);
+                            rs1              := r_current_instruction(92 downto 90);
+                            rs2              := r_current_instruction(89 downto 87);
+                            imm16            := r_current_instruction(86 downto 71);
+                            function_mapping := r_current_instruction(97 downto 96);
+
                             case function_mapping is
                                 when SCALAR_TO_SCALAR =>
                                     r_scalar_reg_sel_1 <= to_integer(unsigned(rs1));
                                     r_scalar_reg_sel_2 <= to_integer(unsigned(rs2));
                                     r_scalar_write_sel <= to_integer(unsigned(rd));
-                                    r_opcode           <= opcode;
                                     r_map_code         <= function_mapping;
                                 when VECTOR_TO_VECTOR =>
                                     r_vector_reg_sel_1 <= to_integer(unsigned(rs1));
                                     r_vector_reg_sel_2 <= to_integer(unsigned(rs2));
                                     r_vector_write_sel <= to_integer(unsigned(rd));
-                                    r_opcode           <= opcode;
                                     r_map_code         <= function_mapping;
                                 when VECTOR_TO_SCALAR            => null;
                                 when VECTOR_AND_SCALAR_TO_VECTOR => null;
                                 when others                      => r_error_flag <= '1';
                             end case;
+
                         when I_TYPE =>
                             rd    := r_current_instruction(95 downto 93);
                             rs1   := r_current_instruction(92 downto 90);
                             imm90 := r_current_instruction(89 downto 0);
+
+                            r_scalar_write_sel <= to_integer(unsigned(rd));
+                            r_scalar_reg_sel_1 <= to_integer(unsigned(rs1));
+                            r_imm90            <= imm90;
+
                             case subop is
-                                when others => null;
+                                when I_CLOADI =>
+                                    null;
+                                when I_CADDI =>
+                                    null;
+                                when I_CMULI =>
+                                    null;
+                                when I_CDIVI =>
+                                    null;
+                                when I_MAXABSI =>
+                                    null;
+                                when I_MINABSI =>
+                                    null;
+                                when others =>
+                                    r_error_flag <= '1';
                             end case;
                         when J_TYPE =>
+                            offs33 := r_current_instruction(92 downto 60);
+                            rs1    := r_current_instruction(95 downto 93);
 
-                            rs1 := r_current_instruction(95 downto 93);
-                            case subop is
-                                when others => null;
-                            end case;
+                            r_scalar_reg_sel_1 <= to_integer(unsigned(rs1));
+                            r_offs33           <= offs33;
+
                         when S_TYPE =>  --Cursed do later
                             case subop is
                                 when others => null;
@@ -215,10 +240,21 @@ begin
                                 when VECTOR_TO_VECTOR => null;
                                     r_av <= i_vector_reg_1;
                                     r_bv <= i_vector_reg_2;
+                                when VECTOR_TO_SCALAR =>
+                                    null;
+                                when VECTOR_AND_SCALAR_TO_VECTOR =>
+                                    null;
                                 when others =>
                                     r_error_flag <= '1';
                             end case;
-
+                        when I_TYPE =>
+                            null;
+                        when J_TYPE =>
+                            if (signed(i_scalar_reg_1.re) /= 0) then
+                                r_jump_flag <= '1';
+                            end if;
+                        when S_TYPE =>
+                            null;
                         when others => r_error_flag <= '1';
                     end case;
                 when S_EXECUTE =>
@@ -226,13 +262,23 @@ begin
                         when R_TYPE =>
                             case r_map_code is
                                 when SCALAR_TO_SCALAR =>
-                                    o_scalar_reg_input    <= i_x;
-                                    o_scalar_write_enable <= '1';
+                                    r_scalar_reg_input    <= i_x;
+                                    r_scalar_write_enable <= '1';
                                 when VECTOR_TO_VECTOR => null;
-                                    o_vector_reg_input    <= i_xv;
-                                    o_vector_write_enable <= '1';
+                                    r_vector_reg_input    <= i_xv;
+                                    r_vector_write_enable <= '1';
+                                when VECTOR_AND_SCALAR_TO_VECTOR =>
+                                    null;
+                                when VECTOR_TO_SCALAR =>
+                                    null;
                                 when others => r_error_flag <= '1';
                             end case;
+                        when I_TYPE =>
+                            null;
+                        when J_TYPE =>
+                            null;
+                        when S_TYPE =>
+                            null;
                         when others => r_error_flag <= '1';
                     end case;
 
@@ -269,10 +315,10 @@ begin
                     r_bv                      <= VECTOR_ZERO;
                     r_vector_reg_input        <= VECTOR_ZERO;
 
-                    if (r_jump_flag = '0') then
-                        r_PC <= r_PC + 1;
-                    else
+                    if (r_jump_flag = '1') then
                         r_PC <= resize(unsigned(offs33), 32);
+                    else
+                        r_PC <= r_PC + 1;
                     end if;
 
                 when S_ERROR =>
@@ -287,7 +333,7 @@ begin
     --------------------------------------------------------------------
     -- 3) Next-state 
     --------------------------------------------------------------------
-    next_state_logic : process(state, i_cu_start, i_reset)
+    next_state_logic : process(state, r_error_flag, i_cu_start, i_reset)
     begin
         state_next <= state;
         case state is
