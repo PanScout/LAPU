@@ -88,6 +88,16 @@ architecture rtl of control_unit is
     signal r_imm90            : std_logic_vector(89 downto 0) := (others => '0');
     signal r_offs33           : std_logic_vector(32 downto 0) := (others => '0');
 
+    function imm90_to_complex_t(imm90 : std_logic_vector(89 downto 0))
+    return complex_t is
+        variable ret : complex_t := COMPLEX_ZERO;
+    begin
+
+        ret.im := to_sfixed(signed(imm90(89 downto 45)), FIXED_INT_BITS, FIXED_FRAC_BITS);
+        ret.re := to_sfixed(signed(imm90(44 downto 0)), FIXED_INT_BITS, FIXED_FRAC_BITS);
+        return ret;
+    end function imm90_to_complex_t;
+
 begin
     -- Gated Output Registers
     o_cu_done                 <= r_cu_done;
@@ -200,10 +210,12 @@ begin
 
                             case subop is
                                 when I_CLOADI =>
-                                    null;
+                                    r_scalar_reg_input <= imm90_to_complex_t(imm90);
                                 when I_CADDI =>
                                     null;
                                 when I_CMULI =>
+                                    null;
+                                when I_CSUB =>
                                     null;
                                 when I_CDIVI =>
                                     null;
@@ -248,7 +260,36 @@ begin
                                     r_error_flag <= '1';
                             end case;
                         when I_TYPE =>
-                            null;
+                            case subop is
+                                when I_CLOADI =>
+                                    r_scalar_write_enable <= '1';
+                                when I_CADDI =>
+                                    r_a      <= i_scalar_reg_1;
+                                    r_b      <= imm90_to_complex_t(r_imm90);
+                                    r_opcode <= R_CADD;
+                                when I_CMULI =>
+                                    r_a      <= i_scalar_reg_1;
+                                    r_b      <= imm90_to_complex_t(r_imm90);
+                                    r_opcode <= R_CMUL;
+                                when I_CSUB =>
+                                    r_a      <= i_scalar_reg_1;
+                                    r_b      <= imm90_to_complex_t(r_imm90);
+                                    r_opcode <= R_CSUB;
+                                when I_CDIVI =>
+                                    r_a      <= i_scalar_reg_1;
+                                    r_b      <= imm90_to_complex_t(r_imm90);
+                                    r_opcode <= R_CDIV;
+                                when I_MAXABSI =>
+                                                                        r_a      <= i_scalar_reg_1;
+                                    r_b      <= imm90_to_complex_t(r_imm90);
+                                    r_opcode <= R_CDIV;
+                                when I_MINABSI =>
+                                                                        r_a      <= i_scalar_reg_1;
+                                    r_b      <= imm90_to_complex_t(r_imm90);
+                                    r_opcode <= R_CDIV;
+                                when others =>
+                                    r_error_flag <= '1';
+                            end case;
                         when J_TYPE =>
                             if (signed(i_scalar_reg_1.re) /= 0) then
                                 r_jump_flag <= '1';
@@ -274,7 +315,30 @@ begin
                                 when others => r_error_flag <= '1';
                             end case;
                         when I_TYPE =>
-                            null;
+                            case subop is
+                                when I_CLOADI =>
+                                    r_scalar_write_enable <= '0';
+                                when I_CADDI =>
+                                    r_scalar_reg_input    <= i_x;
+                                    r_scalar_write_enable <= '1';
+                                when I_CMULI =>
+                                    r_scalar_reg_input    <= i_x;
+                                    r_scalar_write_enable <= '1';
+                                when I_CSUB =>
+                                    r_scalar_reg_input    <= i_x;
+                                    r_scalar_write_enable <= '1';
+                                when I_CDIVI =>
+                                    r_scalar_reg_input    <= i_x;
+                                    r_scalar_write_enable <= '1';
+                                when I_MAXABSI =>
+                                    r_scalar_reg_input    <= i_x;
+                                    r_scalar_write_enable <= '1';
+                                when I_MINABSI =>
+                                    r_scalar_reg_input    <= i_x;
+                                    r_scalar_write_enable <= '1';
+                                when others =>
+                                    r_error_flag <= '1';
+                            end case;
                         when J_TYPE =>
                             null;
                         when S_TYPE =>
