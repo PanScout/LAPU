@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2025.10.14)  17 OCT 2025 15:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2025.10.14)  1 NOV 2025 18:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -716,21 +716,21 @@ Overfull \hbox (33.68925pt too wide) in alignment at lines 243--247
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 247--287
+Overfull \hbox (33.68925pt too wide) in alignment at lines 247--271
  [] [] [] [] [] 
  []
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 290.
+(Font)              <12> on input line 274.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 290.
+(Font)              <8> on input line 274.
 
-Overfull \hbox (35.70892pt too wide) in alignment at lines 291--296
+Overfull \hbox (35.70892pt too wide) in alignment at lines 275--280
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (35.70892pt too wide) in alignment at lines 296--300
+Overfull \hbox (35.70892pt too wide) in alignment at lines 280--284
  [] [] [] [] [] 
  []
 
@@ -741,148 +741,121 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.306 ...& vD, vA     & vD[i] $\leftarrow$ \mathrm
+l.289 ...& vD, vA     & vD[i] $\leftarrow$ \mathrm
                                                   {conj}(vA[i])             ...
 
 ? 
 
-Overfull \hbox (35.70892pt too wide) in alignment at lines 300--308
+Overfull \hbox (35.70892pt too wide) in alignment at lines 284--291
  [] [] [] [] [] 
  []
-
-
 
 [4
 
 ]
-Overfull \hbox (34.37543pt too wide) in alignment at lines 312--317
+Overfull \hbox (33.68925pt too wide) in alignment at lines 295--300
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (34.37543pt too wide) in alignment at lines 317--321
+Overfull \hbox (33.68925pt too wide) in alignment at lines 300--304
  [] [] [] [] [] 
  []
 
 
-LaTeX Warning: Command \= invalid in math mode on input line 323.
+LaTeX Warning: Command \= invalid in math mode on input line 305.
 
 ! Please use \mathaccent for accents in math mode.
 \add@accent ... \let \ignorespaces \relax \accent 
                                                   #1 #2\egroup \ifmmode \els...
-l.323 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
+l.305 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
                                                   [i]\;\={B}[i]$ & Complex d...
 
 ? 
 
-LaTeX Warning: Command \= invalid in math mode on input line 323.
+LaTeX Warning: Command \= invalid in math mode on input line 305.
 
 ! Please use \mathaccent for accents in math mode.
 \add@accent ... \let \ignorespaces \relax \accent 
                                                   #1 #2\egroup \ifmmode \els...
-l.323 ...um_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}
+l.305 ...um_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}
                                                   [i]$ & Complex dot (no con...
 
 ? 
 
-LaTeX Warning: Command \= invalid in math mode on input line 325.
+LaTeX Warning: Command \= invalid in math mode on input line 307.
 
 ! Please use \mathaccent for accents in math mode.
 \add@accent ... \let \ignorespaces \relax \accent 
                                                   #1 #2\egroup \ifmmode \els...
-l.325 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
+l.307 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
                                                   [i]$ & Complex sum; reduce...
 
 ? 
 
-LaTeX Warning: Command \= invalid in math mode on input line 326.
-
-! Please use \mathaccent for accents in math mode.
-\add@accent ... \let \ignorespaces \relax \accent 
-                                                  #1 #2\egroup \ifmmode \els...
-l.326 ...e\sum_{i=0}^{\mathrm{VLEN}-1}\lvert \={A}
-                                                  [i]\rvert,\; sD_{\mathrm{i...
-
-? 
-
-Overfull \hbox (34.37543pt too wide) in alignment at lines 321--328
+Overfull \hbox (33.68925pt too wide) in alignment at lines 304--309
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (34.37543pt too wide) in alignment at lines 332--337
+Overfull \hbox (34.37543pt too wide) in alignment at lines 313--318
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (34.37543pt too wide) in alignment at lines 337--341
+Overfull \hbox (34.37543pt too wide) in alignment at lines 318--322
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (34.37543pt too wide) in alignment at lines 341--351
+Overfull \hbox (34.37543pt too wide) in alignment at lines 322--332
  [] [] [] [] [] 
  []
 
 
 
 [5]
-Overfull \hbox (33.68925pt too wide) in alignment at lines 355--359
+Overfull \hbox (47.07043pt too wide) in alignment at lines 345--350
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 359--363
+Overfull \hbox (47.07043pt too wide) in alignment at lines 350--354
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 363--367
+Overfull \hbox (47.07043pt too wide) in alignment at lines 354--371
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (47.07043pt too wide) in alignment at lines 379--384
+Overfull \hbox (33.68925pt too wide) in alignment at lines 376--381
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (47.07043pt too wide) in alignment at lines 384--388
+Overfull \hbox (33.68925pt too wide) in alignment at lines 381--385
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (47.07043pt too wide) in alignment at lines 388--414
+Overfull \hbox (33.68925pt too wide) in alignment at lines 385--390
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 419--424
+Overfull \hbox (99.48625pt too wide) in alignment at lines 395--400
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 424--428
+Overfull \hbox (99.48625pt too wide) in alignment at lines 400--404
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 428--433
- [] [] [] [] [] 
- []
-
-
-Overfull \hbox (99.48625pt too wide) in alignment at lines 438--443
- [] [] [] [] [] 
- []
-
-
-Overfull \hbox (99.48625pt too wide) in alignment at lines 443--447
- [] [] [] [] [] 
- []
-
-
-Overfull \hbox (99.48625pt too wide) in alignment at lines 447--467
+Overfull \hbox (99.48625pt too wide) in alignment at lines 404--424
  [] [] [] [] [] 
  []
 
@@ -897,10 +870,10 @@ L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 5492 strings out of 473197
- 89931 string characters out of 5718604
- 509706 words of memory out of 5000000
- 28637 multiletter control sequences out of 15000+600000
+ 5491 strings out of 473197
+ 89926 string characters out of 5718604
+ 509624 words of memory out of 5000000
+ 28636 multiletter control sequences out of 15000+600000
  638919 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  89i,19n,95p,424b,519s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -915,7 +888,7 @@ fonts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb
 /public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/
 share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/publi
 c/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on spec.pdf (7 pages, 345094 bytes).
+Output written on spec.pdf (7 pages, 340588 bytes).
 PDF statistics:
  130 PDF objects out of 1000 (max. 8388607)
  82 compressed objects within 1 object stream

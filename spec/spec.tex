@@ -266,22 +266,6 @@ f(\mathbf v,s)              &\mapsto \mathbf v \in \mathrm{V}    && \texttt{11} 
 \texttt{csub}    & 0x09 & d, a, b & d $\leftarrow$ a $-$ b & Truncating. \\
 \texttt{cmul}    & 0x0A & d, a, b & d $\leftarrow$ a $\times$ b & Widen internally, truncate to Q32.32+Q32.32. \\
 \texttt{cdiv}    & 0x0B & d, a, b & d $\leftarrow$ a \,$\div$\, b & $(a\,\overline{b})/|b|^2$; if $|b|=0$ then d$:=0$. \\
-\texttt{cmaxabs} & 0x0C & d, a, b & d $\leftarrow \arg\max_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
-\texttt{cminabs} & 0x0D & d, a, b & d $\leftarrow \arg\min_{x\in\{a,b\}} |x|$ & Ties pick \texttt{a}. \\
-\texttt{cmplt.re} & 0x0E & d, a, b & 
-d$_\mathrm{re} \leftarrow 1$ if $\Re(a) < \Re(b)$ else $0$;\;
-d$_\mathrm{im} \leftarrow 0$ &
-Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
-
-\texttt{cmpgt.re} & 0x0F & d, a, b & 
-d$_\mathrm{re} \leftarrow 1$ if $\Re(a) > \Re(b)$ else $0$;\;
-d$_\mathrm{im} \leftarrow 0$ &
-Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
-
-\texttt{cmple.re} & 0x10 & d, a, b & 
-d$_\mathrm{re} \leftarrow 1$ if $\Re(a) \le \Re(b)$ else $0$;\;
-d$_\mathrm{im} \leftarrow 0$ &
-Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
 
 \bottomrule
 \end{longtable}
@@ -301,7 +285,6 @@ Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
 \texttt{vadd} & 0x00 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $+$ vB[i]                  & Saturating per lane. \\
 \texttt{vsub} & 0x01 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $-$ vB[i]                  & Saturating per lane. \\
 \texttt{vmul} & 0x02 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] $\times$ vB[i]             & Complex lane-wise multiply. \\
-\texttt{vmac} & 0x03 & vD, vA, vB & vD[i] $\leftarrow$ vD[i] + vA[i]\,$\times$\,vB[i]   & Fused complex MAC per lane. \\
 \texttt{vdiv} & 0x04 & vD, vA, vB & vD[i] $\leftarrow$ vA[i] \,$\div$\, vB[i]           & $(a\,\overline{b})/|b|^2$; if $|b|{=}0$ then lane:=0. \\
 \texttt{vconj} & 0x05 & vD, vA     & vD[i] $\leftarrow$ \mathrm{conj}(vA[i])             & Lane-wise conjugate. \\
 \bottomrule
@@ -319,11 +302,9 @@ Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
 \textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
 \midrule
 \endhead
-\texttt{dotc}    & 0x00 & sD, vA, vB & $sD \leftarrow \sum_{i=0}^{\mathrm{VLEN}-1}\mathrm{conj}(vA[i])\cdot vB[i]$ & Reduce to scalar \texttt{sD}. \\
 \texttt{dotu}    & 0x01 & sD, \={A}, \={B} & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}[i]$ & Complex dot (no conjugation). \\
 \texttt{iamax} & 0x02 & sD, vA     & sD $\leftarrow \arg\max_i |vA[i]|$                   & Index in \texttt{sD} real half; imag:=0. \\
 \texttt{sum}   & 0x03 & sD, \={A}  & $sD \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}[i]$ & Complex sum; reduces to scalar. \\
-\texttt{asum}  & 0x04 & sD, \={A}  & $sD_{\mathrm{re}} \leftarrow \displaystyle\sum_{i=0}^{\mathrm{VLEN}-1}\lvert \={A}[i]\rvert,\; sD_{\mathrm{im}} \leftarrow 0$ & Sum of magnitudes (real result). \\
 \bottomrule
 \end{longtable}
 
@@ -350,21 +331,6 @@ Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
 \bottomrule
 \end{longtable}
 \newpage
-%=== V x S -> V  =============================================
-\subsection*{Scalar register Vector register load}
-\begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
-\toprule
-\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
-\midrule
-\endhead
-\texttt{vsload} & 0x1C & vD, a, i & vD[i] $\leftarrow$ a
-  & Load from scalar register $a$ into vector subcomponent $vD[i]$ \\
-\bottomrule
-\end{longtable}
 
 %---------------- I-type -----------------
 \section*{I-type — Immediate (scalars only)}
@@ -372,8 +338,8 @@ Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
 \subsection*{Description}
 \noindent \texttt{imm\_90} is a complex number split into two 45-bit \textbf{signed} fixed-point halves (Q22.23, two’s complement), packed as:
 \[
-\text{Re} \;\to\; \texttt{imm\_90}[44{:}0], \qquad
-\text{Im} \;\to\; \texttt{imm\_90}[89{:}45].
+\text{Re} \;\to\; \texttt{imm\_90}[89{:}45], \qquad
+\text{Im} \;\to\; \texttt{imm\_90}[44{:}0].
 \]
 
 \begin{longtable}{@{}l l l L{0.38\linewidth} L{0.30\linewidth}@{}}
@@ -400,15 +366,6 @@ Ignores imaginary parts of \texttt{a} and \texttt{b}. \\
 
 \texttt{cdiv\_i}  & 0x04 & sD, sA, cIMM   & sD $\leftarrow$ sA \,$\div$\, cIMM
   & $(sA\,\overline{\text{cIMM}})/|\text{cIMM}|^2$; if $|\text{cIMM}|{=}0$ then sD:=0. \\
-
-\texttt{cmaxabs\_i} & 0x05 & sD, sA, cIMM & sD $\leftarrow \arg\max_{x\in\{sA,\ \text{cIMM}\}} |x|$
-  & Ties pick \texttt{sA}. \\
-
-\texttt{cminabs\_i} & 0x06 & sD, sA, cIMM & sD $\leftarrow \arg\min_{x\in\{sA,\ \text{cIMM}\}} |x|$
-  & Ties pick \texttt{sA}. \\
-
-\texttt{cscale\_i} & 0x10 & sD, sA, rIMM  & sD $\leftarrow$ sA $\times$ rIMM
-  & Real scale rIMM packed in \texttt{imm\_90} as Q22.23 with $\mathrm{Im}{=}0$. \\
 
 \bottomrule
 \end{longtable}

@@ -34,7 +34,6 @@ begin
 
   w_clock <= not w_clock after 1 ns;
 
-
   register_file_inst : entity work.register_file
     port map(
       i_clock               => w_clock,
@@ -93,6 +92,7 @@ begin
       o_av                      => w_av,
       o_bv                      => w_bv,
       o_map_code                => w_map_code,
+      o_opcode                  => w_opcode,
       i_x                       => w_x,
       i_xv                      => w_xv,
       o_scalar_reg_sel_1        => w_scalar_reg_sel_1,
@@ -143,11 +143,9 @@ begin
   stim : process
   begin
     -- Wait past t=0 so changes land at real time
-    w_reset    <= '1';
-    wait for 100 ns;
     w_reset    <= '0';
     w_cu_start <= '1';
     stop_sim   <= '1';
-    wait;
+    wait for 1000 ns;
   end process;
 end architecture sim;

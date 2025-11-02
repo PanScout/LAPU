@@ -28,11 +28,11 @@ end entity matrix_bank;
 architecture RTL of matrix_bank is
 
     type   matrix_banks is array (3 downto 0) of matrix_t;
-    signal matrices     : matrix_banks;
+    signal matrices     : matrix_banks := (others => (others => (others => (others => (others => '0')))));
 
 begin
 
-    sel : process(i_clock,i_reset) is
+    sel : process(i_clock, i_reset) is
     begin
         if (rising_edge(i_clock) and i_reset = '0') then
             if (i_scalar_or_vector_action = '0') then --Scalar
@@ -42,24 +42,24 @@ begin
                     matrices(i_matrix_sel)(i_scalar_i, i_scalar_j) <= i_scalar;
                 end if;
             else                        --Vector
-                if i_column_or_row_order = '0' then --Column order
+                if i_column_or_row_order = '1' then --Column order
                     if i_rw_vector = '0' then --read entire col j ->ovec 
                         for k in 0 to VECTOR_SIZE - 1 loop
-                            o_vector(k) <= matrices(i_matrix_sel)(k, i_vector_j);
+                            o_vector(k) <= matrices(i_matrix_sel)(i_vector_i, k + i_vector_j);
                         end loop;
                     else
                         for k in 0 to VECTOR_SIZE - 1 loop
-                            matrices(i_matrix_sel)(k, i_vector_j) <= i_vector(k);
+                            matrices(i_matrix_sel)(k + i_vector_i, i_vector_j) <= i_vector(k);
                         end loop;
                     end if;
                 else                    --Row order
                     if i_rw_vector = '0' then
                         for k in 0 to VECTOR_SIZE - 1 loop
-                            o_vector(k) <= matrices(i_matrix_sel)(i_vector_i, k);
+                            o_vector(k) <= matrices(i_matrix_sel)(k + i_vector_i, i_vector_j);
                         end loop;
                     else
                         for k in 0 to VECTOR_SIZE - 1 loop
-                            matrices(i_matrix_sel)(i_vector_i, k) <= i_vector(k);
+                            matrices(i_matrix_sel)(i_vector_i, k + i_vector_j) <= i_vector(k);
                         end loop;
                     end if;
                 end if;

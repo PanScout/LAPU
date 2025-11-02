@@ -3,7 +3,20 @@ import sys, re, argparse
 from decimal import Decimal, getcontext
 from typing import List, Tuple, Dict, Any, Optional
 
+# ===== Architecture policy =====
+# Vector transfers always move VECTOR_LEN scalars. Scalar transfers move exactly 1.
+# Orientation for vector transfers (row-major vs column-major) is encoded in FLAGS16 bit 111.
+# Syntax for S-type after this refactor:
+#   vld[.rm|.cm] vD, mbid, x16, y16
+#   vst[.rm|.cm] vS, mbid, x16, y16
+#   sld.xy       sD, mbid, x16, y16
+#   sst.xy       sS, mbid, x16, y16
+# No len16 operand exists anymore; bits [56:41] are reserved and set to 0.
+
 getcontext().prec = 80
+
+# Constant vector length (number of scalar elements moved in vld/vst)
+VECTOR_LEN = 8  # <-- adjust to your hardware width
 
 class AsmError(Exception):
     pass
@@ -41,7 +54,7 @@ def parse_int(token: str, line_no: int, *, signed: bool=False, bits: Optional[in
     else:
         base = 10
         tnum = t
-    if not tnum or any(c not in '0123456789abcdef' for c in tnum) if base==16 else not tnum.isdigit():
+    if not tnum or (any(c not in '0123456789abcdef' for c in tnum) if base==16 else not tnum.isdigit()):
         raise AsmError(f"Line {line_no}: invalid integer literal '{token}'")
     val = int(tnum, base)
     if neg:
@@ -213,7 +226,7 @@ J_SUBOPS = {
     'jrel': 0x00,
 }
 
-# S-type
+# S-type subops
 S_SUBOPS = {
     'vld': 0x00,
     'vst': 0x01,
@@ -221,10 +234,30 @@ S_SUBOPS = {
     'sst.xy': 0x03,
 }
 
+# Helpers for S-type order suffix (row/column)
+ROW_SUFFIXES = {"rm", "row", "rowmajor", "r"}
+COL_SUFFIXES = {"cm", "col", "colmajor", "column", "c"}
+
+def parse_vec_order_from_mnemonic(mn: str, line_no: int) -> Tuple[str, int]:
+    """Return (base_mnemonic, order_bit) where order_bit=0 for row-major, 1 for column-major.
+       Accepts suffix forms like 'vld.rm', 'vst.cm'.
+       If no suffix, default row-major (0)."""
+    if '.' in mn:
+        base, suffix = mn.split('.', 1)
+        sfx = suffix.strip().lower()
+        if sfx in ROW_SUFFIXES:
+            return base, 0
+        if sfx in COL_SUFFIXES:
+            return base, 1
+        err(line_no, f"unknown order suffix '.{suffix}' for vector op; use one of {sorted(ROW_SUFFIXES|COL_SUFFIXES)}")
+    return mn, 0
+
+
 def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_index: int) -> int:
     if not tokens:
         return None  # no instruction
-    mn = tokens[0].lower()
+    raw_mn = tokens[0]
+    mn = raw_mn.lower()
     word = 0
 
     def set_common(opcode: int, subop: int):
@@ -246,11 +279,7 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
     # ----- R-type -----
     if mn in R_SCALAR_UNARY or mn in R_SCALAR_BINARY or mn in R_VECTOR_LANE or mn in R_REDUCTIONS or mn in R_VEC_SCALAR:
         set_common(OPCODES['r'], 0)  # we'll set subop shortly
-        # Initialize zeros for all reserved/unused fields
-        # flags later, imm16 zero, reserved zeros by default (word is all zeros)
-        # Parse operands based on category
         if mn in R_SCALAR_UNARY:
-            # cneg d, a
             if len(tokens) != 3:
                 err(line_no, f"{mn} expects 2 operands: d, a")
             if not (is_scalar_reg(tokens[1]) and is_scalar_reg(tokens[2])):
@@ -259,18 +288,14 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
             _, rs1 = parse_reg(tokens[2], line_no)
             subop = R_SCALAR_UNARY[mn]
             word = set_bits(word, subop, 119, 112, line_no=line_no, field_name="subop")
-            # mapping 00
             word = set_bits(word, MAPBITS['SS_to_S'], 97, 96, line_no=line_no, field_name="flags.map")
             word = set_bits(word, rd, 95, 93, line_no=line_no, field_name="rd")
             word = set_bits(word, rs1, 92, 90, line_no=line_no, field_name="rs1")
             word = set_bits(word, 0, 89, 87, line_no=line_no, field_name="rs2")
-            # imm16 zero
             word = set_bits(word, 0, 86, 71, line_no=line_no, field_name="imm16")
-            # reserved zeros already
             if rd == 0:
                 err(line_no, "writing to s0 is illegal (hard error)")
         elif mn in R_SCALAR_BINARY:
-            # cadd d, a, b
             if len(tokens) != 4:
                 err(line_no, f"{mn} expects 3 operands: d, a, b")
             if not (is_scalar_reg(tokens[1]) and is_scalar_reg(tokens[2]) and is_scalar_reg(tokens[3])):
@@ -289,7 +314,6 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
                 err(line_no, "writing to s0 is illegal (hard error)")
         elif mn in R_VECTOR_LANE:
             if mn == 'vconj':
-                # vconj d, a
                 if len(tokens) != 3:
                     err(line_no, f"{mn} expects 2 operands: vD, vA")
                 if not (is_vector_reg(tokens[1]) and is_vector_reg(tokens[2])):
@@ -306,7 +330,6 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
                 if rd == 0:
                     err(line_no, "writing to v0 is illegal (hard error)")
             else:
-                # vadd/vsub/vmul/vmac/vdiv d, a, b
                 if len(tokens) != 4:
                     err(line_no, f"{mn} expects 3 operands: vD, vA, vB")
                 if not (is_vector_reg(tokens[1]) and is_vector_reg(tokens[2]) and is_vector_reg(tokens[3])):
@@ -324,12 +347,6 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
                 if rd == 0:
                     err(line_no, "writing to v0 is illegal (hard error)")
         elif mn in R_REDUCTIONS:
-            # dotc/dotu/iamax/sum/asum (v... -> s), forms:
-            # dotc sD, vA, vB
-            # dotu sD, vA, vB
-            # iamax sD, vA
-            # sum sD, vA
-            # asum sD, vA
             subop = R_REDUCTIONS[mn]
             if mn in ('dotc', 'dotu'):
                 if len(tokens) != 4:
@@ -356,7 +373,6 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
             if rd == 0:
                 err(line_no, "writing to s0 is illegal (hard error)")
         elif mn in R_VEC_SCALAR:
-            # vsadd/vssub/vsmul/vsdiv vD, vA, sB
             if len(tokens) != 4:
                 err(line_no, f"{mn} expects 3 operands: vD, vA, sB")
             if not (is_vector_reg(tokens[1]) and is_vector_reg(tokens[2]) and is_scalar_reg(tokens[3])):
@@ -397,7 +413,6 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
             if not m:
                 err(line_no, "cloadi requires c(re,im) as immediate")
             parts = m.group(1)
-            # split re,im respecting nested? We assume no nested parens inside.
             parts = [p.strip() for p in parts.split(',')]
             if len(parts) != 2:
                 err(line_no, "cIMM must be c(re, im)")
@@ -414,7 +429,7 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
                 err(line_no, "writing to s0 is illegal (hard error)")
             return word
         else:
-            # cadd_i/cm ul_i/csub_i/cdiv_i/cmaxabs_i/cminabs_i: sD, sA, cIMM
+            # cadd_i/cmul_i/csub_i/cdiv_i/cmaxabs_i/cminabs_i: sD, sA, cIMM
             # cscale_i: sD, sA, rIMM (real), but we will still pack into imm_90 with Im=0
             if len(tokens) != 4:
                 err(line_no, f"{mn} expects 3 operands: sD, sA, IMM")
@@ -457,7 +472,7 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
         subop = J_SUBOPS[mn]
         word = set_bits(word, OPCODES['j'], 127, 120, line_no=line_no, field_name="opcode")
         word = set_bits(word, subop, 119, 112, line_no=line_no, field_name="subop")
-        # flags16 zeros except rc bit if applicable (not used here)
+        # flags16 zeros (unused)
         # rs1 hard-encoded to s1
         word = set_bits(word, 1, 95, 93, line_no=line_no, field_name="rs1")
         offs = parse_imm_or_label(tokens[1])
@@ -466,97 +481,84 @@ def assemble_line(tokens: List[str], line_no: int, labels: Dict[str, int], pc_in
         # reserved [59:0] = 0
         return word
 
-    # ----- S-type -----
-    if mn in S_SUBOPS:
-        subop = S_SUBOPS[mn]
-        word = set_bits(word, OPCODES['s'], 127, 120, line_no=line_no, field_name="opcode")
-        word = set_bits(word, subop, 119, 112, line_no=line_no, field_name="subop")
-        # FLAGS16[111:96]; rc at bit 111 (MSB); others zero
-        if mn in ('vld','vst'):
-            # vld vD, mbid, rc, idx16, len16
-            # vst vS, mbid, rc, idx16, len16
-            if len(tokens) != 6:
-                err(line_no, f"{mn} expects 5 operands: v*, mbid, rc, idx16, len16")
+    # ----- S-type (refactored) -----
+    # New forms:
+    #   vld[.rm|.cm] vD, mbid, x16, y16
+    #   vst[.rm|.cm] vS, mbid, x16, y16
+    #   sld.xy sD, mbid, x16, y16
+    #   sst.xy sS, mbid, x16, y16
+    if mn.startswith('vld') or mn.startswith('vst') or mn in S_SUBOPS:
+        # Handle vector order suffix for vld/vst
+        if mn.startswith('vld') or mn.startswith('vst'):
+            base, order_bit = parse_vec_order_from_mnemonic(mn, line_no)
+            if base not in ('vld', 'vst'):
+                err(line_no, f"unknown S-type mnemonic '{raw_mn}'")
+            subop = S_SUBOPS[base]
+            if len(tokens) != 5:
+                err(line_no, f"{raw_mn} expects 4 operands: v*, mbid, x16, y16")
             if not is_vector_reg(tokens[1]):
-                err(line_no, f"{mn} requires vector register in operand 1")
-            _, reg3 = parse_reg(tokens[1], line_no)
+                err(line_no, f"{raw_mn} requires vector register in operand 1")
+            _, vreg = parse_reg(tokens[1], line_no)
             mbid = parse_int(tokens[2], line_no, signed=False, bits=4)
             if not (0 <= mbid < 4):
                 err(line_no, f"mbid {mbid} out of range (must be 0..3 for 4 banks)")
-            rc    = parse_int(tokens[3], line_no, signed=False, bits=1)
-            idx16 = parse_int(tokens[4], line_no, signed=False, bits=16)
-            len16 = parse_int(tokens[5], line_no, signed=False, bits=16)
-            word = set_bits(word, rc, 111, 111, line_no=line_no, field_name="FLAGS16.rc")
-            word = set_bits(word, reg3, 95, 93, line_no=line_no, field_name="reg3")
+            x16  = parse_int(tokens[3], line_no, signed=False, bits=16)
+            y16  = parse_int(tokens[4], line_no, signed=False, bits=16)
+            word = set_bits(word, OPCODES['s'], 127, 120, line_no=line_no, field_name="opcode")
+            word = set_bits(word, subop, 119, 112, line_no=line_no, field_name="subop")
+            # FLAGS16[111] encodes order: 0=row-major, 1=column-major
+            word = set_bits(word, order_bit, 111, 111, line_no=line_no, field_name="FLAGS16.order")
+            word = set_bits(word, vreg, 95, 93, line_no=line_no, field_name="reg3")
             word = set_bits(word, mbid, 92, 89, line_no=line_no, field_name="mbid")
-            # x16 -> i16, y16 -> j16 for sld/sst; here idx16 is placed into i16 (as per table)
-            word = set_bits(word, idx16, 88, 73, line_no=line_no, field_name="i16/idx16")
-            word = set_bits(word, 0, 72, 57, line_no=line_no, field_name="j16")
-            word = set_bits(word, len16, 56, 41, line_no=line_no, field_name="len16")
-            if reg3 == 0:
+            word = set_bits(word, x16, 88, 73, line_no=line_no, field_name="i16/x16")
+            word = set_bits(word, y16, 72, 57, line_no=line_no, field_name="j16/y16")
+            word = set_bits(word, 0,   56, 41, line_no=line_no, field_name="reserved.len16_gone")
+            # Destination rule: forbid writing to v0 on loads only
+            if base == 'vld' and vreg == 0:
                 err(line_no, "writing to v0 is illegal (hard error)")
-        elif mn == 'sld.xy':
-            # sld.xy sD, mbid, x16, y16  (map x->i16, y->j16)
+            return word
+        # Scalar matrix element load/store
+        if mn in ('sld.xy', 'sst.xy'):
+            subop = S_SUBOPS[mn]
             if len(tokens) != 5:
-                err(line_no, "sld.xy expects 4 operands: sD, mbid, x16, y16")
+                err(line_no, f"{mn} expects 4 operands: s*, mbid, x16, y16")
             if not is_scalar_reg(tokens[1]):
-                err(line_no, "sld.xy requires scalar destination sD")
-            _, reg3 = parse_reg(tokens[1], line_no)
+                err(line_no, f"{mn} requires scalar register in operand 1")
+            _, sreg = parse_reg(tokens[1], line_no)
             mbid = parse_int(tokens[2], line_no, signed=False, bits=4)
             if not (0 <= mbid < 4):
                 err(line_no, f"mbid {mbid} out of range (must be 0..3 for 4 banks)")
             x16  = parse_int(tokens[3], line_no, signed=False, bits=16)
             y16  = parse_int(tokens[4], line_no, signed=False, bits=16)
-            word = set_bits(word, reg3, 95, 93, line_no=line_no, field_name="reg3")
+            word = set_bits(word, OPCODES['s'], 127, 120, line_no=line_no, field_name="opcode")
+            word = set_bits(word, subop, 119, 112, line_no=line_no, field_name="subop")
+            # FLAGS16.order unused for scalar transfers (leave 0)
+            word = set_bits(word, sreg, 95, 93, line_no=line_no, field_name="reg3")
             word = set_bits(word, mbid, 92, 89, line_no=line_no, field_name="mbid")
             word = set_bits(word, x16, 88, 73, line_no=line_no, field_name="i16/x16")
             word = set_bits(word, y16, 72, 57, line_no=line_no, field_name="j16/y16")
-            word = set_bits(word, 0, 56, 41, line_no=line_no, field_name="len16")
-            # FLAGS16.rc not used; leave zero
-            if reg3 == 0:
+            word = set_bits(word, 0,   56, 41, line_no=line_no, field_name="reserved.len16_gone")
+            if mn == 'sld.xy' and sreg == 0:
                 err(line_no, "writing to s0 is illegal (hard error)")
-        elif mn == 'sst.xy':
-            # sst.xy sS, mbid, x16, y16  (store scalar to matrix bank; writing memory only, so sS can be s0? spec doesn't forbid store-from-zero; but we won't forbid)
-            if len(tokens) != 5:
-                err(line_no, "sst.xy expects 4 operands: sS, mbid, x16, y16")
-            if not is_scalar_reg(tokens[1]):
-                err(line_no, "sst.xy requires scalar source sS")
-            _, reg3 = parse_reg(tokens[1], line_no)
-            mbid = parse_int(tokens[2], line_no, signed=False, bits=4)
-            if not (0 <= mbid < 4):
-                err(line_no, f"mbid {mbid} out of range (must be 0..3 for 4 banks)")
-            x16  = parse_int(tokens[3], line_no, signed=False, bits=16)
-            y16  = parse_int(tokens[4], line_no, signed=False, bits=16)
-            word = set_bits(word, reg3, 95, 93, line_no=line_no, field_name="reg3")
-            word = set_bits(word, mbid, 92, 89, line_no=line_no, field_name="mbid")
-            word = set_bits(word, x16, 88, 73, line_no=line_no, field_name="i16/x16")
-            word = set_bits(word, y16, 72, 57, line_no=line_no, field_name="j16/y16")
-            word = set_bits(word, 0, 56, 41, line_no=line_no, field_name="len16")
-            # FLAGS16.rc not used; leave zero
-        else:
-            err(line_no, f"unsupported S-type mnemonic '{mn}'")
-        return word
+            return word
+        # If we got here with an S-like mnemonic but didn't match, error out
+        err(line_no, f"unknown or malformed S-type mnemonic '{raw_mn}'")
 
-    err(line_no, f"unknown mnemonic '{mn}'")
+    err(line_no, f"unknown mnemonic '{raw_mn}'")
+
 
 def assemble_text(lines: List[str]) -> List[int]:
-    # First pass: collect labels and instruction addresses (in instruction units)
+    # First pass: collect labels and instruction indices (in instruction units)
     labels: Dict[str, int] = {}
     instrs: List[Tuple[int, List[str]]] = []
     pc = 0
-    label_pattern = re.compile(r'^([A-Za-z_]\w*):$')
     for idx, raw in enumerate(lines, start=1):
-        # strip comments for label detection
         line = raw.split('#', 1)[0].strip()
         if not line:
             continue
-        # allow labels on their own line OR label + instruction on same line
-        # Split potential leading label
         tokens = tokenize(line)
         if not tokens:
             continue
-        # If first token ends with ":" in original, handle; else detect with regex on stripped text
-        # We'll parse labels in a simple way: while tokens[0] is "label:" add label; then process rest.
         rest_tokens = tokens[:]
         while rest_tokens and rest_tokens[0].endswith(':'):
             lab = rest_tokens.pop(0)[:-1]
@@ -567,8 +569,6 @@ def assemble_text(lines: List[str]) -> List[int]:
             labels[lab] = pc
         if not rest_tokens:
             continue
-        # If first token is a bare label (without colon) followed by nothing? Not allowed
-        # Record instruction tokens and line number
         instrs.append((idx, rest_tokens))
         pc += 1
 
@@ -581,10 +581,12 @@ def assemble_text(lines: List[str]) -> List[int]:
         pc += 1
     return enc
 
+
 def format_hex128(word: int) -> str:
     if word < 0 or word >= (1 << 128):
         raise AsmError(f"encoded word out of 128-bit range: {word}")
     return f"{word:032X}"  # uppercase, 32 hex digits
+
 
 def main():
     ap = argparse.ArgumentParser(description="LAPU-128 Assembler (hex output)")
@@ -604,6 +606,7 @@ def main():
     with open(args.output, "w", encoding="utf-8") as f:
         for w in words:
             f.write(format_hex128(w) + "\n")
+
 
 if __name__ == "__main__":
     main()

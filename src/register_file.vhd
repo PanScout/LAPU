@@ -34,10 +34,10 @@ architecture arch of register_file is
 
   -- Storage
   type scalar_regs_t is array (0 to REGISTER_FILE_LENGTH - 1) of complex_t;
-  signal scalar_regs : scalar_regs_t;
+  signal scalar_regs : scalar_regs_t := (others => (others => (others => '0')));
 
   type vector_regs_t is array (0 to REGISTER_FILE_LENGTH - 1) of vector_t;
-  signal vector_regs : vector_regs_t;
+  signal vector_regs : vector_regs_t := ((others => (others => (others => (others => '0')))));
 begin
   ---------------------------------------------------------------------------
   -- Synchronous write + synchronous reset
