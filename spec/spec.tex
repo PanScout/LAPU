@@ -147,12 +147,11 @@ shows the canonical XL, XC, XV, and XM encodings with 8-bit tick marks.
     \bitbox{8}{\bfstack{opc}{127}{120}} &
     \bitbox{8}{\bfstack{subop}{119}{112}} &
     \bitbox{16}{\bfstack{FLAGS16}{111}{96}} &
-    \bitbox{3}{\bfstack{reg3}{95}{93}} &
+    \bitbox{3}{\bfstack{rd}{95}{93}} &
     \bitbox{4}{\bfstack{mbid}{92}{89}} &
     \bitbox{16}{\bfstack{i16}{88}{73}} &
     \bitbox{16}{\bfstack{j16}{72}{57}} &
-    \bitbox{16}{\bfstack{len16}{56}{41}} &
-    \bitbox{41}{\bfstack{rsv}{40}{0}}
+    \bitbox{57}{\bfstack{rsv}{56}{0}}
   \end{rightwordgroup}
 \end{bytefield}
 
@@ -402,14 +401,13 @@ If $s1 \neq 0$: $\mathrm{PC} \leftarrow \mathrm{PC} + \text{offs33}$ (instructio
 \textbf{Mnemonic} & \textbf{subop} & \textbf{Operands} & \textbf{Effect} & \textbf{Notes} \\
 \midrule
 \endhead
-\texttt{vld} & 0x00 & vD, mbid, rc, idx16, len16 &
+\texttt{vld} & 0x00 & vD, mbid, rc, idx16 &
 Load into vD the sequence:
 $\text{if } rc{=}0:\ (r{=}\text{idx16},\ c{=}0..L{-}1),\;
-\text{if } rc{=}1:\ (r{=}0..L{-}1,\ c{=}\text{idx16})$,
-where $L = \text{len16}$ if nonzero, else $L=\mathrm{VLEN}$. &
-\textbf{Encoding:} \texttt{FLAGS16.rc} is bit~\textbf{111} (MSB of \texttt{FLAGS16}); \texttt{rc}{=}0 means row, \texttt{rc}{=}1 means column. Fields \texttt{idx16} and \texttt{len16} are \textbf{unsigned 16-bit}; \texttt{len16}{=}0 selects $L=\mathrm{VLEN}$. Row stride $=1$; column stride $=\mathrm{VLEN}$. Elements are 128-bit complex (Re then Im). \\
+\text{if } rc{=}1:\ (r{=}0..L{-}1,\ c{=}\text{idx16})$
+\textbf{Encoding:} \texttt{FLAGS16.rc} is bit~\textbf{111} (MSB of \texttt{FLAGS16}); \texttt{rc}{=}0 means row, \texttt{rc}{=}1 means column. Fields \texttt{idx16} and \texttt{idy16} are \textbf{unsigned 16-bit}; Write as vld.rm or vld.cm to select row or column major order. Elements are 128-bit complex (Re then Im). \\
 \addlinespace[0.25em]
-\texttt{vst} & 0x01 & vS, mbid, rc, idx16, len16 &
+\texttt{vst} & 0x01 & vS, mbid, rc, idx16 &
 Store from vS to the same address pattern as \texttt{vld}. &
 Same encoding and field conventions as \texttt{vld}. \\
 \addlinespace[0.25em]

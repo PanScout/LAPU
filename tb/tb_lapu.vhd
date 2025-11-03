@@ -15,20 +15,21 @@ architecture sim of tb_lapu is
 
   signal stop_sim : std_logic := '0';
 
-  signal w_clock, w_reset, w_cu_start, w_done, w_program_count_ready, w_rom_ready, w_scalar_or_vector_action, w_rw_vector, w_column_or_row_order, w_rw_scalar : std_logic                            := '0';
-  signal w_jump_flag                                                                                                                                          : std_logic                            := '0';
-  signal w_program_count, w_new_program_count, w_rom_address                                                                                                  : std_logic_vector(31 downto 0)        := (others => '0');
-  signal w_instruction                                                                                                                                        : std_logic_vector((127) downto 0)     := (others => '0');
-  signal w_matrix_sel                                                                                                                                         : integer range 0 to 3                 := 0;
-  signal w_vector_i, w_vector_j, w_scalar_i, w_scalar_j                                                                                                       : integer range 0 to (VECTOR_SIZE - 1) := 0;
-  signal w_in_vector, w_out_vector, w_av, w_bv, w_xv                                                                                                          : vector_t                             := VECTOR_ZERO;
-  signal w_in_scalar, w_out_scalar, w_a, w_b, w_x                                                                                                             : complex_t                            := COMPLEX_ZERO;
-  signal w_map_code                                                                                                                                           : std_logic_vector(1 downto 0)         := (others => '0');
-  signal w_opcode                                                                                                                                             : std_logic_vector(7 downto 0)         := (others => '0');
-  signal w_scalar_reg_sel_1, w_scalar_reg_sel_2, w_scalar_write_sel, w_vector_reg_sel_1, w_vector_reg_sel_2, w_vector_write_sel                               : integer range 0 to 7                 := 0;
-  signal w_scalar_reg_1, w_scalar_reg_2, w_scalar_reg_input                                                                                                   : complex_t                            := COMPLEX_ZERO;
-  signal w_scalar_write_enable, w_vector_write_enable                                                                                                         : std_logic                            := '0';
-  signal w_vector_reg_1, w_vector_reg_2, w_vector_reg_input                                                                                                   : vector_t                             := VECTOR_ZERO;
+  signal w_clock, w_reset, w_cu_start, w_done, w_program_count_ready, w_rom_ready, w_scalar_or_vector_action, w_rw_vector, w_column_or_row_order, w_rw_scalar : std_logic                                            := '0';
+  signal w_jump_flag                                                                                                                                          : std_logic                                            := '0';
+  signal w_program_count, w_new_program_count, w_rom_address                                                                                                  : std_logic_vector(31 downto 0)                        := (others => '0');
+  signal w_instruction                                                                                                                                        : std_logic_vector((127) downto 0)                     := (others => '0');
+  signal w_matrix_sel                                                                                                                                         : integer range 0 to 3                                 := 0;
+  signal w_vector_i, w_vector_j                                                                                                                               : integer range 0 to (MATRIX_FACTOR * VECTOR_SIZE) - 1;
+  signal w_scalar_i, w_scalar_j                                                                                                                               : integer range 0 to (VECTOR_SIZE * MATRIX_FACTOR) - 1 := 0;
+  signal w_in_vector, w_out_vector, w_av, w_bv, w_xv                                                                                                          : vector_t                                             := VECTOR_ZERO;
+  signal w_in_scalar, w_out_scalar, w_a, w_b, w_x                                                                                                             : complex_t                                            := COMPLEX_ZERO;
+  signal w_map_code                                                                                                                                           : std_logic_vector(1 downto 0)                         := (others => '0');
+  signal w_opcode                                                                                                                                             : std_logic_vector(7 downto 0)                         := (others => '0');
+  signal w_scalar_reg_sel_1, w_scalar_reg_sel_2, w_scalar_write_sel, w_vector_reg_sel_1, w_vector_reg_sel_2, w_vector_write_sel                               : integer range 0 to 7                                 := 0;
+  signal w_scalar_reg_1, w_scalar_reg_2, w_scalar_reg_input                                                                                                   : complex_t                                            := COMPLEX_ZERO;
+  signal w_scalar_write_enable, w_vector_write_enable                                                                                                         : std_logic                                            := '0';
+  signal w_vector_reg_1, w_vector_reg_2, w_vector_reg_input                                                                                                   : vector_t                                             := VECTOR_ZERO;
 
 begin
 

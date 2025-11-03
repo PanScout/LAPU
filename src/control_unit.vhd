@@ -27,11 +27,11 @@ entity control_unit is
         o_scalar_or_vector_action                                  : out std_logic;
         o_rw_vector                                                : out std_logic;
         o_column_or_row_order                                      : out std_logic;
-        o_vector_i, o_vector_j                                     : out integer range 0 to VECTOR_SIZE - 1;
+        o_vector_i, o_vector_j                                     : out integer range 0 to (MATRIX_FACTOR * VECTOR_SIZE) - 1;
         o_vector                                                   : out vector_t;
         i_vector                                                   : in  vector_t;
         o_rw_scalar                                                : out std_logic;
-        o_scalar_i, o_scalar_j                                     : out integer range 0 to VECTOR_SIZE - 1;
+        o_scalar_i, o_scalar_j                                     : out integer range 0 to (VECTOR_SIZE * MATRIX_FACTOR) - 1;
         o_scalar                                                   : out complex_t;
         i_scalar                                                   : in  complex_t;
         --ALU Interface
@@ -57,28 +57,29 @@ architecture rtl of control_unit is
     type   state_t                                                                                                      is (S_IDLE, S_ADDRESS_FETCH, S_INSTRUCTION_FETCH, S_DECODE, S_REGISTER_SELECT, S_EXECUTE, S_WRITEBACK, S_ERROR, S_DONE);
     signal state, state_next                                                                                            : state_t;
     --2) Program Counter
-    signal r_PC                                                                                                         : signed(31 downto 0)                := (others => '0');
-    signal r_jump_flag                                                                                                  : std_logic                          := '0';
+    signal r_PC                                                                                                         : signed(31 downto 0)                                  := (others => '0');
+    signal r_jump_flag                                                                                                  : std_logic                                            := '0';
     --3) Output Registers
-    signal r_current_instruction                                                                                        : std_logic_vector(127 downto 0)     := (others => '0');
-    signal r_current_address, r_new_program_count                                                                       : std_logic_vector(31 downto 0)      := (others => '0');
-    signal r_cu_done, r_rw_scalar, r_program_count_ready, r_column_or_row_order, r_rw_vector, r_scalar_or_vector_action : std_logic                          := '0';
-    signal r_matrix_sel                                                                                                 : integer range 0 to 3               := 0;
-    signal r_vector_i, r_vector_j, r_scalar_i, r_scalar_j                                                               : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_vector, r_av, r_bv                                                                                         : vector_t                           := VECTOR_ZERO;
-    signal r_scalar, r_a, r_b                                                                                           : complex_t                          := COMPLEX_ZERO;
-    signal r_map_code                                                                                                   : std_logic_vector(1 downto 0)       := (others => '0');
-    signal r_error_flag                                                                                                 : std_logic                          := '0';
-    signal r_scalar_reg_sel_1                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_scalar_reg_sel_2                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_scalar_write_sel                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_scalar_reg_input                                                                                           : complex_t                          := COMPLEX_ZERO;
-    signal r_scalar_write_enable                                                                                        : std_logic                          := '0';
-    signal r_vector_write_enable                                                                                        : std_logic                          := '0';
-    signal r_vector_reg_sel_1                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_vector_reg_sel_2                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_vector_write_sel                                                                                           : integer range 0 to VECTOR_SIZE - 1 := 0;
-    signal r_vector_reg_input                                                                                           : vector_t                           := VECTOR_ZERO; -- assuming o_vector_reg_input : out vector_t
+    signal r_current_instruction                                                                                        : std_logic_vector(127 downto 0)                       := (others => '0');
+    signal r_current_address, r_new_program_count                                                                       : std_logic_vector(31 downto 0)                        := (others => '0');
+    signal r_cu_done, r_rw_scalar, r_program_count_ready, r_column_or_row_order, r_rw_vector, r_scalar_or_vector_action : std_logic                                            := '0';
+    signal r_matrix_sel                                                                                                 : integer range 0 to 3                                 := 0;
+    signal r_vector_i, r_vector_j                                                                                       : integer range 0 to (MATRIX_FACTOR * VECTOR_SIZE) - 1;
+    signal r_scalar_i, r_scalar_j                                                                                       : integer range 0 to (MATRIX_FACTOR * VECTOR_SIZE) - 1 := 0;
+    signal r_vector, r_av, r_bv                                                                                         : vector_t                                             := VECTOR_ZERO;
+    signal r_scalar, r_a, r_b                                                                                           : complex_t                                            := COMPLEX_ZERO;
+    signal r_map_code                                                                                                   : std_logic_vector(1 downto 0)                         := (others => '0');
+    signal r_error_flag                                                                                                 : std_logic                                            := '0';
+    signal r_scalar_reg_sel_1                                                                                           : integer range 0 to VECTOR_SIZE - 1                   := 0;
+    signal r_scalar_reg_sel_2                                                                                           : integer range 0 to VECTOR_SIZE - 1                   := 0;
+    signal r_scalar_write_sel                                                                                           : integer range 0 to VECTOR_SIZE - 1                   := 0;
+    signal r_scalar_reg_input                                                                                           : complex_t                                            := COMPLEX_ZERO;
+    signal r_scalar_write_enable                                                                                        : std_logic                                            := '0';
+    signal r_vector_write_enable                                                                                        : std_logic                                            := '0';
+    signal r_vector_reg_sel_1                                                                                           : integer range 0 to VECTOR_SIZE - 1                   := 0;
+    signal r_vector_reg_sel_2                                                                                           : integer range 0 to VECTOR_SIZE - 1                   := 0;
+    signal r_vector_write_sel                                                                                           : integer range 0 to VECTOR_SIZE - 1                   := 0;
+    signal r_vector_reg_input                                                                                           : vector_t                                             := VECTOR_ZERO; -- assuming o_vector_reg_input : out vector_t
 
     --4) Field Registers (Some of these are mapped to outputs though)
     signal r_opcode, r_subop  : std_logic_vector(7 downto 0)  := (others => '0');
@@ -92,14 +93,13 @@ architecture rtl of control_unit is
     subtype q32_32 is sfixed(31 downto -32);
     subtype q22_23 is sfixed(21 downto -23);
 
-    function imm90_to_complex_t(imm90 : std_logic_vector(89 downto 0))
-    return complex_t is
-        variable ret    : complex_t := COMPLEX_ZERO; -- assume re/im are q32_32
+    function imm90_to_complex_t(imm90 : std_logic_vector(89 downto 0)) return complex_t is
+        variable ret    : complex_t := COMPLEX_ZERO;
         variable re_q23 : q22_23;
         variable im_q23 : q22_23;
     begin
-        re_q23 := to_sfixed(imm90(44 downto 0), 21, -23); -- overload from slv
-        im_q23 := to_sfixed(imm90(89 downto 45), 21, -23);
+        re_q23 := to_sfixed(imm90(89 downto 45), 21, -23);
+        im_q23 := to_sfixed(imm90(44 downto 0), 21, -23);
 
         ret.re := resize(re_q23, 31, -32);
         ret.im := resize(im_q23, 31, -32);
@@ -238,10 +238,6 @@ begin
                                     null;
                                 when I_CDIVI =>
                                     null;
-                                when I_MAXABSI =>
-                                    null;
-                                when I_MINABSI =>
-                                    null;
                                 when others =>
                                     r_error_flag <= '1';
                             end case;
@@ -252,8 +248,8 @@ begin
                             r_scalar_reg_sel_1 <= to_integer(unsigned(rs1));
                             r_offs33           <= offs33;
 
-                        when S_TYPE =>  
-                            rd   := r_current_instruction(95 downto 93);
+                        when S_TYPE =>
+                            rd    := r_current_instruction(95 downto 93);
                             mbid  := r_current_instruction(92 downto 89);
                             i16   := r_current_instruction(88 downto 73);
                             j16   := r_current_instruction(72 downto 57);
@@ -321,27 +317,19 @@ begin
                                 when I_CADDI =>
                                     r_a      <= i_scalar_reg_1;
                                     r_b      <= imm90_to_complex_t(r_imm90);
-                                    r_opcode <= R_CADD;
+                                    r_subop <= R_CADD;
                                 when I_CMULI =>
                                     r_a      <= i_scalar_reg_1;
                                     r_b      <= imm90_to_complex_t(r_imm90);
-                                    r_opcode <= R_CMUL;
+                                    r_subop <= R_CMUL;
                                 when I_CSUB =>
                                     r_a      <= i_scalar_reg_1;
                                     r_b      <= imm90_to_complex_t(r_imm90);
-                                    r_opcode <= R_CSUB;
+                                    r_subop <= R_CSUB;
                                 when I_CDIVI =>
                                     r_a      <= i_scalar_reg_1;
                                     r_b      <= imm90_to_complex_t(r_imm90);
-                                    r_opcode <= R_CDIV;
-                                when I_MAXABSI =>
-                                    r_a      <= i_scalar_reg_1;
-                                    r_b      <= imm90_to_complex_t(r_imm90);
-                                    r_opcode <= R_CDIV;
-                                when I_MINABSI =>
-                                    r_a      <= i_scalar_reg_1;
-                                    r_b      <= imm90_to_complex_t(r_imm90);
-                                    r_opcode <= R_CDIV;
+                                    r_subop <= R_CDIV;
                                 when others =>
                                     r_error_flag <= '1';
                             end case;
@@ -350,7 +338,7 @@ begin
                                 r_jump_flag <= '1';
                             end if;
                         when S_TYPE =>
-                          null;
+                            null;
 
                         when others => r_error_flag <= '1';
                     end case;
@@ -400,7 +388,7 @@ begin
                         when J_TYPE =>
                             null;
                         when S_TYPE =>
-                              case r_subop is
+                            case r_subop is
                                 when S_VLD =>
                                     r_vector_reg_input    <= i_vector;
                                     r_vector_write_enable <= '1';
@@ -420,7 +408,7 @@ begin
                     end case;
 
                     if (r_jump_flag = '1') then
-                        r_PC <= r_PC + resize(signed(offs33), 32);
+                        r_PC <= r_PC + resize(signed(r_offs33), 32);
                     else
                         r_PC <= r_PC + 1;
                     end if;

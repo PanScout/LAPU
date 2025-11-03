@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2025.10.14)  1 NOV 2025 18:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2025.10.14)  2 NOV 2025 20:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -663,16 +663,12 @@ Overfull \hbox (3.23589pt too wide) in paragraph at lines 150--150
 \height=\dimen196 (locally)
 \depth=\dimen197 (locally)
 \totalheight=\dimen198 (locally)
-\width=\dimen195 (locally)
-\height=\dimen196 (locally)
-\depth=\dimen197 (locally)
-\totalheight=\dimen198 (locally)
 \curly@height=\dimen195 (locally)
 \half@curly@height=\dimen196 (locally)
 \curly@shift=\dimen197 (locally)
 \total@box@width=\dimen195 (locally)
 
-Overfull \hbox (115.52065pt too wide) in paragraph at lines 157--158
+Overfull \hbox (115.52065pt too wide) in paragraph at lines 156--157
 [] 
  []
 
@@ -688,49 +684,49 @@ Overfull \hbox (115.52065pt too wide) in paragraph at lines 157--158
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/
 dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-20.
+19.
 
 (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 220.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 219.
 
-Underfull \hbox (badness 10000) in paragraph at lines 223--224
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 223--224
+Underfull \hbox (badness 10000) in paragraph at lines 222--223
 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 238--243
+Underfull \hbox (badness 10000) in paragraph at lines 222--223
+
+ []
+
+
+Overfull \hbox (33.68925pt too wide) in alignment at lines 237--242
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 243--247
+Overfull \hbox (33.68925pt too wide) in alignment at lines 242--246
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 247--271
+Overfull \hbox (33.68925pt too wide) in alignment at lines 246--270
  [] [] [] [] [] 
  []
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 274.
+(Font)              <12> on input line 273.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 274.
+(Font)              <8> on input line 273.
 
-Overfull \hbox (35.70892pt too wide) in alignment at lines 275--280
+Overfull \hbox (35.70892pt too wide) in alignment at lines 274--279
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (35.70892pt too wide) in alignment at lines 280--284
+Overfull \hbox (35.70892pt too wide) in alignment at lines 279--283
  [] [] [] [] [] 
  []
 
@@ -741,127 +737,135 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.289 ...& vD, vA     & vD[i] $\leftarrow$ \mathrm
+l.288 ...& vD, vA     & vD[i] $\leftarrow$ \mathrm
                                                   {conj}(vA[i])             ...
 
 ? 
 
-Overfull \hbox (35.70892pt too wide) in alignment at lines 284--291
+Overfull \hbox (35.70892pt too wide) in alignment at lines 283--290
  [] [] [] [] [] 
  []
 
 [4
 
 ]
-Overfull \hbox (33.68925pt too wide) in alignment at lines 295--300
+Overfull \hbox (33.68925pt too wide) in alignment at lines 294--299
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 300--304
+Overfull \hbox (33.68925pt too wide) in alignment at lines 299--303
  [] [] [] [] [] 
  []
 
 
-LaTeX Warning: Command \= invalid in math mode on input line 305.
+LaTeX Warning: Command \= invalid in math mode on input line 304.
 
 ! Please use \mathaccent for accents in math mode.
 \add@accent ... \let \ignorespaces \relax \accent 
                                                   #1 #2\egroup \ifmmode \els...
-l.305 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
+l.304 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
                                                   [i]\;\={B}[i]$ & Complex d...
 
 ? 
 
-LaTeX Warning: Command \= invalid in math mode on input line 305.
+LaTeX Warning: Command \= invalid in math mode on input line 304.
 
 ! Please use \mathaccent for accents in math mode.
 \add@accent ... \let \ignorespaces \relax \accent 
                                                   #1 #2\egroup \ifmmode \els...
-l.305 ...um_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}
+l.304 ...um_{i=0}^{\mathrm{VLEN}-1}\={A}[i]\;\={B}
                                                   [i]$ & Complex dot (no con...
 
 ? 
 
-LaTeX Warning: Command \= invalid in math mode on input line 307.
+LaTeX Warning: Command \= invalid in math mode on input line 306.
 
 ! Please use \mathaccent for accents in math mode.
 \add@accent ... \let \ignorespaces \relax \accent 
                                                   #1 #2\egroup \ifmmode \els...
-l.307 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
+l.306 ...laystyle\sum_{i=0}^{\mathrm{VLEN}-1}\={A}
                                                   [i]$ & Complex sum; reduce...
 
 ? 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 304--309
+Overfull \hbox (33.68925pt too wide) in alignment at lines 303--308
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (34.37543pt too wide) in alignment at lines 313--318
+Overfull \hbox (34.37543pt too wide) in alignment at lines 312--317
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (34.37543pt too wide) in alignment at lines 318--322
+Overfull \hbox (34.37543pt too wide) in alignment at lines 317--321
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (34.37543pt too wide) in alignment at lines 322--332
+Overfull \hbox (34.37543pt too wide) in alignment at lines 321--331
  [] [] [] [] [] 
  []
 
 
 
 [5]
-Overfull \hbox (47.07043pt too wide) in alignment at lines 345--350
+Overfull \hbox (47.07043pt too wide) in alignment at lines 344--349
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (47.07043pt too wide) in alignment at lines 350--354
+Overfull \hbox (47.07043pt too wide) in alignment at lines 349--353
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (47.07043pt too wide) in alignment at lines 354--371
+Overfull \hbox (47.07043pt too wide) in alignment at lines 353--370
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 376--381
+Overfull \hbox (33.68925pt too wide) in alignment at lines 375--380
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 381--385
+Overfull \hbox (33.68925pt too wide) in alignment at lines 380--384
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (33.68925pt too wide) in alignment at lines 385--390
+Overfull \hbox (33.68925pt too wide) in alignment at lines 384--389
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (99.48625pt too wide) in alignment at lines 395--400
+Overfull \hbox (99.48625pt too wide) in alignment at lines 394--399
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (99.48625pt too wide) in alignment at lines 400--404
+Overfull \hbox (99.48625pt too wide) in alignment at lines 399--403
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (99.48625pt too wide) in alignment at lines 404--424
+Overfull \hbox (70.59741pt too wide) in alignment at lines 403--423
  [] [] [] [] [] 
  []
 
 
 
 [6]
+
+Package longtable Warning: Column widths have changed
+(longtable)                in table 8 on input line 423.
+
+
+Package longtable Warning: Table widths have changed. Rerun LaTeX.
+
+
 
 [7] (./spec.aux)
  ***********
@@ -872,7 +876,7 @@ L3 programming layer <2025-01-18>
 Here is how much of TeX's memory you used:
  5491 strings out of 473197
  89926 string characters out of 5718604
- 509624 words of memory out of 5000000
+ 508625 words of memory out of 5000000
  28636 multiletter control sequences out of 15000+600000
  638919 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -888,7 +892,7 @@ fonts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb
 /public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/
 share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/publi
 c/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on spec.pdf (7 pages, 340588 bytes).
+Output written on spec.pdf (7 pages, 340368 bytes).
 PDF statistics:
  130 PDF objects out of 1000 (max. 8388607)
  82 compressed objects within 1 object stream

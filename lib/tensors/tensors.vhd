@@ -65,7 +65,17 @@ package body tensors is
     -------------------------------
     --- HELPER FUNCTIONS (local) ---
     -------------------------------
-
+    function abs2_mag(A : complex_t) return sfix_t is
+        variable xr  : sfix_t := (others => '0');
+        variable xi  : sfix_t := (others => '0');
+        variable sum : sfix_t := (others => '0');
+    begin
+        -- Resize products back into sfix_t’s range to avoid width mismatches/overflow
+        xr  := resize(A.re * A.re, sum'high, sum'low);
+        xi  := resize(A.im * A.im, sum'high, sum'low);
+        sum := resize(xr + xi, sum'high, sum'low);
+        return sum;
+    end function;
     function fit(A : sfixed) return sfix_t is
     begin
         return resize(A, (FIXED_INT_BITS - 1), FIXED_FRAC_BITS);
@@ -294,7 +304,7 @@ package body tensors is
     function ">"(A, B : complex_t)
     return boolean is
     begin
-        if (abs (A) > abs (B)) then
+        if (abs2_mag (A) > abs2_mag (B)) then
             return true;
         end if;
 
@@ -305,7 +315,7 @@ package body tensors is
     function "<"(A, B : complex_t)
     return boolean is
     begin
-        if (abs (A) > abs (B)) then
+        if (abs2_mag (A) < abs2_mag (B)) then
             return false;
         end if;
 
@@ -591,12 +601,11 @@ package body tensors is
         variable sum : complex_t := COMPLEX_ZERO;
     begin
         for i in 0 to VECTOR_SIZE - 1 loop
-            sum := abs(sum) + abs(A(i));
+            sum := abs (sum) + abs (A(i));
         end loop;
 
         return sum;
     end function vasum;
-
 
     -------------------------------------------
     -----------VECTORS TIMES SCALAR------------
